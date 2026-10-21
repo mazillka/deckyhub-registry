@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  # Weekly too: a plugin's new release can break its entry with no change here.
+  schedule:
+    - cron: "23 5 * * 1"
 
 permissions:
   contents: read
@@ -23,3 +26,8 @@ jobs:
         working-directory: deckyhub-plugin
         env:
           DECKYHUB_REGISTRY: ${{ github.workspace }}/registry/apps.json
+      - run: python3 -m unittest discover -s tests
+      # Each entry against its repository: releases, asset filter, plugin.json name.
+      - run: python3 scripts/validate.py
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
