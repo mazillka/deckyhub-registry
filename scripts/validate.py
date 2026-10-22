@@ -13,6 +13,7 @@ import io
 import json
 import os
 import sys
+import time
 import urllib.error
 import urllib.request
 import zipfile
@@ -53,13 +54,26 @@ def channel_releases(app: dict, releases: list[dict]) -> dict[str, dict | None]:
     return {"stable": next((release for release in candidates if not release.get("prerelease")), None), "prerelease": next(iter(candidates), None)}
 
 
-def fetch(url: str, headers: dict | None = None) -> bytes:
-    token = os.environ.get("GITHUB_TOKEN", "")
+def fetch(url: str, headers: dict | None = None, auth: bool = True) -> bytes:
+    token = os.environ.get("GITHUB_TOKEN", "") if auth else ""
     headers = {"User-Agent": "deckyhub-registry-validate", **(headers or {})}
     if token and url.startswith(API):
         headers["Authorization"] = f"Bearer {token}"
     with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=60) as response:
         return response.read()
+
+
+def fetch_releases(repo: str) -> list[dict]:
+    """GitHub's releases list sometimes answers [] to an authenticated request for a repo
+    that has releases (about 1 in 4 in October 2026), while unauthenticated requests got the
+    list every time. So an empty answer is asked again without the token, then once more
+    with it, before it's believed."""
+    url = f"{API}/repos/{repo}/releases?per_page=20"
+    for auth in (True, False, True):
+        if releases := json.loads(fetch(url, auth=auth)):
+            return releases
+        time.sleep(1)
+    return []
 
 
 class RangedFile(io.RawIOBase):
@@ -109,7 +123,7 @@ def github_problems(app: dict) -> tuple[list[str], list[str]]:
         warnings.append(f"{label}: {app['repo']} was renamed to {repo['full_name']}; update repo")
     if repo.get("archived"):
         warnings.append(f"{label}: {repo['full_name']} is archived")
-    channels = channel_releases(app, json.loads(fetch(f"{API}/repos/{app['repo']}/releases?per_page=20")))
+    channels = channel_releases(app, fetch_releases(app["repo"]))
     if not channels["prerelease"]:
         return [f"{label}: no release matches releaseTagInclude {app.get('releaseTagInclude')!r}" if app.get("releaseTagInclude") else f"{label}: no releases"], warnings
     if not channels["stable"]:
