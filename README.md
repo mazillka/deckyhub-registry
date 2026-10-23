@@ -1,5 +1,8 @@
 # DeckyHub registry
 
+> [!CAUTION]
+> **DeckyHub only fetches releases from their authors' GitHub repositories. It doesn't make, review or vouch for these plugins and isn't responsible for anything they do to your device or data. Install at your own risk.**
+
 The curated list of Decky plugins that [DeckyHub](https://github.com/mazillka/deckyhub-plugin) shows. DeckyHub downloads [`registry/apps.json`](registry/apps.json) from `main` at startup, so a merged change reaches installed copies on their next restart without a DeckyHub release.
 
 ## Adding an entry
