@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DeckyHub Registry</title>
+<meta name="description" content="The curated list of Steam Deck plugins that DeckyHub shows on Discover. Search it, browse by category, or suggest a plugin.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://mazillka.github.io/deckyhub-registry/">
+<meta name="theme-color" content="#10151f">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mazillka.github.io/deckyhub-registry/">
+<meta property="og:title" content="DeckyHub Registry">
+<meta property="og:description" content="The curated list of Steam Deck plugins that DeckyHub shows on Discover.">
+<style>
+:root{color-scheme:dark;--bg:#10151f;--panel:#182131;--panel2:#1d2839;--line:#2e405a;--text:#eef4ff;--muted:#b6c3d4;--dim:#8a9bb2;--accent:#1d75cc;--accent2:#4b9cf0;--warn:#e8b54a}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+a{color:var(--accent2)}
+.wrap{max-width:1100px;margin:auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:5;background:rgba(16,21,31,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:20px;height:56px}
+nav .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--text);text-decoration:none;margin-right:auto}
+nav .brand img{width:26px;height:26px}
+nav a{color:var(--muted);text-decoration:none;font-size:.95rem}nav a:hover{color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;border:1px solid transparent}
+.btn:hover{background:var(--accent2)}.btn.ghost{background:transparent;border-color:var(--line);color:var(--text)}.btn.ghost:hover{border-color:var(--accent2)}
+header{padding:64px 0 36px;text-align:center;background:radial-gradient(ellipse at top,#1b3254 0%,var(--bg) 65%)}
+header h1{font-size:clamp(2rem,6vw,3.2rem);line-height:1.1;margin:0 0 14px;letter-spacing:-.02em}
+header p{font-size:1.15rem;color:var(--muted);max-width:620px;margin:0 auto 26px}
+.cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.stats{display:flex;justify-content:center;gap:36px;margin-top:34px;color:var(--dim);font-size:.9rem}
+.stats strong{display:block;color:var(--text);font-size:1.6rem;line-height:1.2}
+section{padding:56px 0;border-top:1px solid #1c2738}
+h2{font-size:clamp(1.5rem,4vw,2rem);margin:0 0 8px;letter-spacing:-.01em}
+.sub{color:var(--muted);max-width:680px;margin:0 0 28px}
+.tools{display:flex;flex-direction:column;gap:14px;margin-bottom:22px}
+input[type=search]{width:100%;padding:13px 16px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit}
+input[type=search]:focus{outline:2px solid var(--accent2);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font:inherit;font-size:.9rem;cursor:pointer}
+.chip:hover{border-color:var(--accent2);color:var(--text)}
+.chip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip span{opacity:.7;margin-left:4px}
+.catalog{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.app{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:border-color .15s,background .15s}
+.app:hover,.app:focus-visible{border-color:var(--accent2);background:var(--panel2)}
+.app small{color:var(--accent2);font-size:.75rem;text-transform:uppercase;letter-spacing:.06em}
+.app strong{font-size:1.05rem;margin-top:2px}
+.app p{margin:6px 0 12px;color:var(--muted);font-size:.92rem;flex:1}
+.app code{font-size:.78rem;color:var(--dim);overflow-wrap:anywhere}
+.empty,.status{color:var(--muted);padding:24px 0}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px}
+.card h3{margin:0 0 8px;font-size:1.05rem}.card p{margin:0;color:var(--muted)}
+code{background:#0f1724;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:.88em}
+.app code{background:none;border:0;padding:0}
+.caution{border:1px solid #5a4a22;background:#231e12;border-radius:10px;padding:14px 18px;color:#f1dcaa;font-size:.92rem}
+footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-size:.88rem}
+@media(max-width:640px){.wrap{padding:0 16px}header{padding:40px 0 24px}header h1 br{display:none}nav .hide{display:none}section{padding:40px 0}.cta .btn{flex:1;justify-content:center}.stats{gap:22px}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+<a class="brand" href="./"><img src="favicon.svg" alt="">DeckyHub Registry</a>
+<a class="hide" href="#catalog">Catalog</a><a class="hide" href="#contribute">Contribute</a>
+<a href="https://github.com/mazillka/deckyhub-registry">GitHub</a>
+</div></nav>
+
+<header><div class="wrap">
+<h1>Plugins for your Steam Deck,<br>hand-picked.</h1>
+<p>The curated list behind <a href="https://github.com/mazillka/deckyhub-plugin">DeckyHub</a>'s Discover tab. Every app here installs straight from its author's GitHub releases.</p>
+<div class="cta">
+<a class="btn" href="#catalog">Browse the catalog</a>
+<a class="btn ghost" href="https://github.com/mazillka/deckyhub-plugin/releases/latest">Get DeckyHub</a>
+</div>
+<div class="stats" aria-live="polite"><div><strong id="count">–</strong>plugins</div><div><strong id="cats">–</strong>categories</div></div>
+</div></header>
+
+<section id="catalog"><div class="wrap">
+<h2>Catalog</h2>
+<p class="sub">Exactly what DeckyHub shows on Discover, loaded live from <a href="https://github.com/mazillka/deckyhub-registry/blob/main/registry/apps.json"><code>registry/apps.json</code></a>.</p>
+<div class="tools">
+<input type="search" id="q" placeholder="Search by name, description or repository" aria-label="Search plugins">
+<div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+</div>
+<div class="catalog" id="list"><p class="status">Loading…</p></div>
+</div></section>
+
+<section id="contribute"><div class="wrap">
+<h2>Contribute</h2>
+<p class="sub">A merged change reaches every DeckyHub on its next restart. No app update needed.</p>
+<div class="grid">
+<div class="card"><h3>Suggest a plugin</h3><p>Know a Decky plugin that belongs here? <a href="https://github.com/mazillka/deckyhub-registry/issues/new">Open an issue</a> with its repository.</p></div>
+<div class="card"><h3>Add it yourself</h3><p>Add an entry to <code>registry/apps.json</code> and its row in the README, then open a pull request. CI checks it against the plugin's real releases. <a href="https://github.com/mazillka/deckyhub-registry#adding-a-plugin">How-to</a></p></div>
+<div class="card"><h3>Run your own list</h3><p>Fork this repository and add it in DeckyHub under <strong>Repositories → Custom Registries</strong> as <code>owner/repo</code>.</p></div>
+</div>
+<p class="caution" style="margin-top:28px"><strong>Install at your own risk.</strong> DeckyHub only fetches releases from their authors' GitHub repositories. It doesn't make, review or vouch for these plugins and isn't responsible for anything they do to your device or data.</p>
+</div></section>
+
+<footer><div class="wrap">Plugins belong to their respective authors. Registry licensed <a href="https://github.com/mazillka/deckyhub-registry/blob/main/LICENSE.md">GPL-3.0</a>. Part of <a href="https://mazillka.github.io/deckyhub-plugin/">DeckyHub</a>.</div></footer>
+
+<script>
+const URL_ = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/refs/heads/main/registry/apps.json";
+const list = document.getElementById("list"), chips = document.getElementById("chips"), q = document.getElementById("q");
+let apps = [], category = "";
+
+function el(tag, props, ...children) {
+  const node = Object.assign(document.createElement(tag), props);
+  node.append(...children);
+  return node;
+}
+
+function render() {
+  const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const shown = apps.filter((app) => (!category || app.category === category)
+    && words.every((word) => `${app.name} ${app.description || ""} ${app.repo} ${app.category}`.toLowerCase().includes(word)));
+  list.replaceChildren(...(shown.length ? shown.map((app) => el("a", { className: "app", href: `https://github.com/${app.repo}` },
+    el("small", { textContent: app.category }), el("strong", { textContent: app.name }),
+    el("p", { textContent: app.description || "" }), el("code", { textContent: app.repo }))) : [el("p", { className: "empty", textContent: "No plugins match." })]));
+}
+
+function renderChips() {
+  const counts = apps.reduce((all, app) => ({ ...all, [app.category]: (all[app.category] || 0) + 1 }), {});
+  chips.replaceChildren(...[["", "All", apps.length], ...Object.keys(counts).sort().map((name) => [name, name, counts[name]])].map(([value, label, n]) => {
+    const chip = el("button", { type: "button", className: "chip" }, label, el("span", { textContent: n }));
+    chip.setAttribute("aria-pressed", String(value === category));
+    chip.onclick = () => { category = value; renderChips(); render(); };
+    return chip;
+  }));
+}
+
+fetch(URL_, { cache: "no-store" }).then((r) => { if (!r.ok) throw Error(`HTTP ${r.status}`); return r.json(); }).then((data) => {
+  apps = data.apps;
+  document.getElementById("count").textContent = apps.length;
+  document.getElementById("cats").textContent = new Set(apps.map((app) => app.category)).size;
+  renderChips();
+  render();
+}).catch((error) => list.replaceChildren(el("p", { className: "status", textContent: `Couldn't load the registry (${error.message}).` })));
+q.addEventListener("input", render);
+</script>
+</body>
+</html>
