@@ -43,12 +43,19 @@ def static_errors(apps: list[dict]) -> list[str]:
 
 
 
+TABLE_HEADER = "| Tool | Category | Repository |\n| --- | --- | --- |\n"
+
+
 def readme_errors(apps: list[dict], readme: str) -> list[str]:
     """README's Repositories table must list every entry, in apps.json order."""
     section = readme.split("## Repositories", 1)[-1].split("\n## ", 1)[0]
     listed = re.findall(r"^\|.*\|.*\| \[([^\]]+)\]", section, re.M)
     expected = [app["repo"] for app in apps]
-    return [] if listed == expected else [f"README's Repositories table lists {listed}, expected {expected}"]
+    errors = [] if listed == expected else [f"README's Repositories table lists {listed}, expected {expected}"]
+    # Without its header and separator rows GitHub renders the table as plain text.
+    if TABLE_HEADER not in section:
+        errors.append("README's Repositories table is missing its '| Tool | Category | Repository |' header and '| --- |' separator rows")
+    return errors
 
 
 # The same rules as DeckyHub's frontend (listAppReleases/matchingAssets/inChannel in

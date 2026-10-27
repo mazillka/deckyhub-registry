@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from validate import channel_releases, matching_assets, readme_errors, static_errors  # noqa: E402
+from validate import TABLE_HEADER, channel_releases, matching_assets, readme_errors, static_errors  # noqa: E402
 
 
 def app(id="a", repo="o/a", names=("A",), include=(".zip",), exclude=("source",), tag=None):
@@ -28,6 +28,7 @@ class ValidateTests(unittest.TestCase):
         self.assertEqual(readme_errors([app(), app(id="b", repo="o/b")], readme), [])
         self.assertEqual(len(readme_errors([app(id="b", repo="o/b"), app()], readme)), 1)
         self.assertEqual(len(readme_errors([app()], readme)), 1)
+        self.assertEqual(len(readme_errors([app(), app(id="b", repo="o/b")], readme.replace(TABLE_HEADER, ""))), 1)
 
     def test_matching_assets_follows_deckyhubs_filter(self):
         assets = release("v1", "2026-01-01", assets=("Plugin.zip", "Plugin-source.zip", "Plugin.tar.gz", "Other.zip"))
