@@ -12,6 +12,7 @@ Exits 1 on any error; warnings are printed but don't fail.
 import io
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -19,7 +20,9 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
-REGISTRY = Path(__file__).resolve().parent.parent / "registry" / "apps.json"
+ROOT = Path(__file__).resolve().parent.parent
+REGISTRY = ROOT / "registry" / "apps.json"
+README = ROOT / "README.md"
 API = "https://api.github.com"
 
 
@@ -37,6 +40,15 @@ def static_errors(apps: list[dict]) -> list[str]:
                 errors.append(f"{app['id']}: detect name {name!r} is already claimed by {names[name.casefold()]}")
             names[name.casefold()] = app["id"]
     return errors
+
+
+
+def readme_errors(apps: list[dict], readme: str) -> list[str]:
+    """README's Repositories table must list every entry, in apps.json order."""
+    section = readme.split("## Repositories", 1)[-1].split("\n## ", 1)[0]
+    listed = re.findall(r"^\|.*\|.*\| \[([^\]]+)\]", section, re.M)
+    expected = [app["repo"] for app in apps]
+    return [] if listed == expected else [f"README's Repositories table lists {listed}, expected {expected}"]
 
 
 # The same rules as DeckyHub's frontend (listAppReleases/matchingAssets/inChannel in
@@ -154,7 +166,7 @@ def asset_digest(asset: dict) -> str:
 
 def main() -> int:
     apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
-    errors, warnings = static_errors(apps), []
+    errors, warnings = static_errors(apps) + readme_errors(apps, README.read_text(encoding="utf-8")), []
     if "--offline" not in sys.argv:
         for app in apps:
             try:
