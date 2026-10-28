@@ -235,6 +235,33 @@
       "category": "Frame Generation",
       "detect": { "type": "decky-plugin", "names": ["Jedi-ReFrameShade4All"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "titledeck",
+      "name": "TitleDeck",
+      "description": "Customize game titles and Game Info descriptions in Gaming Mode.",
+      "repo": "ValentineBSAA/TitleDeck",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["TitleDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "game-theme-music",
+      "name": "Game Theme Music",
+      "description": "Plays a game's theme music on its Steam library page.",
+      "repo": "ValentineBSAA/Game-Theme-Music",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Game Theme Music"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "resonadeck",
+      "name": "ResonaDeck",
+      "description": "Plays music from a Plex server on the Steam Deck.",
+      "repo": "ValentineBSAA/ResonaDeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["ResonaDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
