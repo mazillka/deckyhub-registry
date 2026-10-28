@@ -199,6 +199,69 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["DeckSMB"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "panel-de-control",
+      "name": "Panel de Control",
+      "description": "All-in-one handheld control center: power, fans, battery, display, HUD and Steam themes.",
+      "repo": "Hooandee/panel-de-control",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Panel de Control"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyshare",
+      "name": "DeckyShare",
+      "description": "Wireless file sharing between the Steam Deck and a phone or PC.",
+      "repo": "gillrajvir950-wq/deckyshare",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckyShare"] },
+      "asset": { "include": ["DeckyShare.zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "themedeck",
+      "name": "ThemeDeck",
+      "description": "Plays theme music on Steam game pages from local files or YouTube.",
+      "repo": "BrenticusMaximus/ThemeDeck",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["ThemeDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "jedi-reframeshade4all",
+      "name": "Jedi ReFrameShade4All",
+      "description": "Runs OptiScaler frame generation and ReShade together on the same game.",
+      "repo": "sauliiin/Jedi-ReFrameShade4All",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["Jedi-ReFrameShade4All"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "titledeck",
+      "name": "TitleDeck",
+      "description": "Customize game titles and Game Info descriptions in Gaming Mode.",
+      "repo": "ValentineBSAA/TitleDeck",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["TitleDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "game-theme-music",
+      "name": "Game Theme Music",
+      "description": "Plays a game's theme music on its Steam library page.",
+      "repo": "ValentineBSAA/Game-Theme-Music",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Game Theme Music"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "resonadeck",
+      "name": "ResonaDeck",
+      "description": "Plays music from a Plex server on the Steam Deck.",
+      "repo": "ValentineBSAA/ResonaDeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["ResonaDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
