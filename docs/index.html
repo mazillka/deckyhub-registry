@@ -48,6 +48,9 @@ input[type=search]:focus{outline:2px solid var(--accent2);outline-offset:1px}
 .app strong{font-size:1.05rem;margin-top:2px}
 .app p{margin:6px 0 12px;color:var(--muted);font-size:.92rem;flex:1}
 .app code{font-size:.78rem;color:var(--dim);overflow-wrap:anywhere}
+.app footer{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.app .dl{font-size:.78rem;color:var(--muted);white-space:nowrap}
+.tools select{align-self:flex-start;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit;font-size:.9rem}
 .empty,.status{color:var(--muted);padding:24px 0}
 .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px}
@@ -73,7 +76,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 <a class="btn" href="#catalog">Browse the catalog</a>
 <a class="btn ghost" href="https://github.com/mazillka/deckyhub-plugin/releases/latest">Get DeckyHub</a>
 </div>
-<div class="stats" aria-live="polite"><div><strong id="count">–</strong>plugins</div><div><strong id="cats">–</strong>categories</div></div>
+<div class="stats" aria-live="polite"><div><strong id="count">–</strong>plugins</div><div><strong id="cats">–</strong>categories</div><div><strong id="total">–</strong>downloads</div></div>
 </div></header>
 
 <section id="catalog"><div class="wrap">
@@ -82,6 +85,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 <div class="tools">
 <input type="search" id="q" placeholder="Search by name, description or repository" aria-label="Search plugins">
 <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+<select id="sort" aria-label="Sort plugins"><option value="az">A to Z</option><option value="downloads">Most downloaded</option><option value="added">Recently added</option></select>
 </div>
 <div class="catalog" id="list"><p class="status">Loading…</p></div>
 </div></section>
@@ -102,8 +106,13 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 
 <script>
 const URL_ = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/refs/heads/main/registry/apps.json";
-const list = document.getElementById("list"), chips = document.getElementById("chips"), q = document.getElementById("q");
-let apps = [], category = "";
+// All-time downloads of each plugin's release ZIPs, rebuilt every 30 minutes by the
+// release-index workflow (scripts/build_release_index.py). The catalog works without it.
+const DOWNLOADS_URL = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/release-index/downloads.json";
+const list = document.getElementById("list"), chips = document.getElementById("chips"), q = document.getElementById("q"), sort = document.getElementById("sort");
+const compact = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
+let apps = [], category = "", downloads = {};
+const downloadsOf = (app) => downloads[app.repo.toLowerCase()];
 
 function el(tag, props, ...children) {
   const node = Object.assign(document.createElement(tag), props);
@@ -115,9 +124,15 @@ function render() {
   const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const shown = apps.filter((app) => (!category || app.category === category)
     && words.every((word) => `${app.name} ${app.description || ""} ${app.repo} ${app.category}`.toLowerCase().includes(word)));
+  if (Object.keys(downloads).length) document.getElementById("total").textContent = compact.format(apps.reduce((sum, app) => sum + (downloadsOf(app) ?? 0), 0));
+  // apps.json only ever appends, so "Recently added" is its order reversed.
+  if (sort.value === "downloads") shown.sort((a, b) => (downloadsOf(b) ?? -1) - (downloadsOf(a) ?? -1));
+  else if (sort.value === "added") shown.reverse();
+  else shown.sort((a, b) => a.name.localeCompare(b.name));
   list.replaceChildren(...(shown.length ? shown.map((app) => el("a", { className: "app", href: `https://github.com/${app.repo}` },
     el("small", { textContent: app.category }), el("strong", { textContent: app.name }),
-    el("p", { textContent: app.description || "" }), el("code", { textContent: app.repo }))) : [el("p", { className: "empty", textContent: "No plugins match." })]));
+    el("p", { textContent: app.description || "" }),
+    el("footer", {}, el("code", { textContent: app.repo }), ...(downloadsOf(app) === undefined ? [] : [el("span", { className: "dl", title: `${downloadsOf(app).toLocaleString("en")} downloads`, textContent: `↓ ${compact.format(downloadsOf(app))}` })])))) : [el("p", { className: "empty", textContent: "No plugins match." })]));
 }
 
 function renderChips() {
@@ -138,6 +153,12 @@ fetch(URL_, { cache: "no-store" }).then((r) => { if (!r.ok) throw Error(`HTTP ${
   render();
 }).catch((error) => list.replaceChildren(el("p", { className: "status", textContent: `Couldn't load the registry (${error.message}).` })));
 q.addEventListener("input", render);
+sort.addEventListener("change", render);
+fetch(DOWNLOADS_URL, { cache: "no-store" }).then((r) => r.ok ? r.json() : null).then((data) => {
+  if (!data) return;
+  downloads = data.downloads;
+  render();
+}).catch(() => {});
 </script>
 </body>
 </html>

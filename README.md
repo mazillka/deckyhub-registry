@@ -23,6 +23,8 @@ DeckyHub downloads [`registry/apps.json`](registry/apps.json) from `main` every 
 
 DeckyHub also reads every listed plugin's recent releases from one file, so it doesn't spend a GitHub API call per plugin (60 an hour without a token). The [release-index workflow](.github/workflows/release-index.yml) runs [`scripts/build_release_index.py`](scripts/build_release_index.py) every 30 minutes and whenever `apps.json` changes, and publishes `releases.json` on the [`release-index`](https://github.com/mazillka/deckyhub-registry/tree/release-index) branch. A new release can take up to 30 minutes to show up in DeckyHub.
 
+The same job writes `downloads.json`: each plugin's all-time downloads, summed over its plugin ZIPs (the entry's `asset` filter) across every release. The [catalog](https://mazillka.github.io/deckyhub-registry/) shows them and can sort by them. GitHub counts every download of a file, whether from DeckyHub, Decky, a browser or a script, so these are downloads, not installs.
+
 ## Repositories
 
 | Tool | Category | Repository |
