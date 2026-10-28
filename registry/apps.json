@@ -262,6 +262,367 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["ResonaDeck"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-metadata",
+      "name": "Decky Metadata",
+      "description": "Adds metadata, news and community controller layouts to non-Steam games.",
+      "repo": "beallio/Decky-Metadata",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Decky Metadata"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "friendeck",
+      "name": "Friendeck",
+      "description": "Transfers and manages files between the Steam Deck and other devices.",
+      "repo": "panyiwei-home/Friendeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Friendeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "romm-tender",
+      "name": "Tender",
+      "description": "Syncs a RomM library into Steam with ROM downloads, BIOS and save sync.",
+      "repo": "danielcopper/romm-tender",
+      "category": "Game Libraries",
+      "releaseTagInclude": "tender-v",
+      "detect": { "type": "decky-plugin", "names": ["Tender"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "vpn-deck",
+      "name": "VPN Deck",
+      "description": "Connects to AmneziaWG, VLESS and v2ray VPNs from Gaming Mode.",
+      "repo": "MrWaip/vpn-deck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["vpn-deck"] },
+      "asset": { "include": ["vpn-deck.zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-hydra-launcher",
+      "name": "Hydra",
+      "description": "Hydra Launcher integration for Gaming Mode.",
+      "repo": "hydralauncher/decky-hydra-launcher",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Hydra"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-proton-pulse",
+      "name": "Proton Pulse",
+      "description": "Pulls, scores and applies Proton launch options for each game.",
+      "repo": "mdeguzis/decky-proton-pulse",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["Proton Pulse"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamcord",
+      "name": "Steamcord",
+      "description": "Discord voice chat, DMs and screen sharing inside Gaming Mode.",
+      "repo": "Necrosiak/Steamcord",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Steamcord"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-music",
+      "name": "Decky Music",
+      "description": "Plays music from QQ Music and NetEase Cloud Music.",
+      "repo": "jinzhongjia/decky-music",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Music"] },
+      "asset": { "include": ["Decky.Music.zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-voxtype",
+      "name": "Voxtype",
+      "description": "Voice transcription for text input.",
+      "repo": "mimed95/decky-voxtype",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["decky-voxtype"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-ha-mqtt",
+      "name": "MQTT Status",
+      "description": "Connects the Deck to Home Assistant over MQTT for stats and power control.",
+      "repo": "jjuuzzii/decky-ha-mqtt-plugin",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["MQTT Status"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "game-roulette",
+      "name": "Game Roulette",
+      "description": "Spins a slot-machine reel of your library to pick a game to play.",
+      "repo": "ayrshirepixels/game-roulette",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Game Roulette"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-prysm",
+      "name": "Prysm",
+      "description": "Streams the Deck's screen to any browser with hardware encoding.",
+      "repo": "hostsrc/decky-prysm",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Prysm"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "allycenter",
+      "name": "Ally Center",
+      "description": "Adds ROG Ally controls and settings to SteamOS.",
+      "repo": "PixelAddictUnlocked/allycenter",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Ally Center"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "xgmobile-manager",
+      "name": "XG Mobile Manager",
+      "description": "Manages an ASUS XG Mobile eGPU and installs NVIDIA drivers.",
+      "repo": "Kentronix57/Decky-Loader-XGMobile-Manager",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["XGMobile-Manager"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ally-vibe-control",
+      "name": "Ally Vibe Control",
+      "description": "Sets the vibration strength on the ROG Xbox Ally X.",
+      "repo": "piyush-tyagi-13/ally-vibe-control",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Ally Vibe Control"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyzone",
+      "name": "DeckyZone",
+      "description": "Controller mappings, display fixes and hardware settings for the Zotac Gaming Zone.",
+      "repo": "DeckFilter/DeckyZone",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["DeckyZone"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "rumbledeck",
+      "name": "RumbleDeck",
+      "description": "Controls the DRV2605 rumble mod for the Steam Deck.",
+      "repo": "dawidmpunkt/RumbleDeck",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["RumbleDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "xone-driver-manager",
+      "name": "Xone Driver Manager",
+      "description": "Installs and manages the xone and xpad-noone Xbox controller drivers.",
+      "repo": "SavageCore/xone-decky-plugin",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Xone Driver Manager"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ds5-bridge",
+      "name": "DS5 Bridge",
+      "description": "Battery, status and settings for the DS5-Linux-Bridge dongle.",
+      "repo": "kungaa/DS5-Linux-Decky",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["DS5 Bridge"] },
+      "asset": { "include": ["DS5-Bridge.zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steam-achievements",
+      "name": "Steam Achievements",
+      "description": "Shows achievement progress on each game's library page.",
+      "repo": "AG69075/steamOS_plugin_achievements",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["steam-achievements"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-ui-restored",
+      "name": "Decky UI Restored",
+      "description": "Reversible fixes for Steam Deck interface regressions.",
+      "repo": "beallio/Decky-UI-Restored",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Decky UI Restored"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "bootnext",
+      "name": "BootNext",
+      "description": "Picks another installed operating system for the next boot.",
+      "repo": "rsore/decky-bootnext",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["BootNext"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-insignia",
+      "name": "Insignia",
+      "description": "Live player and lobby stats from the Insignia network.",
+      "repo": "stevensnoeijen/decky-insignia",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Insignia"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "retrodecky",
+      "name": "RetroDECKY",
+      "description": "Companion controls for RetroDECK.",
+      "repo": "Teppichseite/RetroDECKY",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["RetroDECKY"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "rsm-decky",
+      "name": "RSM-Decky",
+      "description": "Manages ReShade and shader repositories.",
+      "repo": "zany130/RSM-Decky",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["RSM-Decky"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "nordvpn-decky",
+      "name": "NordVPN",
+      "description": "Controls the NordVPN CLI: status, connect, disconnect and meshnet.",
+      "repo": "cwtechshiz/nordvpn-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["NordVPN"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-vibrance-hdr",
+      "name": "Decky Vibrance HDR",
+      "description": "Adjusts colour saturation under gamescope in SDR and HDR.",
+      "repo": "Rayekkk/DeckyVibranceHDR",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Decky Vibrance HDR"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "achievement-companion",
+      "name": "Achievement Companion",
+      "description": "RetroAchievements and Steam achievement progress in Gaming Mode.",
+      "repo": "parvagans/achievement-companion",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Achievement Companion"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decktools",
+      "name": "DeckTools",
+      "description": "Manages your game library and settings.",
+      "repo": "lopesleo/DeckTools",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["DeckTools"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-controller",
+      "name": "Decky Controller",
+      "description": "Uses the Steam Deck as a USB controller for another PC.",
+      "repo": "flexlug/decky-controller",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Decky Controller"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deck-shelves",
+      "name": "Deck Shelves",
+      "description": "Customizable game shelves for the Steam home screen.",
+      "repo": "santojon/Deck-Shelves",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Deck Shelves"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "cheat-engine-launcher",
+      "name": "Cheat Engine Launcher",
+      "description": "Downloads, installs and runs Cheat Engine from Gaming Mode.",
+      "repo": "LucifersCircle/Decky-Cheat-Engine-Launcher",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Cheat Engine Launcher"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-quick-tab",
+      "name": "Quick Tab",
+      "description": "Pins your plugins as tabs in the Quick Access Menu.",
+      "repo": "moi952/decky-quick-tab",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Quick Tab"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ce-decky",
+      "name": "CE Decky",
+      "description": "Manages Cheat Engine tables and live controls from Gaming Mode.",
+      "repo": "goooroooX/CE-Decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["CE Decky"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "gabecubeaura",
+      "name": "GabeCubeAura",
+      "description": "Drives the Steam Machine's LED strip with alerts, artwork and effects.",
+      "repo": "Alyenax/GabeCubeAura",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["GabeCubeAura"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ambideck",
+      "name": "Ambideck",
+      "description": "Makes the ROG Xbox Ally's stick lights follow what's on screen.",
+      "repo": "michpalm/ambideck",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Ambideck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "bluetooth-order",
+      "name": "Bluetooth Order",
+      "description": "Sets the order of the Bluetooth device menus.",
+      "repo": "JediRhymeTrix/decky-bluetooth-order",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Bluetooth Order"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "legion-go-2-companion",
+      "name": "Legion Go 2 Companion",
+      "description": "TDP, battery, gyro, RGB and button tools for the Legion Go 2.",
+      "repo": "Rayekkk/LegionGo2Companion",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Legion Go 2 Companion"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "elemental-deckkeys",
+      "name": "Elemental DeckKeys",
+      "description": "Controls the Deck's mouse and keyboard from a PC or phone browser, and sends files to it.",
+      "repo": "Koutasora/Elemental-DeckKeys",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Elemental DeckKeys"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-direct-updater",
+      "name": "Decky Direct Updater",
+      "description": "Finds Decky plugins on GitHub and keeps installed ones up to date.",
+      "repo": "nukeador/deckyup",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Direct Updater"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
