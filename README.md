@@ -23,6 +23,13 @@ DeckyHub downloads [`registry/apps.json`](registry/apps.json) from `main` every 
 
 DeckyHub also reads every listed plugin's recent releases from one file, so it doesn't spend a GitHub API call per plugin (60 an hour without a token). The [release-index workflow](.github/workflows/release-index.yml) runs [`scripts/build_release_index.py`](scripts/build_release_index.py) every 30 minutes and whenever `apps.json` changes, and publishes `releases.json` on the [`release-index`](https://github.com/mazillka/deckyhub-registry/tree/release-index) branch. A new release can take up to 30 minutes to show up in DeckyHub.
 
+The same job writes `stats.json` for the [catalog](https://mazillka.github.io/deckyhub-registry/), which shows these on each card and can sort by them:
+
+- **Downloads:** all-time, summed over the plugin's ZIPs (the entry's `asset` filter) across every release. GitHub counts every download of a file, whether from DeckyHub, Decky, a browser or a script, so these are downloads, not installs.
+- **Stars:** the repository's GitHub stars.
+- **Last updated:** when the release DeckyHub shows came out; over a year ago reads **No release in a year**.
+- **Runs as root:** that release's `plugin.json` has `"root"` in its `flags`, so Decky Loader runs the plugin's backend as the `root` user. It can then read and change anything on the Deck: system files, other plugins, your data. Plenty of plugins need that for real reasons (fan and power control, drivers, VPNs, system settings), so it isn't a red flag by itself, but a bug or a malicious update can do far more harm.
+
 ## Repositories
 
 | Tool | Category | Repository |

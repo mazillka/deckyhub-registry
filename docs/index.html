@@ -48,6 +48,14 @@ input[type=search]:focus{outline:2px solid var(--accent2);outline-offset:1px}
 .app strong{font-size:1.05rem;margin-top:2px}
 .app p{margin:6px 0 12px;color:var(--muted);font-size:.92rem;flex:1}
 .app code{font-size:.78rem;color:var(--dim);overflow-wrap:anywhere}
+.app .meta{display:flex;flex-wrap:wrap;gap:6px 12px;margin:0 0 10px;font-size:.78rem;color:var(--muted)}
+.badge{padding:1px 8px;border-radius:999px;border:1px solid currentColor;font-size:.72rem;white-space:nowrap}
+.root{color:#ffb35c}
+.stale{color:#ff8a8a}
+.legend{margin:0 0 18px;color:var(--muted);font-size:.85rem;line-height:1.7}
+.legend .badge{margin-right:4px}
+.legend .stale{margin-left:8px}
+.tools select{align-self:flex-start;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit;font-size:.9rem}
 .empty,.status{color:var(--muted);padding:24px 0}
 .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px}
@@ -73,7 +81,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 <a class="btn" href="#catalog">Browse the catalog</a>
 <a class="btn ghost" href="https://github.com/mazillka/deckyhub-plugin/releases/latest">Get DeckyHub</a>
 </div>
-<div class="stats" aria-live="polite"><div><strong id="count">–</strong>plugins</div><div><strong id="cats">–</strong>categories</div></div>
+<div class="stats" aria-live="polite"><div><strong id="count">–</strong>plugins</div><div><strong id="cats">–</strong>categories</div><div><strong id="total">–</strong>downloads</div></div>
 </div></header>
 
 <section id="catalog"><div class="wrap">
@@ -82,7 +90,9 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 <div class="tools">
 <input type="search" id="q" placeholder="Search by name, description or repository" aria-label="Search plugins">
 <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+<select id="sort" aria-label="Sort plugins"><option value="az">A to Z</option><option value="downloads">Most downloaded</option><option value="stars">Most stars</option><option value="updated">Recently updated</option><option value="added">Recently added</option></select>
 </div>
+<p class="legend"><span class="badge root">Runs as root</span> The plugin asks Decky Loader to run its backend as the <code>root</code> user, which can read and change anything on the Deck, including system files, other plugins and your data. Many plugins need it for real reasons (fan or power control, drivers, VPNs, system settings), so it isn't a warning sign on its own. It does mean a bug or a malicious update can do far more harm, so install these only from authors you trust. <span class="badge stale">No release in a year</span> The newest release is over a year old, so it may not work with current SteamOS or Decky Loader.</p>
 <div class="catalog" id="list"><p class="status">Loading…</p></div>
 </div></section>
 
@@ -102,8 +112,31 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 
 <script>
 const URL_ = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/refs/heads/main/registry/apps.json";
-const list = document.getElementById("list"), chips = document.getElementById("chips"), q = document.getElementById("q");
-let apps = [], category = "";
+// Per-plugin downloads, stars, last release and root flag, rebuilt every 30 minutes by the
+// release-index workflow (scripts/build_release_index.py). The catalog works without it.
+const STATS_URL = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/release-index/stats.json";
+const YEAR = 365 * 24 * 60 * 60 * 1000;
+const list = document.getElementById("list"), chips = document.getElementById("chips"), q = document.getElementById("q"), sort = document.getElementById("sort");
+const compact = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
+let apps = [], category = "", stats = {};
+const statsOf = (app) => stats[app.repo.toLowerCase()] || {};
+const downloadsOf = (app) => statsOf(app).downloads;
+const updatedAt = (app) => Date.parse(statsOf(app).updated || "") || 0;
+const relative = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+function age(time) {
+  const days = Math.round((time - Date.now()) / 86400000);
+  return Math.abs(days) < 31 ? relative.format(days, "day") : Math.abs(days) < 365 ? relative.format(Math.round(days / 30), "month") : relative.format(Math.round(days / 365), "year");
+}
+function meta(app) {
+  const { downloads, stars, root } = statsOf(app), updated = updatedAt(app), items = [];
+  if (downloads !== undefined) items.push(el("span", { title: `${downloads.toLocaleString("en")} downloads`, textContent: `↓ ${compact.format(downloads)}` }));
+  if (stars != null) items.push(el("span", { title: `${stars.toLocaleString("en")} GitHub stars`, textContent: `★ ${compact.format(stars)}` }));
+  if (updated) items.push(Date.now() - updated > YEAR
+    ? el("span", { className: "badge stale", title: `Last release ${new Date(updated).toLocaleDateString("en")}`, textContent: "No release in a year" })
+    : el("span", { title: new Date(updated).toLocaleDateString("en"), textContent: `Updated ${age(updated)}` }));
+  if (root) items.push(el("span", { className: "badge root", title: "Its plugin.json asks Decky Loader to run it as root, with full access to the system", textContent: "Runs as root" }));
+  return items.length ? [el("div", { className: "meta" }, ...items)] : [];
+}
 
 function el(tag, props, ...children) {
   const node = Object.assign(document.createElement(tag), props);
@@ -115,9 +148,17 @@ function render() {
   const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const shown = apps.filter((app) => (!category || app.category === category)
     && words.every((word) => `${app.name} ${app.description || ""} ${app.repo} ${app.category}`.toLowerCase().includes(word)));
+  if (Object.keys(stats).length) document.getElementById("total").textContent = compact.format(apps.reduce((sum, app) => sum + (downloadsOf(app) ?? 0), 0));
+  // apps.json only ever appends, so "Recently added" is its order reversed.
+  if (sort.value === "downloads") shown.sort((a, b) => (downloadsOf(b) ?? -1) - (downloadsOf(a) ?? -1));
+  else if (sort.value === "stars") shown.sort((a, b) => (statsOf(b).stars ?? -1) - (statsOf(a).stars ?? -1));
+  else if (sort.value === "updated") shown.sort((a, b) => updatedAt(b) - updatedAt(a));
+  else if (sort.value === "added") shown.reverse();
+  else shown.sort((a, b) => a.name.localeCompare(b.name));
   list.replaceChildren(...(shown.length ? shown.map((app) => el("a", { className: "app", href: `https://github.com/${app.repo}` },
     el("small", { textContent: app.category }), el("strong", { textContent: app.name }),
-    el("p", { textContent: app.description || "" }), el("code", { textContent: app.repo }))) : [el("p", { className: "empty", textContent: "No plugins match." })]));
+    el("p", { textContent: app.description || "" }), ...meta(app),
+    el("code", { textContent: app.repo }))) : [el("p", { className: "empty", textContent: "No plugins match." })]));
 }
 
 function renderChips() {
@@ -138,6 +179,12 @@ fetch(URL_, { cache: "no-store" }).then((r) => { if (!r.ok) throw Error(`HTTP ${
   render();
 }).catch((error) => list.replaceChildren(el("p", { className: "status", textContent: `Couldn't load the registry (${error.message}).` })));
 q.addEventListener("input", render);
+sort.addEventListener("change", render);
+fetch(STATS_URL, { cache: "no-store" }).then((r) => r.ok ? r.json() : null).then((data) => {
+  if (!data) return;
+  stats = data.plugins;
+  render();
+}).catch(() => {});
 </script>
 </body>
 </html>
