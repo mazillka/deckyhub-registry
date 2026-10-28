@@ -219,6 +219,10 @@ CI runs on every pull request, and weekly because a plugin's new release can bre
 
 DeckyHub's **Repositories** → **Custom Registries** accepts `owner/repo` for any repository laid out like this one (`registry/apps.json` on the default branch), or any HTTPS `.json` URL. Fork this repository as a starting point, or build a list in the [registry editor](https://mazillka.github.io/deckyhub-registry/editor.html) and host the file it exports. An added registry can add apps but never replace one from this list.
 
+## Disclaimer
+
+Not affiliated with Valve or the Decky Loader project. This list is collected from public GitHub repositories, and every plugin belongs to its own authors. Entries are checked for a working release, not reviewed for safety: DeckyHub doesn't own, endorse or take responsibility for any listed plugin. Plugins are installed at your own risk, so look at a plugin's repository before you install it.
+
 ## License
 
 [GPL-3.0](LICENSE.md). Each listed plugin belongs to its authors and has its own license.
