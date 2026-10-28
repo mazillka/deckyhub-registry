@@ -1,0 +1,36 @@
+name: Release index
+
+# Publishes releases.json (scripts/build_release_index.py) on the release-index branch,
+# which DeckyHub reads instead of asking GitHub's API once per listed repo. Only main
+# is protected, so this job can replace that branch's single commit each run.
+on:
+  push:
+    branches: [main]
+    paths: [registry/apps.json, scripts/build_release_index.py]
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-index
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: python3 scripts/build_release_index.py "$RUNNER_TEMP/releases.json"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      # One orphan commit, force-pushed, so the branch never grows a history.
+      - run: |
+          git checkout --orphan release-index
+          git rm -rfq .
+          cp "$RUNNER_TEMP/releases.json" releases.json
+          git add releases.json
+          git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qm "Release index"
+          git push -fq origin release-index
