@@ -92,6 +92,8 @@ DeckyHub downloads [`registry/apps.json`](registry/apps.json) from `main` every 
 | Ambideck | Customization | [michpalm/ambideck](https://github.com/michpalm/ambideck) |
 | Bluetooth Order | Utilities | [JediRhymeTrix/decky-bluetooth-order](https://github.com/JediRhymeTrix/decky-bluetooth-order) |
 | Legion Go 2 Companion | Performance | [Rayekkk/LegionGo2Companion](https://github.com/Rayekkk/LegionGo2Companion) |
+| Elemental DeckKeys | Utilities | [Koutasora/Elemental-DeckKeys](https://github.com/Koutasora/Elemental-DeckKeys) |
+| Decky Direct Updater | Utilities | [nukeador/deckyup](https://github.com/nukeador/deckyup) |
 
 ## Adding a plugin
 

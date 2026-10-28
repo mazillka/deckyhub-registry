@@ -605,6 +605,24 @@
       "category": "Performance",
       "detect": { "type": "decky-plugin", "names": ["Legion Go 2 Companion"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "elemental-deckkeys",
+      "name": "Elemental DeckKeys",
+      "description": "Controls the Deck's mouse and keyboard from a PC or phone browser, and sends files to it.",
+      "repo": "Koutasora/Elemental-DeckKeys",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Elemental DeckKeys"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-direct-updater",
+      "name": "Decky Direct Updater",
+      "description": "Finds Decky plugins on GitHub and keeps installed ones up to date.",
+      "repo": "nukeador/deckyup",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Direct Updater"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
