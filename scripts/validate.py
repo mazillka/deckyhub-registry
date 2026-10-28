@@ -124,11 +124,15 @@ class RangedFile(io.RawIOBase):
         return data
 
 
-def zip_plugin_name(asset: dict) -> str | None:
-    """The name Decky Loader reads from the ZIP's top-level plugin.json once installed."""
+def zip_plugin_manifest(asset: dict) -> dict | None:
+    """The ZIP's top-level plugin.json, which Decky Loader reads once it's installed."""
     with zipfile.ZipFile(RangedFile(asset["browser_download_url"], asset["size"])) as archive:
         manifests = sorted((name for name in archive.namelist() if name.endswith("plugin.json") and "node_modules/" not in name), key=lambda name: name.count("/"))
-        return json.loads(archive.read(manifests[0])).get("name") if manifests else None
+        return json.loads(archive.read(manifests[0])) if manifests else None
+
+
+def zip_plugin_name(asset: dict) -> str | None:
+    return (zip_plugin_manifest(asset) or {}).get("name")
 
 
 def github_problems(app: dict) -> tuple[list[str], list[str]]:
