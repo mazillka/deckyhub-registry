@@ -1,6 +1,6 @@
 name: Release index
 
-# Publishes releases.json and downloads.json (scripts/build_release_index.py) on the release-index branch,
+# Publishes releases.json and stats.json (scripts/build_release_index.py) on the release-index branch,
 # which DeckyHub reads instead of asking GitHub's API once per listed repo. Only main
 # is protected, so this job can replace that branch's single commit each run.
 on:
@@ -31,6 +31,6 @@ jobs:
           git checkout --orphan release-index
           git rm -rfq .
           cp "$RUNNER_TEMP"/index/*.json .
-          git add releases.json downloads.json
+          git add releases.json stats.json
           git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qm "Release index"
           git push -fq origin release-index
