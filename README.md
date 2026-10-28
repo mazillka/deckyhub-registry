@@ -54,6 +54,44 @@ DeckyHub downloads [`registry/apps.json`](registry/apps.json) from `main` every 
 | TitleDeck | Customization | [ValentineBSAA/TitleDeck](https://github.com/ValentineBSAA/TitleDeck) |
 | Game Theme Music | Customization | [ValentineBSAA/Game-Theme-Music](https://github.com/ValentineBSAA/Game-Theme-Music) |
 | ResonaDeck | Utilities | [ValentineBSAA/ResonaDeck](https://github.com/ValentineBSAA/ResonaDeck) |
+| Decky Metadata | Game Libraries | [beallio/Decky-Metadata](https://github.com/beallio/Decky-Metadata) |
+| Friendeck | Utilities | [panyiwei-home/Friendeck](https://github.com/panyiwei-home/Friendeck) |
+| Tender | Game Libraries | [danielcopper/romm-tender](https://github.com/danielcopper/romm-tender) |
+| VPN Deck | Utilities | [MrWaip/vpn-deck](https://github.com/MrWaip/vpn-deck) |
+| Hydra | Game Libraries | [hydralauncher/decky-hydra-launcher](https://github.com/hydralauncher/decky-hydra-launcher) |
+| Proton Pulse | Launch Options | [mdeguzis/decky-proton-pulse](https://github.com/mdeguzis/decky-proton-pulse) |
+| Steamcord | Utilities | [Necrosiak/Steamcord](https://github.com/Necrosiak/Steamcord) |
+| Decky Music | Utilities | [jinzhongjia/decky-music](https://github.com/jinzhongjia/decky-music) |
+| Voxtype | Utilities | [mimed95/decky-voxtype](https://github.com/mimed95/decky-voxtype) |
+| MQTT Status | Utilities | [jjuuzzii/decky-ha-mqtt-plugin](https://github.com/jjuuzzii/decky-ha-mqtt-plugin) |
+| Game Roulette | Game Libraries | [ayrshirepixels/game-roulette](https://github.com/ayrshirepixels/game-roulette) |
+| Prysm | Utilities | [hostsrc/decky-prysm](https://github.com/hostsrc/decky-prysm) |
+| Ally Center | Performance | [PixelAddictUnlocked/allycenter](https://github.com/PixelAddictUnlocked/allycenter) |
+| XG Mobile Manager | Utilities | [Kentronix57/Decky-Loader-XGMobile-Manager](https://github.com/Kentronix57/Decky-Loader-XGMobile-Manager) |
+| Ally Vibe Control | Controllers | [piyush-tyagi-13/ally-vibe-control](https://github.com/piyush-tyagi-13/ally-vibe-control) |
+| DeckyZone | Controllers | [DeckFilter/DeckyZone](https://github.com/DeckFilter/DeckyZone) |
+| RumbleDeck | Controllers | [dawidmpunkt/RumbleDeck](https://github.com/dawidmpunkt/RumbleDeck) |
+| Xone Driver Manager | Controllers | [SavageCore/xone-decky-plugin](https://github.com/SavageCore/xone-decky-plugin) |
+| DS5 Bridge | Controllers | [kungaa/DS5-Linux-Decky](https://github.com/kungaa/DS5-Linux-Decky) |
+| Steam Achievements | Customization | [AG69075/steamOS_plugin_achievements](https://github.com/AG69075/steamOS_plugin_achievements) |
+| Decky UI Restored | Customization | [beallio/Decky-UI-Restored](https://github.com/beallio/Decky-UI-Restored) |
+| BootNext | Utilities | [rsore/decky-bootnext](https://github.com/rsore/decky-bootnext) |
+| Insignia | Utilities | [stevensnoeijen/decky-insignia](https://github.com/stevensnoeijen/decky-insignia) |
+| RetroDECKY | Game Libraries | [Teppichseite/RetroDECKY](https://github.com/Teppichseite/RetroDECKY) |
+| RSM-Decky | Customization | [zany130/RSM-Decky](https://github.com/zany130/RSM-Decky) |
+| NordVPN | Utilities | [cwtechshiz/nordvpn-decky](https://github.com/cwtechshiz/nordvpn-decky) |
+| Decky Vibrance HDR | Customization | [Rayekkk/DeckyVibranceHDR](https://github.com/Rayekkk/DeckyVibranceHDR) |
+| Achievement Companion | Utilities | [parvagans/achievement-companion](https://github.com/parvagans/achievement-companion) |
+| DeckTools | Game Libraries | [lopesleo/DeckTools](https://github.com/lopesleo/DeckTools) |
+| Decky Controller | Controllers | [flexlug/decky-controller](https://github.com/flexlug/decky-controller) |
+| Deck Shelves | Customization | [santojon/Deck-Shelves](https://github.com/santojon/Deck-Shelves) |
+| Cheat Engine Launcher | Utilities | [LucifersCircle/Decky-Cheat-Engine-Launcher](https://github.com/LucifersCircle/Decky-Cheat-Engine-Launcher) |
+| Quick Tab | Customization | [moi952/decky-quick-tab](https://github.com/moi952/decky-quick-tab) |
+| CE Decky | Utilities | [goooroooX/CE-Decky](https://github.com/goooroooX/CE-Decky) |
+| GabeCubeAura | Customization | [Alyenax/GabeCubeAura](https://github.com/Alyenax/GabeCubeAura) |
+| Ambideck | Customization | [michpalm/ambideck](https://github.com/michpalm/ambideck) |
+| Bluetooth Order | Utilities | [JediRhymeTrix/decky-bluetooth-order](https://github.com/JediRhymeTrix/decky-bluetooth-order) |
+| Legion Go 2 Companion | Performance | [Rayekkk/LegionGo2Companion](https://github.com/Rayekkk/LegionGo2Companion) |
 
 ## Adding a plugin
 
