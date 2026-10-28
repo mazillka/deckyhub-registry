@@ -46,7 +46,7 @@ DeckyHub downloads [`registry/apps.json`](registry/apps.json) from `main` every 
 | PS5 Dashboard | Customization | [kromossomom-debug/decky-ps5-dashboard](https://github.com/kromossomom-debug/decky-ps5-dashboard) |
 | Xbox Dashboard | Customization | [kromossomom-debug/decky-xbox-dashboard](https://github.com/kromossomom-debug/decky-xbox-dashboard) |
 | Loadout | Performance | [cyruzin/loadout](https://github.com/cyruzin/loadout) |
-| DeckSMB | Utilities | [chillibeaver/DeckSMB](https://github.com/chillibeaver/DeckSMB) |
+| DeckSMB | Utilities | [bonorca/DeckSMB](https://github.com/bonorca/DeckSMB) |
 | Panel de Control | Performance | [Hooandee/panel-de-control](https://github.com/Hooandee/panel-de-control) |
 | DeckyShare | Utilities | [gillrajvir950-wq/deckyshare](https://github.com/gillrajvir950-wq/deckyshare) |
 | ThemeDeck | Customization | [BrenticusMaximus/ThemeDeck](https://github.com/BrenticusMaximus/ThemeDeck) |
@@ -64,7 +64,7 @@ Open a pull request that adds one entry to [`registry/apps.json`](registry/apps.
   "id": "decksmb",
   "name": "DeckSMB",
   "description": "Manages a Samba (SMB) file-sharing server on the Steam Deck.",
-  "repo": "chillibeaver/DeckSMB",
+  "repo": "bonorca/DeckSMB",
   "category": "Utilities",
   "detect": {
     "type": "decky-plugin",
