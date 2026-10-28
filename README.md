@@ -28,7 +28,7 @@ The same job writes `stats.json` for the [catalog](https://mazillka.github.io/de
 - **Downloads:** all-time, summed over the plugin's ZIPs (the entry's `asset` filter) across every release. GitHub counts every download of a file, whether from DeckyHub, Decky, a browser or a script, so these are downloads, not installs.
 - **Stars:** the repository's GitHub stars.
 - **Last updated:** when the release DeckyHub shows came out; over a year ago reads **No release in a year**.
-- **Runs as root:** that release's `plugin.json` asks Decky Loader to run it as root, with full access to the system.
+- **Runs as root:** that release's `plugin.json` has `"root"` in its `flags`, so Decky Loader runs the plugin's backend as the `root` user. It can then read and change anything on the Deck: system files, other plugins, your data. Plenty of plugins need that for real reasons (fan and power control, drivers, VPNs, system settings), so it isn't a red flag by itself, but a bug or a malicious update can do far more harm.
 
 ## Repositories
 

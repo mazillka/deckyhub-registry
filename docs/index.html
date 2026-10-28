@@ -49,9 +49,12 @@ input[type=search]:focus{outline:2px solid var(--accent2);outline-offset:1px}
 .app p{margin:6px 0 12px;color:var(--muted);font-size:.92rem;flex:1}
 .app code{font-size:.78rem;color:var(--dim);overflow-wrap:anywhere}
 .app .meta{display:flex;flex-wrap:wrap;gap:6px 12px;margin:0 0 10px;font-size:.78rem;color:var(--muted)}
-.app .badge{padding:1px 8px;border-radius:999px;border:1px solid currentColor;font-size:.72rem}
-.app .root{color:#ffb35c}
-.app .stale{color:#ff8a8a}
+.badge{padding:1px 8px;border-radius:999px;border:1px solid currentColor;font-size:.72rem;white-space:nowrap}
+.root{color:#ffb35c}
+.stale{color:#ff8a8a}
+.legend{margin:0 0 18px;color:var(--muted);font-size:.85rem;line-height:1.7}
+.legend .badge{margin-right:4px}
+.legend .stale{margin-left:8px}
 .tools select{align-self:flex-start;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit;font-size:.9rem}
 .empty,.status{color:var(--muted);padding:24px 0}
 .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
@@ -89,6 +92,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
 <select id="sort" aria-label="Sort plugins"><option value="az">A to Z</option><option value="downloads">Most downloaded</option><option value="stars">Most stars</option><option value="updated">Recently updated</option><option value="added">Recently added</option></select>
 </div>
+<p class="legend"><span class="badge root">Runs as root</span> The plugin asks Decky Loader to run its backend as the <code>root</code> user, which can read and change anything on the Deck, including system files, other plugins and your data. Many plugins need it for real reasons (fan or power control, drivers, VPNs, system settings), so it isn't a warning sign on its own. It does mean a bug or a malicious update can do far more harm, so install these only from authors you trust. <span class="badge stale">No release in a year</span> The newest release is over a year old, so it may not work with current SteamOS or Decky Loader.</p>
 <div class="catalog" id="list"><p class="status">Loading…</p></div>
 </div></section>
 
