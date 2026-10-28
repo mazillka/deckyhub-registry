@@ -365,6 +365,7 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Sort by HLTB | Game Libraries | [RedHatter/sort-by-hltb](https://github.com/RedHatter/sort-by-hltb) |
 | Codex Remote | Utilities | [VovasaeXranitel/decky-codex-remote](https://github.com/VovasaeXranitel/decky-codex-remote) |
 | Freedeck | Utilities | [YunGuiHe/freedeck-plugin-enhancements](https://github.com/YunGuiHe/freedeck-plugin-enhancements) |
+| Decky Sunshine | Utilities | [s0t7x/decky-sunshine](https://github.com/s0t7x/decky-sunshine) |
 
 ## Credits
 
