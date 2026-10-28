@@ -30,6 +30,8 @@ The same job writes `stats.json` for the [catalog](https://mazillka.github.io/de
 - **Last updated:** when the release DeckyHub shows came out; over a year ago reads **No release in a year**.
 - **Runs as root:** that release's `plugin.json` has `"root"` in its `flags`, so Decky Loader runs the plugin's backend as the `root` user. It can then read and change anything on the Deck: system files, other plugins, your data. Plenty of plugins need that for real reasons (fan and power control, drivers, VPNs, system settings), so it isn't a red flag by itself, but a bug or a malicious update can do far more harm.
 
+New plugins are found automatically too. Every day the [discover workflow](.github/workflows/discover.yml) runs [`scripts/discover.py`](scripts/discover.py) over [Decky Plugins Explorer](https://safetzahirovic.github.io/decky-plugins-explorer/)'s nightly list of every public repository with a Decky `plugin.json`. Plugins that aren't listed yet and pass the same checks as `validate.py` (and have a stable release) are opened as a pull request, at most 25 at a time. Nothing is merged without review.
+
 ## Repositories
 
 | Tool | Category | Repository |

@@ -1,0 +1,48 @@
+name: Discover
+
+# Daily: scripts/discover.py adds plugins from decky-plugins-explorer that pass
+# validate.py's checks, and this opens a pull request with them for review. Never
+# merges. Skips the run while an earlier discover PR is still open.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 6 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+  # To start CI on the new branch: a PR opened with this token doesn't trigger it.
+  actions: write
+
+concurrency:
+  group: discover
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: open
+        run: echo "count=$(gh pr list --state open --search 'head:discover/' --json number --jq length)" >> "$GITHUB_OUTPUT"
+      - if: steps.open.outputs.count == '0'
+        run: python3 scripts/discover.py --limit 25 | tee "$RUNNER_TEMP/found.txt"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - if: steps.open.outputs.count == '0'
+        run: |
+          git diff --quiet && { echo "Nothing new."; exit 0; }
+          branch="discover/$(date -u +%Y-%m-%d)"
+          git switch -c "$branch"
+          git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qam "feat: add plugins found by decky-plugins-explorer"
+          git push -q origin "$branch"
+          {
+            echo "Plugins found by [decky-plugins-explorer](https://github.com/SafetZahirovic/decky-plugins-explorer) that pass \`validate.py\`'s checks and have a stable release. Opened by the discover workflow, which never merges."
+            echo
+            echo "**Review before merging:** each one's category (picked by keyword) and description (from its plugin.json), and anything that looks like a fork, a test build or not really a plugin. Delete an entry and its README row to drop it."
+            echo
+            tail -n +2 "$RUNNER_TEMP/found.txt"
+          } > "$RUNNER_TEMP/body.md"
+          gh pr create --base main --head "$branch" --title "feat: add plugins found by decky-plugins-explorer ($(date -u +%Y-%m-%d))" --body-file "$RUNNER_TEMP/body.md"
+          gh workflow run ci.yml --ref "$branch"
