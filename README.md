@@ -96,6 +96,65 @@ DeckyHub also reads every listed plugin's recent releases from one file, so it d
 | Legion Go 2 Companion | Performance | [Rayekkk/LegionGo2Companion](https://github.com/Rayekkk/LegionGo2Companion) |
 | Elemental DeckKeys | Utilities | [Koutasora/Elemental-DeckKeys](https://github.com/Koutasora/Elemental-DeckKeys) |
 | Decky Direct Updater | Utilities | [nukeador/deckyup](https://github.com/nukeador/deckyup) |
+| AlarMe | Utilities | [lemossilva/alarme-decky-plugin](https://github.com/lemossilva/alarme-decky-plugin) |
+| AutoFlatpaks | Utilities | [jurassicplayer/decky-autoflatpaks](https://github.com/jurassicplayer/decky-autoflatpaks) |
+| AutoSuspend | Performance | [jurassicplayer/decky-autosuspend](https://github.com/jurassicplayer/decky-autosuspend) |
+| Battery Tracker | Performance | [safijari/steam-deck-battery-tracker](https://github.com/safijari/steam-deck-battery-tracker) |
+| Better Keyboard | Utilities | [chenx-dust/BetterKeyboard](https://github.com/chenx-dust/BetterKeyboard) |
+| Bluetooth | Utilities | [Outpox/Bluetooth](https://github.com/Outpox/Bluetooth) |
+| CheatDeck | Launch Options | [SheffeyG/CheatDeck](https://github.com/SheffeyG/CheatDeck) |
+| Crosshair | Customization | [xXJSONDeruloXx/crosshair-plugin](https://github.com/xXJSONDeruloXx/crosshair-plugin) |
+| Deck Progress Tracker | Game Libraries | [maroun2/deck-progress-tracker](https://github.com/maroun2/deck-progress-tracker) |
+| Deck Settings | Game Libraries | [DeckSettings/decky-game-settings](https://github.com/DeckSettings/decky-game-settings) |
+| DeckPass | Utilities | [Teppichseite/DeckPass](https://github.com/Teppichseite/DeckPass) |
+| DeckRoulette | Game Libraries | [davocarli/deck-roulette](https://github.com/davocarli/deck-roulette) |
+| Decky Clash | Utilities | [chenx-dust/DeckyClash](https://github.com/chenx-dust/DeckyClash) |
+| Decky DoT DNS | Utilities | [ohaiibuzzle/decky-dot-dns](https://github.com/ohaiibuzzle/decky-dot-dns) |
+| Decky Localsend | Utilities | [MoYoez/Decky-LocalSend](https://github.com/MoYoez/Decky-LocalSend) |
+| Decky Ludusavi | Utilities | [GedasFX/decky-ludusavi](https://github.com/GedasFX/decky-ludusavi) |
+| Decky Translator | Utilities | [cat-in-a-box/Decky-Translator](https://github.com/cat-in-a-box/Decky-Translator) |
+| Decky Zerotier | Utilities | [hyacz/decky-zerotier](https://github.com/hyacz/decky-zerotier) |
+| Decky-Clipper | Utilities | [Managor/Decky-Clipper](https://github.com/Managor/Decky-Clipper) |
+| Decky-SpoofDPI | Utilities | [ohaiibuzzle/decky-spoof-dpi](https://github.com/ohaiibuzzle/decky-spoof-dpi) |
+| DeckyClocker | Utilities | [Jaccident/DeckyClocker](https://github.com/Jaccident/DeckyClocker) |
+| DeckySpy | Utilities | [Seraphli/decky-spy](https://github.com/Seraphli/decky-spy) |
+| Dimmer Deck | Customization | [chenx-dust/DimmerDeck](https://github.com/chenx-dust/DimmerDeck) |
+| Docky | Utilities | [datbird/docky](https://github.com/datbird/docky) |
+| Download All | Utilities | [bentemple/decky-download-all](https://github.com/bentemple/decky-download-all) |
+| EmuDecky | Game Libraries | [EmuDeck/EmuDecky](https://github.com/EmuDeck/EmuDecky) |
+| Game Sync | Utilities | [AkazaRenn/SDH-GameSync](https://github.com/AkazaRenn/SDH-GameSync) |
+| Games Prefix Manager | Utilities | [Saad-Alareqi/GamesPrefixManager](https://github.com/Saad-Alareqi/GamesPrefixManager) |
+| HLTB for Deck | Game Libraries | [morwy/hltb-for-deck](https://github.com/morwy/hltb-for-deck) |
+| HueSync | Customization | [honjow/HueSync](https://github.com/honjow/HueSync) |
+| IPv6 Enabler Plugin | Utilities | [spmzt/decky-ipv6](https://github.com/spmzt/decky-ipv6) |
+| IsThereAnyDeal for Deck | Game Libraries | [JtdeGraaf/IsThereAnyDeal-DeckyPlugin](https://github.com/JtdeGraaf/IsThereAnyDeal-DeckyPlugin) |
+| MagicBlack | Customization | [steam3d/MagicBlackDecky](https://github.com/steam3d/MagicBlackDecky) |
+| MagicPods | Utilities | [steam3d/MagicPodsDecky](https://github.com/steam3d/MagicPodsDecky) |
+| MoonDeck | Game Libraries | [FrogTheFrog/moondeck](https://github.com/FrogTheFrog/moondeck) |
+| Muon | Utilities | [wtlnetwork/muon](https://github.com/wtlnetwork/muon) |
+| MuraDeck | Customization | [Moonveil-Kanata/MuraDeck](https://github.com/Moonveil-Kanata/MuraDeck) |
+| MuteOnSleep | Utilities | [genc-v/mute-on-sleep](https://github.com/genc-v/mute-on-sleep) |
+| Output Manager | Utilities | [joeatethebeans/OutputManager](https://github.com/joeatethebeans/OutputManager) |
+| Pause Games | Performance | [wynn1212/SDH-PauseGames](https://github.com/wynn1212/SDH-PauseGames) |
+| PlayCount | Game Libraries | [itsOwen/playcount-decky](https://github.com/itsOwen/playcount-decky) |
+| PlayTime | Game Libraries | [0u73r-h34v3n/SDH-PlayTime](https://github.com/0u73r-h34v3n/SDH-PlayTime) |
+| Quick User Switcher | Utilities | [nikitaclicks/decky-multi-user](https://github.com/nikitaclicks/decky-multi-user) |
+| Reroll | Utilities | [kayon/decky-reroll](https://github.com/kayon/decky-reroll) |
+| ScreenSaver | Utilities | [xfangfang/DeckyInhibitScreenSaver](https://github.com/xfangfang/DeckyInhibitScreenSaver) |
+| ShadowDeck | Utilities | [tikh-iv/ShadowDeck](https://github.com/tikh-iv/ShadowDeck) |
+| Steam Status | Utilities | [bschelst/steamstatus-decky](https://github.com/bschelst/steamstatus-decky) |
+| SuggestMe | Game Libraries | [lemossilva/suggestme-decky-plugin](https://github.com/lemossilva/suggestme-decky-plugin) |
+| TabMaster | Customization | [Tormak9970/TabMaster](https://github.com/Tormak9970/TabMaster) |
+| TS3 QuickAccess | Utilities | [ILadis/ts3-qs4sd](https://github.com/ILadis/ts3-qs4sd) |
+| TunnelDeck | Utilities | [bkohler616/TunnelDeck](https://github.com/bkohler616/TunnelDeck) |
+| VARTA | Game Libraries | [HARd/varta-decky](https://github.com/HARd/varta-decky) |
+| Virtual Surround Sound | Utilities | [DeckSettings/decky-virtual-surround-sound](https://github.com/DeckSettings/decky-virtual-surround-sound) |
+| Volume Mixer | Utilities | [isiah-lloyd/VolumeMixer-decky](https://github.com/isiah-lloyd/VolumeMixer-decky) |
+| XR Gaming | Utilities | [wheaney/decky-XRGaming](https://github.com/wheaney/decky-XRGaming) |
+
+## Credits
+
+Many entries were found through [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) by [beallio](https://github.com/beallio), a community catalog that also publishes a [security audit](https://decky-extended-plugins.beallio.com/audit) of the plugins it lists. Each entry here was still checked against its own repository's releases before being added.
 
 ## Adding a plugin
 

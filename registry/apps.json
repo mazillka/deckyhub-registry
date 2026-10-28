@@ -623,6 +623,501 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decky Direct Updater"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "alarme-decky-plugin",
+      "name": "AlarMe",
+      "description": "Alarms and timers with snooze, repeats and a Pomodoro mode.",
+      "repo": "lemossilva/alarme-decky-plugin",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["AlarMe"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-autoflatpaks",
+      "name": "AutoFlatpaks",
+      "description": "Manages, notifies about and auto-updates Flatpaks.",
+      "repo": "jurassicplayer/decky-autoflatpaks",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["AutoFlatpaks"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-autosuspend",
+      "name": "AutoSuspend",
+      "description": "Suspends the Deck automatically when the battery runs low.",
+      "repo": "jurassicplayer/decky-autosuspend",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["AutoSuspend"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steam-deck-battery-tracker",
+      "name": "Battery Tracker",
+      "description": "Tracks battery usage over time.",
+      "repo": "safijari/steam-deck-battery-tracker",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Battery Tracker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "betterkeyboard",
+      "name": "Better Keyboard",
+      "description": "Improves Gaming Mode for physical keyboard users.",
+      "repo": "chenx-dust/BetterKeyboard",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Better Keyboard"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "bluetooth",
+      "name": "Bluetooth",
+      "description": "Quickly connects to already paired Bluetooth devices.",
+      "repo": "Outpox/Bluetooth",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Bluetooth"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "cheatdeck",
+      "name": "CheatDeck",
+      "description": "Runs games with cheats and trainers through launch options.",
+      "repo": "SheffeyG/CheatDeck",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["CheatDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "crosshair-plugin",
+      "name": "Crosshair",
+      "description": "Turns the performance overlay into a customizable crosshair.",
+      "repo": "xXJSONDeruloXx/crosshair-plugin",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Crosshair"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deck-progress-tracker",
+      "name": "Deck Progress Tracker",
+      "description": "Tags games by achievements, playtime and completion, with badges in the library.",
+      "repo": "maroun2/deck-progress-tracker",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Deck Progress Tracker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-game-settings",
+      "name": "Deck Settings",
+      "description": "Shows community game settings and compatibility reports.",
+      "repo": "DeckSettings/decky-game-settings",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Deck Settings"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckpass",
+      "name": "DeckPass",
+      "description": "Reads passwords from a KeePassXC database in Gaming Mode.",
+      "repo": "Teppichseite/DeckPass",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckPass"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deck-roulette",
+      "name": "DeckRoulette",
+      "description": "Jumps to a random game from your library or a collection.",
+      "repo": "davocarli/deck-roulette",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["DeckRoulette"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyclash",
+      "name": "Decky Clash",
+      "description": "Lightweight Clash/Mihomo proxy client.",
+      "repo": "chenx-dust/DeckyClash",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Clash"] },
+      "asset": { "include": ["DeckyClash.zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-dot-dns",
+      "name": "Decky DoT DNS",
+      "description": "Sets DNS-over-TLS through systemd-resolved.",
+      "repo": "ohaiibuzzle/decky-dot-dns",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky DoT DNS"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-localsend",
+      "name": "Decky Localsend",
+      "description": "LocalSend in Gaming Mode: send files, text and screenshots between devices.",
+      "repo": "MoYoez/Decky-LocalSend",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Localsend"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-ludusavi",
+      "name": "Decky Ludusavi",
+      "description": "Backs up and restores game saves with Ludusavi.",
+      "repo": "GedasFX/decky-ludusavi",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Ludusavi"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-translator",
+      "name": "Decky Translator",
+      "description": "Translates text on screen into your language.",
+      "repo": "cat-in-a-box/Decky-Translator",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Translator"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-zerotier",
+      "name": "Decky Zerotier",
+      "description": "Controls ZeroTier networks from Gaming Mode.",
+      "repo": "hyacz/decky-zerotier",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Zerotier"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-clipper",
+      "name": "Decky-Clipper",
+      "description": "Records the screen, even when no game is running.",
+      "repo": "Managor/Decky-Clipper",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky-Clipper"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-spoof-dpi",
+      "name": "Decky-SpoofDPI",
+      "description": "Anti-censorship wrapper around SpoofDPI.",
+      "repo": "ohaiibuzzle/decky-spoof-dpi",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky-SpoofDPI"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyclocker",
+      "name": "DeckyClocker",
+      "description": "Sets the system date and time by hand.",
+      "repo": "Jaccident/DeckyClocker",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckyClocker"] },
+      "asset": { "include": ["release"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-spy",
+      "name": "DeckySpy",
+      "description": "Shows system information.",
+      "repo": "Seraphli/decky-spy",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckySpy"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "dimmerdeck",
+      "name": "Dimmer Deck",
+      "description": "Dims the screen below the normal minimum brightness.",
+      "repo": "chenx-dust/DimmerDeck",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Dimmer Deck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "docky",
+      "name": "Docky",
+      "description": "Automates tasks on triggers like docking, AC power or controllers.",
+      "repo": "datbird/docky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Docky"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-download-all",
+      "name": "Download All",
+      "description": "Starts every scheduled download right away.",
+      "repo": "bentemple/decky-download-all",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Download All"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "emudecky",
+      "name": "EmuDecky",
+      "description": "Official EmuDeck companion plugin.",
+      "repo": "EmuDeck/EmuDecky",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["EmuDecky"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "sdh-gamesync",
+      "name": "Game Sync",
+      "description": "Cloud saves and mods for games, a fork of Decky Cloud Save.",
+      "repo": "AkazaRenn/SDH-GameSync",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Game Sync"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "gamesprefixmanager",
+      "name": "Games Prefix Manager",
+      "description": "Manages Proton prefixes: delete orphans and back them up.",
+      "repo": "Saad-Alareqi/GamesPrefixManager",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Games Prefix Manager"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "hltb-for-deck",
+      "name": "HLTB for Deck",
+      "description": "Shows How Long To Beat times on game pages.",
+      "repo": "morwy/hltb-for-deck",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["HLTB for Deck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "huesync",
+      "name": "HueSync",
+      "description": "LED control for handhelds other than the Steam Deck.",
+      "repo": "honjow/HueSync",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["HueSync"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-ipv6",
+      "name": "IPv6 Enabler Plugin",
+      "description": "Turns IPv6 on or off.",
+      "repo": "spmzt/decky-ipv6",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["IPv6 Enabler Plugin"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "isthereanydeal-deckyplugin",
+      "name": "IsThereAnyDeal for Deck",
+      "description": "Shows IsThereAnyDeal prices on store pages.",
+      "repo": "JtdeGraaf/IsThereAnyDeal-DeckyPlugin",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["IsThereAnyDeal for Deck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "magicblackdecky",
+      "name": "MagicBlack",
+      "description": "Blacks out the OLED screen as if it were off.",
+      "repo": "steam3d/MagicBlackDecky",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["MagicBlack"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "magicpodsdecky",
+      "name": "MagicPods",
+      "description": "Battery and noise-cancelling controls for AirPods, Beats and Galaxy Buds.",
+      "repo": "steam3d/MagicPodsDecky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["MagicPods"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "moondeck",
+      "name": "MoonDeck",
+      "description": "Streams your Steam games through Moonlight without adding them to Sunshine.",
+      "repo": "FrogTheFrog/moondeck",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["MoonDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "muon",
+      "name": "Muon",
+      "description": "Ad-hoc Wi-Fi networking for local multiplayer.",
+      "repo": "wtlnetwork/muon",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Muon"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "muradeck",
+      "name": "MuraDeck",
+      "description": "Mura and gamma correction for affected Samsung OLED panels.",
+      "repo": "Moonveil-Kanata/MuraDeck",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["MuraDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "mute-on-sleep",
+      "name": "MuteOnSleep",
+      "description": "Mutes the volume when the Deck wakes from sleep.",
+      "repo": "genc-v/mute-on-sleep",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["MuteOnSleep"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "outputmanager",
+      "name": "Output Manager",
+      "description": "Switches display and audio outputs from Quick Access.",
+      "repo": "joeatethebeans/OutputManager",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Output Manager"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "sdh-pausegames",
+      "name": "Pause Games",
+      "description": "Pauses and resumes games to free up resources.",
+      "repo": "wynn1212/SDH-PauseGames",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Pause Games"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "playcount-decky",
+      "name": "PlayCount",
+      "description": "Shows current player counts for your Steam games.",
+      "repo": "itsOwen/playcount-decky",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["PlayCount"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "sdh-playtime",
+      "name": "PlayTime",
+      "description": "Tracks time played in Steam and non-Steam games, with reports.",
+      "repo": "0u73r-h34v3n/SDH-PlayTime",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["PlayTime"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-multi-user",
+      "name": "Quick User Switcher",
+      "description": "Switches between Steam accounts quickly.",
+      "repo": "nikitaclicks/decky-multi-user",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Quick User Switcher"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-reroll",
+      "name": "Reroll",
+      "description": "Memory scanner for offline, single-player games.",
+      "repo": "kayon/decky-reroll",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Reroll"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyinhibitscreensaver",
+      "name": "ScreenSaver",
+      "description": "Stops the screen saver during video playback.",
+      "repo": "xfangfang/DeckyInhibitScreenSaver",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["ScreenSaver"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "shadowdeck",
+      "name": "ShadowDeck",
+      "description": "Connects to Shadowsocks proxies.",
+      "repo": "tikh-iv/ShadowDeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["ShadowDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamstatus-decky",
+      "name": "Steam Status",
+      "description": "Shows Steam service status and player counts.",
+      "repo": "bschelst/steamstatus-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Steam Status"] },
+      "asset": { "include": ["steamstatus-decky.zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "suggestme-decky-plugin",
+      "name": "SuggestMe",
+      "description": "Suggests what to play from your Steam library.",
+      "repo": "lemossilva/suggestme-decky-plugin",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["SuggestMe"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "tabmaster",
+      "name": "TabMaster",
+      "description": "Customize, add and hide Steam library tabs.",
+      "repo": "Tormak9970/TabMaster",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["TabMaster"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ts3-qs4sd",
+      "name": "TS3 QuickAccess",
+      "description": "TeamSpeak 3 client in Quick Access.",
+      "repo": "ILadis/ts3-qs4sd",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["TS3 QuickAccess"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "tunneldeck",
+      "name": "TunnelDeck",
+      "description": "VPN and OpenVPN support in Gaming Mode.",
+      "repo": "bkohler616/TunnelDeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["TunnelDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "varta-decky",
+      "name": "VARTA",
+      "description": "Marks Ukrainian and hostile game developers in the Steam UI.",
+      "repo": "HARd/varta-decky",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["VARTA"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-virtual-surround-sound",
+      "name": "Virtual Surround Sound",
+      "description": "Turns 7.1 surround into binaural audio for headphones.",
+      "repo": "DeckSettings/decky-virtual-surround-sound",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Virtual Surround Sound"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "volumemixer-decky",
+      "name": "Volume Mixer",
+      "description": "Per-app and Bluetooth source volume control.",
+      "repo": "isiah-lloyd/VolumeMixer-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Volume Mixer"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-xrgaming",
+      "name": "XR Gaming",
+      "description": "Virtual display, VR-Lite and Follow modes for XR glasses.",
+      "repo": "wheaney/decky-XRGaming",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["XR Gaming"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
