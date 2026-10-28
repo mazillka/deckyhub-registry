@@ -47,6 +47,10 @@ DeckyHub downloads [`registry/apps.json`](registry/apps.json) from `main` every 
 | Xbox Dashboard | Customization | [kromossomom-debug/decky-xbox-dashboard](https://github.com/kromossomom-debug/decky-xbox-dashboard) |
 | Loadout | Performance | [cyruzin/loadout](https://github.com/cyruzin/loadout) |
 | DeckSMB | Utilities | [chillibeaver/DeckSMB](https://github.com/chillibeaver/DeckSMB) |
+| Panel de Control | Performance | [Hooandee/panel-de-control](https://github.com/Hooandee/panel-de-control) |
+| DeckyShare | Utilities | [gillrajvir950-wq/deckyshare](https://github.com/gillrajvir950-wq/deckyshare) |
+| ThemeDeck | Customization | [BrenticusMaximus/ThemeDeck](https://github.com/BrenticusMaximus/ThemeDeck) |
+| Jedi ReFrameShade4All | Frame Generation | [sauliiin/Jedi-ReFrameShade4All](https://github.com/sauliiin/Jedi-ReFrameShade4All) |
 
 ## Adding a plugin
 
