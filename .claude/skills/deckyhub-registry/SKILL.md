@@ -34,6 +34,14 @@ The plugin repo's checkout sits next to this one: `../deckyhub-plugin`. Clone it
    Always check that every repo link is still valid, not just the entries you touched: `validate.py` checks every entry's `repo` against GitHub. Treat a renamed repo as a fix: update `repo` and every README link to the new `owner/name` (`grep -rl old/name` across the checkout) in its own PR. Treat an archived or missing repo as a question for the user: keep the entry or remove it.
 3. Commit, push and open the PR; `main` only accepts squash-merged PRs whose `validate` check passed. Its CI runs both checks. Merge it.
 
+## Daily discovery PRs
+
+`.github/workflows/discover.yml` runs `scripts/discover.py` every day at 06:41 UTC. It reads Decky Plugins Explorer and Decky Extended Plugins, checks each repo they list that `apps.json` doesn't (a Decky plugin with a release ZIP whose `plugin.json` name is free), adds the ones that pass, and opens a `discover/<date>` PR, dispatching CI on it. Bots can't approve their own PRs, so each one waits for the user's review and approval: check the new entries like any other (name, category, description) before they approve. Never merge one without the user's OK. Try it locally with `python scripts/discover.py --dry-run --limit 5`.
+
+## Release index and stats
+
+`.github/workflows/release-index.yml` runs `scripts/build_release_index.py` every 30 minutes (and on pushes that change `apps.json` or the script). It force-pushes two files to the orphan `release-index` branch: `releases.json` (each repo's newest releases, which DeckyHub reads instead of calling the GitHub API per repo) and `stats.json` (downloads, stars, last release date and runs-as-root per repo, shown on Discover and the catalog page). A repo missing from them just falls back to the API in DeckyHub, so a failed run is worth fixing but breaks nothing. Never push to `release-index` by hand.
+
 ## The weekly CI run failed
 
 CI runs `scripts/validate.py` weekly, because a plugin's new release can break its entry (renamed ZIP, a second ZIP, a changed `plugin.json` name) with no change here. Fix the entry in a PR.
