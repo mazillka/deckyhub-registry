@@ -30,7 +30,7 @@ The same job writes `stats.json` for the [catalog](https://mazillka.github.io/de
 - **Last updated:** when the release DeckyHub shows came out; over a year ago reads **No release in a year**.
 - **Runs as root:** that release's `plugin.json` has `"root"` in its `flags`, so Decky Loader runs the plugin's backend as the `root` user. It can then read and change anything on the Deck: system files, other plugins, your data. Plenty of plugins need that for real reasons (fan and power control, drivers, VPNs, system settings), so it isn't a red flag by itself, but a bug or a malicious update can do far more harm.
 
-New plugins are found automatically too. Every day the [discover workflow](.github/workflows/discover.yml) runs [`scripts/discover.py`](scripts/discover.py) over [Decky Plugins Explorer](https://safetzahirovic.github.io/decky-plugins-explorer/)'s nightly list of every public repository with a Decky `plugin.json`. Plugins that aren't listed yet and pass the same checks as `validate.py` (and have a stable release) are opened as a pull request, at most 25 at a time. Nothing is merged without review.
+New plugins are found automatically too. Every day the [discover workflow](.github/workflows/discover.yml) runs [`scripts/discover.py`](scripts/discover.py) over two community catalogs: [Decky Plugins Explorer](https://safetzahirovic.github.io/decky-plugins-explorer/)'s nightly list of every public repository with a Decky `plugin.json`, and [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) (the Decky store plus community plugins). Plugins that aren't listed yet and pass the same checks as `validate.py` (and have a stable release) are opened as a pull request, at most 25 at a time. Nothing is merged without review.
 
 ## Repositories
 
@@ -366,14 +366,14 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Codex Remote | Utilities | [VovasaeXranitel/decky-codex-remote](https://github.com/VovasaeXranitel/decky-codex-remote) |
 | Freedeck | Utilities | [YunGuiHe/freedeck-plugin-enhancements](https://github.com/YunGuiHe/freedeck-plugin-enhancements) |
 
-## Credits
+## Where the plugins come from
 
-Many entries were found through two community catalogs:
+Plugins are suggested by people (issues and pull requests here) or found through two community catalogs, which the [discover workflow](.github/workflows/discover.yml) checks every day:
 
 - [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) by [beallio](https://github.com/beallio), which also publishes a [security audit](https://decky-extended-plugins.beallio.com/audit) of the plugins it lists.
 - [Decky Plugins Explorer](https://safetzahirovic.github.io/decky-plugins-explorer/) by [SafetZahirovic](https://github.com/SafetZahirovic), which finds every public GitHub repository with a Decky `plugin.json` every night ([MIT](https://github.com/SafetZahirovic/decky-plugins-explorer/blob/main/LICENSE)).
 
-Each entry here was still checked against its own repository's releases before being added.
+However a plugin was found, it's only added once `validate.py` passes for it (a stable release, exactly one plugin ZIP, a matching `plugin.json` name) and a person has reviewed the pull request. Thanks to both catalogs' authors for making their data available.
 
 ## Adding a plugin
 
