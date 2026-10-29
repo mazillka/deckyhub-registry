@@ -2963,6 +2963,15 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Freedeck"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-sunshine",
+      "name": "Decky Sunshine",
+      "description": "Stream your Steam Deck screen to another device with minimal effort.",
+      "repo": "s0t7x/decky-sunshine",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Sunshine"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
