@@ -23,6 +23,7 @@ import json
 import os
 import sys
 import time
+import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -39,21 +40,34 @@ RELEASE_FIELDS = "tagName name isDraft isPrerelease publishedAt url description 
 
 
 def graphql(query: str) -> tuple[dict, set[str]]:
-    """One GraphQL query, retried once (GitHub answers a slow one with a 502), and the
+    """One GraphQL query, retried (GitHub answers a slow one with a 502, and a burst
+    with a 403 secondary rate limit that says how long to wait), and the
     top-level aliases whose answer is incomplete: a repo that's gone, or one GitHub cut
     short (RESOURCE_LIMITS_EXCEEDED), comes back null or partly null with an error."""
     request = urllib.request.Request(f"{API}/graphql", json.dumps({"query": query}).encode(), {"Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}", "User-Agent": "deckyhub-registry-index"})
-    for attempt in (1, 2):
+    for attempt in (1, 2, 3):
+        wait = 5
         try:
             with urllib.request.urlopen(request, timeout=60) as response:
                 body = json.loads(response.read())
             if body.get("data") is None:
                 raise RuntimeError(body.get("errors"))
             return body["data"], {str(error["path"][0]) for error in body.get("errors") or [] if error.get("path")}
-        except Exception:
-            if attempt == 2:
+        except urllib.error.HTTPError as error:
+            headers = {key: error.headers.get(key) for key in ("retry-after", "x-ratelimit-remaining", "x-ratelimit-reset") if error.headers.get(key)}
+            print(f"warning: GraphQL HTTP {error.code} {headers}: {error.read()[:300]!r}", file=sys.stderr)
+            if attempt == 3:
                 raise
-            time.sleep(5)
+            if error.headers.get("retry-after"):
+                wait = int(error.headers["retry-after"])
+            elif error.headers.get("x-ratelimit-remaining") == "0":
+                wait = max(0, int(error.headers["x-ratelimit-reset"]) - int(time.time())) + 1
+            elif error.code == 403:
+                wait = 60
+        except Exception:
+            if attempt == 3:
+                raise
+        time.sleep(min(wait, 600))
 
 
 def rest_shape(node: dict) -> dict:
@@ -172,6 +186,10 @@ def main() -> int:
     apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
     entries = apps + EXTRA_ENTRIES
     github = fetch_github(list({entry["repo"].casefold(): entry["repo"] for entry in entries}.values()))
+    if len(github) < len(entries) / 2:
+        # Something's wrong on GitHub's side: keep the published index rather than replace it with a thin one.
+        print(f"error: only {len(github)} of {len(entries)} repos answered", file=sys.stderr)
+        return 1
     index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"]))
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
