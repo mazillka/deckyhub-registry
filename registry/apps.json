@@ -2972,6 +2972,51 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decky Sunshine"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "fusionhud",
+      "name": "FusionHUD",
+      "description": "Gives Steam's performance overlay the FusionHUD look: levels 1-4 become Minimal, Pill, Full and Mega.",
+      "repo": "The412Banner/FusionHUD",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["FusionHUD"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "xreal-linux",
+      "name": "XREAL",
+      "description": "Control XREAL glasses from game mode: head mouse or SteamVR, with a status readout and runtime install/update.",
+      "repo": "kevindurb/xreal-linux",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["XREAL"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "sdh-ludusavi",
+      "name": "SDH-Ludusavi",
+      "description": "Decky Loader controls for Ludusavi save backups and restores.",
+      "repo": "beallio/SDH-Ludusavi",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SDH-Ludusavi"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-trailer-hero",
+      "name": "Trailer Hero",
+      "description": "Plays the game's trailer on the game page and behind the Home game selection, and can show the game's logo instead of its name.",
+      "repo": "Ak4ai/decky-trailer-hero",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Trailer Hero"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-projetos",
+      "name": "PS5 Dashboard",
+      "description": "Lista seus jogos instalados, faz backup dos saves para o microSD e restaura quando precisar.",
+      "repo": "hayahsc3/decky-projetos",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["PS5 Dashboard"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
