@@ -28,20 +28,24 @@ jobs:
       - id: open
         run: echo "count=$(gh pr list --state open --search 'head:discover/' --json number --jq length)" >> "$GITHUB_OUTPUT"
       - if: steps.open.outputs.count == '0'
-        run: python3 scripts/discover.py --limit 25 | tee "$RUNNER_TEMP/found.txt"
+        # Plugins listed in closed discovery PRs that aren't in apps.json were turned down.
+        run: |
+          gh pr list --state closed --search 'head:discover/' --limit 200 --json body --jq '.[].body' > "$RUNNER_TEMP/closed.txt"
+          python3 scripts/discover.py --limit 25 --ignore "$RUNNER_TEMP/closed.txt" | tee "$RUNNER_TEMP/found.txt"
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - if: steps.open.outputs.count == '0'
         run: |
           git diff --quiet && { echo "Nothing new."; exit 0; }
-          branch="discover/$(date -u +%Y-%m-%d)"
+          # With the time, so a rerun the same day doesn't clash with a closed PR's branch.
+          branch="discover/$(date -u +%Y-%m-%d-%H%M)"
           git switch -c "$branch"
           git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qam "feat: add plugins found by community catalogs"
           git push -q origin "$branch"
           {
             echo "Plugins found by [Decky Plugins Explorer](https://github.com/SafetZahirovic/decky-plugins-explorer) and [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) that pass \`validate.py\`'s checks and have a stable release. Opened by the discover workflow, which never merges."
             echo
-            echo "**Review before merging:** each one's category (picked by keyword) and description (from its plugin.json), and anything that looks like a fork, a test build or not really a plugin. Delete an entry and its README row to drop it."
+            echo "**Review before merging:** each one's category (picked by keyword) and description (from its plugin.json), and anything that looks like a fork, a test build or not really a plugin. Delete an entry and its README row to drop it; plugins dropped that way, or by closing this PR, aren't proposed again."
             echo
             tail -n +2 "$RUNNER_TEMP/found.txt"
           } > "$RUNNER_TEMP/body.md"

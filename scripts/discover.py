@@ -1,6 +1,6 @@
 """Find Decky plugins that aren't listed yet and add the ones that pass validation.
 
-    GITHUB_TOKEN=$(gh auth token) python scripts/discover.py [--limit N] [--dry-run]
+    GITHUB_TOKEN=$(gh auth token) python scripts/discover.py [--limit N] [--dry-run] [--ignore FILE]
 
 The candidates come from two community catalogs:
 - Decky Plugins Explorer (https://github.com/SafetZahirovic/decky-plugins-explorer,
@@ -12,6 +12,10 @@ Each candidate is checked the way validate.py checks an entry (its own releases,
 plugin ZIP, the ZIP's plugin.json name), and needs a stable release. Passing ones are
 appended to registry/apps.json and the README table; the discover workflow then opens
 a pull request, so a person still reviews every addition before it's merged.
+
+--ignore names a text file whose GitHub repository links are skipped: the workflow
+passes the bodies of closed discovery PRs, so a plugin dropped from one (the PR closed,
+or its entry deleted before merging) isn't proposed again.
 """
 import json
 import re
@@ -88,12 +92,17 @@ def extended_items(storefront: dict, store: list[dict]) -> list[dict]:
     return items
 
 
-def candidates(explorer: list[dict], apps: list[dict], now: datetime) -> list[dict]:
+def ignored_repos(text: str) -> set[str]:
+    """Lowercase owner/name of every GitHub repository link in the text."""
+    return {repo.casefold().removesuffix(".git") for repo in re.findall(r"github\.com/([\w.-]+/[\w.-]+)", text)}
+
+
+def candidates(explorer: list[dict], apps: list[dict], now: datetime, ignored: set[str] = frozenset()) -> list[dict]:
     """The catalogs' repos worth a GitHub check: not listed, not archived, not a
     template, released within MAX_AGE (a catalog saying "never released" rules a repo
     out; an unknown date doesn't), and a plugin name nobody here uses yet. One item
     per repo; most downloaded first, so the busiest of two same-named repos goes first."""
-    listed = {app["repo"].casefold() for app in apps}
+    listed = {app["repo"].casefold() for app in apps} | ignored
     names = {name.casefold() for app in apps for name in app["detect"]["names"]} | {"deckyhub"}
     picked, seen = [], set()
     for item in explorer:
@@ -170,7 +179,8 @@ def main() -> int:
         items += extended_items(json.loads(fetch(f"{EXTENDED_URL}/storefront.json", auth=False)), store)
     except Exception as error:  # noqa: BLE001 - one catalog being down shouldn't stop the other
         print(f"warning: Decky Extended Plugins unavailable: {error}", file=sys.stderr)
-    found = candidates(items, apps, datetime.now(timezone.utc))
+    ignored = ignored_repos(open(sys.argv[sys.argv.index("--ignore") + 1], encoding="utf-8").read()) if "--ignore" in sys.argv else set()
+    found = candidates(items, apps, datetime.now(timezone.utc), ignored)
 
     def safe_check(item):
         try:
