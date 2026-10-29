@@ -24,7 +24,7 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 
-from validate import API, README, REGISTRY, channel_releases, fetch, fetch_releases, github_problems, matching_assets, zip_plugin_name
+from validate import README, REGISTRY, channel_releases, fetch, fetch_github, github_problems, matching_assets, zip_plugin_name
 
 EXPLORER_URL = "https://raw.githubusercontent.com/SafetZahirovic/decky-plugins-explorer/HEAD/data/plugins.json"
 EXTENDED_URL = "https://decky-extended-plugins.beallio.com"
@@ -117,15 +117,15 @@ def candidates(explorer: list[dict], apps: list[dict], now: datetime, ignored: s
     return sorted(picked, key=lambda item: -(item.get("downloads") or 0))
 
 
-def check(item: dict) -> dict | None:
+def check(item: dict, repo: dict | None) -> dict | None:
     """A registry entry for the candidate if it passes validate.py's checks, else None.
-    Says which catalog it came from under "source", which entry_json() leaves out."""
-    repo = json.loads(fetch(f"{API}/repos/{item['repo']}"))
-    if repo.get("archived") or repo.get("fork"):
+    Says which catalog it came from under "source", which entry_json() leaves out.
+    repo is the candidate's fetch_github() answer."""
+    if not repo or repo["archived"] or repo["fork"]:
         return None
     plugin = item.get("plugin") or {}
     entry = {"repo": repo["full_name"], "asset": DEFAULT_ASSET}
-    stable = channel_releases(entry, fetch_releases(entry["repo"]))["stable"]
+    stable = channel_releases(entry, repo["releases"])["stable"]
     assets = matching_assets(entry, stable) if stable else []
     if len(assets) != 1:
         return None
@@ -146,7 +146,7 @@ def check(item: dict) -> dict | None:
         "detect": {"type": "decky-plugin", "names": [name]},
         "asset": DEFAULT_ASSET,
     }
-    errors, _ = github_problems(entry)
+    errors, _ = github_problems(entry, repo)
     return None if errors else {**entry, "source": item.get("source")}
 
 
@@ -182,9 +182,12 @@ def main() -> int:
     ignored = ignored_repos(open(sys.argv[sys.argv.index("--ignore") + 1], encoding="utf-8").read()) if "--ignore" in sys.argv else set()
     found = candidates(items, apps, datetime.now(timezone.utc), ignored)
 
+    # One batched lookup for every candidate, rather than a GraphQL query per thread.
+    github = fetch_github([item["repo"] for item in found])
+
     def safe_check(item):
         try:
-            return check(item)
+            return check(item, github.get(item["repo"].casefold()))
         except Exception as error:  # noqa: BLE001 - one bad repo mustn't stop the run
             print(f"warning: {item['repo']}: {error}", file=sys.stderr)
             return None
