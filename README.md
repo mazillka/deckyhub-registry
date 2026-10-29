@@ -222,7 +222,6 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | MotionCueDots | Utilities | [matttt/steamdeck-motion-cues](https://github.com/matttt/steamdeck-motion-cues) |
 | HV Launcher | Utilities | [RemakeCode/hv-launcher](https://github.com/RemakeCode/hv-launcher) |
 | Finally 3D Game Cases | Game Libraries | [otisabiburada/finally-3d-game-cases-plugin](https://github.com/otisabiburada/finally-3d-game-cases-plugin) |
-| OpenHeadset Control | Utilities | [Asfax03L/momentum-5-control](https://github.com/Asfax03L/momentum-5-control) |
 | Dimensions Toypad | Game Libraries | [SpiderNic96/dimensions-toypad-aio](https://github.com/SpiderNic96/dimensions-toypad-aio) |
 | Ally Companion | Customization | [bassobr/Decky-Ally-Companion](https://github.com/bassobr/Decky-Ally-Companion) |
 | Decky-Achievement | Game Libraries | [totallynotbakadestroyer/Decky-Achievement](https://github.com/totallynotbakadestroyer/Decky-Achievement) |
