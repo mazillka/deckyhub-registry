@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from discover import candidates, category, entry_json, extended_items, short_description  # noqa: E402
+from discover import candidates, category, entry_json, extended_items, ignored_repos, short_description  # noqa: E402
 
 NOW = datetime(2026, 10, 28, tzinfo=timezone.utc)
 
@@ -31,6 +31,12 @@ class DiscoverTests(unittest.TestCase):
             item("o/busy", "Busy", downloads=500),
         ]
         self.assertEqual([found["repo"] for found in candidates(explorer, LISTED, NOW)], ["o/busy", "o/quiet"])
+
+    def test_repos_from_closed_discovery_prs_are_skipped(self):
+        body = "- Busy (Utilities): https://github.com/O/Busy (via explorer)\n- Other: https://github.com/o/other.git"
+        self.assertEqual(ignored_repos(body), {"o/busy", "o/other"})
+        explorer = [item("o/busy", "Busy"), item("o/quiet", "Quiet")]
+        self.assertEqual([found["repo"] for found in candidates(explorer, LISTED, NOW, ignored_repos(body))], ["o/quiet"])
 
     def test_extended_items_take_the_main_repo_and_store_details(self):
         storefront = {"plugins": {
