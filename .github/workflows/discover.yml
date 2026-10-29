@@ -1,6 +1,7 @@
 name: Discover
 
-# Daily: scripts/discover.py adds plugins from decky-plugins-explorer that pass
+# Daily: scripts/discover.py adds plugins from Decky Plugins Explorer and Decky
+# Extended Plugins that pass
 # validate.py's checks, and this opens a pull request with them for review. Never
 # merges. Skips the run while an earlier discover PR is still open.
 on:
@@ -35,14 +36,14 @@ jobs:
           git diff --quiet && { echo "Nothing new."; exit 0; }
           branch="discover/$(date -u +%Y-%m-%d)"
           git switch -c "$branch"
-          git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qam "feat: add plugins found by decky-plugins-explorer"
+          git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qam "feat: add plugins found by community catalogs"
           git push -q origin "$branch"
           {
-            echo "Plugins found by [decky-plugins-explorer](https://github.com/SafetZahirovic/decky-plugins-explorer) that pass \`validate.py\`'s checks and have a stable release. Opened by the discover workflow, which never merges."
+            echo "Plugins found by [Decky Plugins Explorer](https://github.com/SafetZahirovic/decky-plugins-explorer) and [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) that pass \`validate.py\`'s checks and have a stable release. Opened by the discover workflow, which never merges."
             echo
             echo "**Review before merging:** each one's category (picked by keyword) and description (from its plugin.json), and anything that looks like a fork, a test build or not really a plugin. Delete an entry and its README row to drop it."
             echo
             tail -n +2 "$RUNNER_TEMP/found.txt"
           } > "$RUNNER_TEMP/body.md"
-          gh pr create --base main --head "$branch" --title "feat: add plugins found by decky-plugins-explorer ($(date -u +%Y-%m-%d))" --body-file "$RUNNER_TEMP/body.md"
+          gh pr create --base main --head "$branch" --title "feat: add plugins found by community catalogs ($(date -u +%Y-%m-%d))" --body-file "$RUNNER_TEMP/body.md"
           gh workflow run ci.yml --ref "$branch"

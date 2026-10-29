@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from discover import candidates, category, entry_json, short_description  # noqa: E402
+from discover import candidates, category, entry_json, extended_items, short_description  # noqa: E402
 
 NOW = datetime(2026, 10, 28, tzinfo=timezone.utc)
 
@@ -31,6 +31,22 @@ class DiscoverTests(unittest.TestCase):
             item("o/busy", "Busy", downloads=500),
         ]
         self.assertEqual([found["repo"] for found in candidates(explorer, LISTED, NOW)], ["o/busy", "o/quiet"])
+
+    def test_extended_items_take_the_main_repo_and_store_details(self):
+        storefront = {"plugins": {
+            "a": {"name": "A", "versions": [{"repository": "o/a"}, {"repository": "o/a"}, {"repository": "fork/a"}]},
+            "b": {"name": "B", "versions": [], "source_urls": ["https://github.com/o/b.git"]},
+            "c": {"name": "C", "versions": []},
+        }}
+        store = [{"name": "a", "description": "Does A.", "tags": ["x"], "downloads": 7, "versions": [{"created": "2026-01-01T00:00:00Z"}, {"created": "2026-03-01T00:00:00Z"}]}]
+        items = extended_items(storefront, store)
+        self.assertEqual([item["repo"] for item in items], ["o/a", "o/b"])
+        self.assertEqual(items[0]["latest_release"], {"published_at": "2026-03-01T00:00:00Z"})
+        self.assertEqual((items[0]["plugin"]["publish"]["description"], items[0]["downloads"]), ("Does A.", 7))
+        # No store details: unknown date, still a candidate; one item per repo across catalogs.
+        self.assertEqual(items[1]["latest_release"], {"published_at": None})
+        found = candidates([item("o/a", "A"), *items], LISTED, NOW)
+        self.assertEqual([entry["repo"] for entry in found], ["o/a", "o/b"])
 
     def test_category_takes_the_first_matching_rule_and_defaults_to_utilities(self):
         self.assertEqual(category("Fan curve and TDP control"), "Performance")

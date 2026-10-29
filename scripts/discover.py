@@ -2,16 +2,20 @@
 
     GITHUB_TOKEN=$(gh auth token) python scripts/discover.py [--limit N] [--dry-run]
 
-The candidates come from decky-plugins-explorer
-(https://github.com/SafetZahirovic/decky-plugins-explorer, MIT), which finds every
-public GitHub repository with a Decky plugin.json through code search, nightly. Each
-candidate is checked the way validate.py checks an entry (its own releases, one
+The candidates come from two community catalogs:
+- Decky Plugins Explorer (https://github.com/SafetZahirovic/decky-plugins-explorer,
+  MIT), which finds every public GitHub repository with a Decky plugin.json through
+  code search, nightly.
+- Decky Extended Plugins (https://decky-extended-plugins.beallio.com/) by beallio,
+  the official Decky store plus community plugins, each with its source repository.
+Each candidate is checked the way validate.py checks an entry (its own releases, one
 plugin ZIP, the ZIP's plugin.json name), and needs a stable release. Passing ones are
 appended to registry/apps.json and the README table; the discover workflow then opens
 a pull request, so a person still reviews every addition before it's merged.
 """
 import json
 import re
+from collections import Counter
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
@@ -19,6 +23,7 @@ from datetime import datetime, timedelta, timezone
 from validate import API, README, REGISTRY, channel_releases, fetch, fetch_releases, github_problems, matching_assets, zip_plugin_name
 
 EXPLORER_URL = "https://raw.githubusercontent.com/SafetZahirovic/decky-plugins-explorer/HEAD/data/plugins.json"
+EXTENDED_URL = "https://decky-extended-plugins.beallio.com"
 # A plugin last released longer ago than this is probably abandoned.
 MAX_AGE = timedelta(days=730)
 # Names a plugin template ships with, or that never got changed from it.
@@ -54,25 +59,58 @@ def slug(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
 
 
+def explorer_items(explorer: list[dict]) -> list[dict]:
+    return [{**item, "source": "Decky Plugins Explorer"} for item in explorer]
+
+
+def extended_items(storefront: dict, store: list[dict]) -> list[dict]:
+    """Decky Extended Plugins' catalog in the explorer's shape. Its storefront.json
+    names each plugin's GitHub repository (the one most of its versions came from);
+    the store-format plugins.json adds the description, tags, downloads and dates.
+    A plugin with no known release date is left to the GitHub check."""
+    details = {plugin["name"].casefold(): plugin for plugin in store}
+    items = []
+    for plugin in storefront.get("plugins", {}).values():
+        repos = Counter(version["repository"] for version in plugin.get("versions", []) if version.get("repository"))
+        if not repos:
+            repos = Counter(match.group(1).removesuffix(".git") for url in plugin.get("source_urls", []) if (match := re.search(r"github\.com/([\w.-]+/[\w.-]+)", url)))
+        if not repos:
+            continue
+        detail = details.get(plugin["name"].casefold(), {})
+        dates = [version["created"] for version in detail.get("versions", []) if version.get("created")]
+        items.append({
+            "repo": repos.most_common(1)[0][0],
+            "plugin": {"name": plugin["name"], "publish": {"description": detail.get("description"), "tags": detail.get("tags")}},
+            "downloads": detail.get("downloads") or 0,
+            "latest_release": {"published_at": max(dates, default=None)},
+            "source": "Decky Extended Plugins",
+        })
+    return items
+
+
 def candidates(explorer: list[dict], apps: list[dict], now: datetime) -> list[dict]:
-    """The explorer's repos worth a GitHub check: not listed, not archived, not a
-    template, released within MAX_AGE, and a plugin name nobody here uses yet.
-    Most downloaded first, so the busiest of two same-named repos is tried first."""
+    """The catalogs' repos worth a GitHub check: not listed, not archived, not a
+    template, released within MAX_AGE (a catalog saying "never released" rules a repo
+    out; an unknown date doesn't), and a plugin name nobody here uses yet. One item
+    per repo; most downloaded first, so the busiest of two same-named repos goes first."""
     listed = {app["repo"].casefold() for app in apps}
     names = {name.casefold() for app in apps for name in app["detect"]["names"]} | {"deckyhub"}
-    picked = []
+    picked, seen = [], set()
     for item in explorer:
         name = ((item.get("plugin") or {}).get("name") or "").strip()
-        release = item.get("latest_release") or {}
-        published = datetime.fromisoformat(release["published_at"].replace("Z", "+00:00")) if release.get("published_at") else None
-        if item["repo"].casefold() in listed or item.get("archived") or not name or TEMPLATE.search(name) or name.casefold() in names or not published or now - published > MAX_AGE:
+        release = item.get("latest_release")
+        published = datetime.fromisoformat(release["published_at"].replace("Z", "+00:00")) if release and release.get("published_at") else None
+        repo = item["repo"].casefold()
+        if repo in listed or repo in seen or item.get("archived") or not name or TEMPLATE.search(name) or name.casefold() in names or not release or (published and now - published > MAX_AGE):
             continue
+        seen.add(repo)
         picked.append(item)
     return sorted(picked, key=lambda item: -(item.get("downloads") or 0))
 
 
 def check(item: dict) -> dict | None:
-    """A registry entry for the candidate if it passes validate.py's checks, else None."""
+    """A registry entry for the candidate if it passes validate.py's checks, else None.
+    Says which catalog it came from under "source", which entry_json() leaves out."""
     repo = json.loads(fetch(f"{API}/repos/{item['repo']}"))
     if repo.get("archived") or repo.get("fork"):
         return None
@@ -100,12 +138,12 @@ def check(item: dict) -> dict | None:
         "asset": DEFAULT_ASSET,
     }
     errors, _ = github_problems(entry)
-    return None if errors else entry
+    return None if errors else {**entry, "source": item.get("source")}
 
 
 def entry_json(entry: dict) -> str:
     """One entry in apps.json's house style (detect and asset on one line each)."""
-    lines = [f'      "{key}": {json.dumps(value, ensure_ascii=False)}' for key, value in entry.items() if key not in ("detect", "asset")]
+    lines = [f'      "{key}": {json.dumps(value, ensure_ascii=False)}' for key, value in entry.items() if key not in ("detect", "asset", "source")]
     lines.append(f'      "detect": {{ "type": "decky-plugin", "names": {json.dumps(entry["detect"]["names"], ensure_ascii=False)} }}')
     lines.append(f'      "asset": {{ "include": {json.dumps(entry["asset"]["include"])}, "exclude": {json.dumps(entry["asset"]["exclude"])} }}')
     return "    {\n" + ",\n".join(lines) + "\n    }"
@@ -126,7 +164,13 @@ def add(entries: list[dict]) -> None:
 def main() -> int:
     limit = int(sys.argv[sys.argv.index("--limit") + 1]) if "--limit" in sys.argv else 25
     apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
-    found = candidates(json.loads(fetch(EXPLORER_URL, auth=False)), apps, datetime.now(timezone.utc))
+    items = explorer_items(json.loads(fetch(EXPLORER_URL, auth=False)))
+    try:
+        store = [plugin for name in ("plugins.json", "testing_plugins.json") for plugin in json.loads(fetch(f"{EXTENDED_URL}/{name}", auth=False))]
+        items += extended_items(json.loads(fetch(f"{EXTENDED_URL}/storefront.json", auth=False)), store)
+    except Exception as error:  # noqa: BLE001 - one catalog being down shouldn't stop the other
+        print(f"warning: Decky Extended Plugins unavailable: {error}", file=sys.stderr)
+    found = candidates(items, apps, datetime.now(timezone.utc))
 
     def safe_check(item):
         try:
@@ -151,7 +195,7 @@ def main() -> int:
     picked = picked[:limit]
     print(f"{len(found)} candidates, {len(passed)} passed, adding {len(picked)}")
     for entry in picked:
-        print(f"- {entry['name']} ({entry['category']}): https://github.com/{entry['repo']}")
+        print(f"- {entry['name']} ({entry['category']}): https://github.com/{entry['repo']} (via {entry['source']})")
     if picked and "--dry-run" not in sys.argv:
         add(picked)
     return 0
