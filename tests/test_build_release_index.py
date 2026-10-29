@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from build_release_index import RECENT, build, plugin_stats  # noqa: E402
+from build_release_index import RECENT, build, plugin_stats, rest_shape  # noqa: E402
 
 
 def entry(repo="o/a", include=(".zip",), exclude=("source",)):
@@ -63,6 +63,15 @@ class BuildReleaseIndexTests(unittest.TestCase):
         self.assertIsNone(stats["root"])
         self.assertIsNone(stats["stars"])
         self.assertEqual(plugin_stats(entry(), [], stars=lambda repo: 0, manifest=broken), {"downloads": 0, "stars": 0, "updated": None, "root": None})
+
+
+    def test_graphql_releases_take_the_rest_shape(self):
+        node = {"tagName": "v1", "name": "One", "isDraft": False, "isPrerelease": True, "publishedAt": "2026-01-01T00:00:00Z", "url": "u", "description": "notes",
+                "releaseAssets": {"nodes": [{"name": "a.zip", "downloadUrl": "d", "size": 3, "digest": "sha256:ab", "downloadCount": 5}]}}
+        self.assertEqual(rest_shape(node), {
+            "tag_name": "v1", "name": "One", "draft": False, "prerelease": True, "published_at": "2026-01-01T00:00:00Z", "html_url": "u", "body": "notes",
+            "assets": [{"name": "a.zip", "browser_download_url": "d", "size": 3, "digest": "sha256:ab", "download_count": 5}],
+        })
 
 
 if __name__ == "__main__":

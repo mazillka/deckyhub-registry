@@ -14,33 +14,98 @@ It also writes stats.json for the catalog page, per plugin:
 - stars: the repo's GitHub stars.
 - updated: when the release DeckyHub shows (newest stable, else newest pre-release) came out.
 - root: whether that release's plugin.json asks Decky to run it as root.
+
+Releases and stars come from GitHub's GraphQL API, BATCH repos per query: a REST run
+took two calls per repo (over 600 for the list), against the workflow token's 1,000
+an hour, which CI and discovery share. A query costs about 0.2 points per repo.
 """
 import json
+import os
 import sys
 import time
+import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from validate import API, REGISTRY, channel_releases, fetch, fetch_releases, matching_assets, zip_plugin_manifest
+from validate import API, REGISTRY, channel_releases, matching_assets, zip_plugin_manifest
 
 # Not a registry entry, but DeckyHub checks its own releases too.
 EXTRA_ENTRIES = [{"repo": "mazillka/deckyhub-plugin", "asset": {"include": ["deckyhub-"], "exclude": []}}]
 # What DeckyHub's release pickers show per repo.
 RECENT = 20
+# Repos per GraphQL query. At 25, GitHub cut parts of the answer for resource limits.
+BATCH = 10
+RELEASE_FIELDS = "tagName name isDraft isPrerelease publishedAt url description releaseAssets(first: 50) { nodes { name downloadUrl size digest downloadCount } }"
 
 
-def fetch_all_releases(repo: str) -> list[dict]:
-    """Every release, for the all-time download count: 100 a page."""
-    releases, page = [], 1
-    while True:
-        batch = json.loads(fetch(f"{API}/repos/{repo}/releases?per_page=100&page={page}"))
-        if page == 1 and not batch:
-            # GitHub's occasional empty first answer; fetch_releases retries it (20 at most).
-            return fetch_releases(repo)
-        releases += batch
-        if len(batch) < 100:
-            return releases
-        page += 1
+def graphql(query: str) -> tuple[dict, set[str]]:
+    """One GraphQL query, retried once (GitHub answers a slow one with a 502), and the
+    top-level aliases whose answer is incomplete: a repo that's gone, or one GitHub cut
+    short (RESOURCE_LIMITS_EXCEEDED), comes back null or partly null with an error."""
+    request = urllib.request.Request(f"{API}/graphql", json.dumps({"query": query}).encode(), {"Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}", "User-Agent": "deckyhub-registry-index"})
+    for attempt in (1, 2):
+        try:
+            with urllib.request.urlopen(request, timeout=60) as response:
+                body = json.loads(response.read())
+            if body.get("data") is None:
+                raise RuntimeError(body.get("errors"))
+            return body["data"], {str(error["path"][0]) for error in body.get("errors") or [] if error.get("path")}
+        except Exception:
+            if attempt == 2:
+                raise
+            time.sleep(5)
+
+
+def rest_shape(node: dict) -> dict:
+    """A GraphQL release in the shape of GitHub's REST releases list, which the rest of
+    this script and DeckyHub read."""
+    return {
+        "tag_name": node["tagName"],
+        "name": node.get("name"),
+        "draft": node["isDraft"],
+        "prerelease": node["isPrerelease"],
+        "published_at": node.get("publishedAt"),
+        "html_url": node.get("url"),
+        "body": node.get("description"),
+        "assets": [{"name": asset["name"], "browser_download_url": asset["downloadUrl"], "size": asset["size"], "digest": asset.get("digest"), "download_count": asset["downloadCount"]} for asset in node["releaseAssets"]["nodes"]],
+    }
+
+
+def releases_query(repo: str, first: int, after: str | None = None) -> str:
+    owner, name = repo.split("/")
+    cursor = f", after: {json.dumps(after)}" if after else ""
+    return (f"repository(owner: {json.dumps(owner)}, name: {json.dumps(name)}) {{ stargazerCount "
+            f"releases(first: {first}{cursor}, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ pageInfo {{ hasNextPage endCursor }} nodes {{ {RELEASE_FIELDS} }} }} }}")
+
+
+def fetch_github(repos: list[str]) -> dict[str, dict]:
+    """Every repo's releases (all of them, for the all-time download count) and stars,
+    keyed by lowercase owner/name. A repo GitHub doesn't answer for is left out."""
+    found: dict[str, dict] = {}
+    for start in range(0, len(repos), BATCH):
+        batch = repos[start:start + BATCH]
+        data, failed = graphql("{ " + " ".join(f"r{index}: {releases_query(repo, RECENT)}" for index, repo in enumerate(batch)) + " }")
+        for index, repo in enumerate(batch):
+            try:
+                result = data.get(f"r{index}")
+                if f"r{index}" in failed:
+                    # Asked again on its own, where it may fit the limits.
+                    alone, failed_alone = graphql("{ r: " + releases_query(repo, RECENT) + " }")
+                    result = None if failed_alone else alone["r"]
+                if not result:
+                    raise RuntimeError("not found or incomplete")
+                releases, page = result["releases"]["nodes"], result["releases"]["pageInfo"]
+                # ponytail: one query per extra page; only the few repos with over 20 releases need one.
+                while page["hasNextPage"]:
+                    more, failed_more = graphql("{ r: " + releases_query(repo, 100, page["endCursor"]) + " }")
+                    if failed_more:
+                        raise RuntimeError("older releases incomplete")
+                    releases, page = releases + more["r"]["releases"]["nodes"], more["r"]["releases"]["pageInfo"]
+            except Exception as error:  # noqa: BLE001 - left out, so DeckyHub asks GitHub for it directly
+                print(f"warning: {repo}: {error}", file=sys.stderr)
+                continue
+            found[repo.casefold()] = {"releases": [rest_shape(node) for node in releases], "stars": result["stargazerCount"]}
+    return found
 
 
 def slim(release: dict) -> dict:
@@ -57,10 +122,6 @@ def slim(release: dict) -> dict:
     }
 
 
-def repo_stars(repo: str) -> int:
-    return json.loads(fetch(f"{API}/repos/{repo}"))["stargazers_count"]
-
-
 def best_effort(lookup, *args):
     """A stat that can't be read is left out rather than sinking its plugin's entry."""
     try:
@@ -70,7 +131,7 @@ def best_effort(lookup, *args):
         return None
 
 
-def plugin_stats(entry: dict, releases: list[dict], stars=repo_stars, manifest=zip_plugin_manifest) -> dict:
+def plugin_stats(entry: dict, releases: list[dict], stars, manifest=zip_plugin_manifest) -> dict:
     channels = channel_releases(entry, releases)
     shown = channels["stable"] or channels["prerelease"]
     assets = matching_assets(entry, shown) if shown else []
@@ -83,7 +144,7 @@ def plugin_stats(entry: dict, releases: list[dict], stars=repo_stars, manifest=z
     }
 
 
-def build(entries: list[dict], fetch=fetch_all_releases, stats=plugin_stats) -> dict:
+def build(entries: list[dict], fetch, stats) -> dict:
     """Keyed by lowercase owner/name: each repo's newest releases, and its stats (see the
     module docstring). A repo whose lookup fails is left out, so DeckyHub asks GitHub for
     it directly rather than trusting an empty list."""
@@ -109,7 +170,9 @@ def build(entries: list[dict], fetch=fetch_all_releases, stats=plugin_stats) -> 
 
 def main() -> int:
     apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
-    index = build(apps + EXTRA_ENTRIES)
+    entries = apps + EXTRA_ENTRIES
+    github = fetch_github(list({entry["repo"].casefold(): entry["repo"] for entry in entries}.values()))
+    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"]))
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     # DeckyHub reads releases; the catalog page reads the much smaller stats file.
