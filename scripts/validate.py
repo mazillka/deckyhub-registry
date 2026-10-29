@@ -82,17 +82,6 @@ def fetch(url: str, headers: dict | None = None, auth: bool = True) -> bytes:
         return response.read()
 
 
-def fetch_releases(repo: str) -> list[dict]:
-    """GitHub's releases list sometimes answers [] to an authenticated request for a repo
-    that has releases (about 1 in 4 in October 2026), while unauthenticated requests got the
-    list every time. So an empty answer is asked again without the token, then once more
-    with it, before it's believed."""
-    url = f"{API}/repos/{repo}/releases?per_page=20"
-    for auth in (True, False, True):
-        if releases := json.loads(fetch(url, auth=auth)):
-            return releases
-        time.sleep(1)
-    return []
 
 
 class RangedFile(io.RawIOBase):
@@ -135,27 +124,28 @@ def zip_plugin_name(asset: dict) -> str | None:
     return (zip_plugin_manifest(asset) or {}).get("name")
 
 
-def github_problems(app: dict) -> tuple[list[str], list[str]]:
+def github_problems(app: dict, repo: dict | None = None) -> tuple[list[str], list[str]]:
+    """repo: the entry's fetch_github() answer, looked up here when not given."""
     errors, warnings = [], []
     label = app["id"]
-    try:
-        repo = json.loads(fetch(f"{API}/repos/{app['repo']}"))
-    except urllib.error.HTTPError as error:
-        return [f"{label}: repository {app['repo']} not found (HTTP {error.code})"], []
+    if repo is None:
+        repo = fetch_github([app["repo"]]).get(app["repo"].casefold())
+    if not repo:
+        return [f"{label}: repository {app['repo']} not found, or GitHub didn't answer for it"], []
     if repo["full_name"].casefold() != app["repo"].casefold():
         warnings.append(f"{label}: {app['repo']} was renamed to {repo['full_name']}; update repo")
     if repo.get("archived"):
         warnings.append(f"{label}: {repo['full_name']} is archived")
-    channels = channel_releases(app, fetch_releases(app["repo"]))
+    channels = channel_releases(app, repo["releases"])
     if not channels["prerelease"]:
         return [f"{label}: no release matches releaseTagInclude {app.get('releaseTagInclude')!r}" if app.get("releaseTagInclude") else f"{label}: no releases"], warnings
     if not channels["stable"]:
         warnings.append(f"{label}: no stable release; the default (stable) channel shows an error")
     checked = set()
     for channel, release in channels.items():
-        if not release or release["id"] in checked:
+        if not release or release["tag_name"] in checked:
             continue
-        checked.add(release["id"])
+        checked.add(release["tag_name"])
         where = f"{label} {release['tag_name']} ({channel})"
         assets = matching_assets(app, release)
         if len(assets) != 1:
@@ -171,6 +161,105 @@ def github_problems(app: dict) -> tuple[list[str], list[str]]:
     return errors, warnings
 
 
+# What DeckyHub's release pickers show per repo.
+RECENT = 20
+# Repos per GraphQL query. At 25, GitHub cut parts of the answer for resource limits.
+BATCH = 10
+RELEASE_FIELDS = "tagName name isDraft isPrerelease publishedAt url description releaseAssets(first: 50) { nodes { name downloadUrl size digest downloadCount } }"
+
+
+def graphql(query: str) -> tuple[dict, set[str]]:
+    """One GraphQL query, retried (GitHub answers a slow one with a 502, and a burst
+    with a 403 secondary rate limit that says how long to wait), and the
+    top-level aliases whose answer is incomplete: a repo that's gone, or one GitHub cut
+    short (RESOURCE_LIMITS_EXCEEDED), comes back null or partly null with an error."""
+    request = urllib.request.Request(f"{API}/graphql", json.dumps({"query": query}).encode(), {"Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}", "User-Agent": "deckyhub-registry"})
+    for attempt in (1, 2, 3):
+        wait = 5
+        try:
+            with urllib.request.urlopen(request, timeout=60) as response:
+                body = json.loads(response.read())
+            if body.get("data") is None:
+                raise RuntimeError(body.get("errors"))
+            return body["data"], {str(error["path"][0]) for error in body.get("errors") or [] if error.get("path")}
+        except urllib.error.HTTPError as error:
+            headers = {key: error.headers.get(key) for key in ("retry-after", "x-ratelimit-remaining", "x-ratelimit-reset") if error.headers.get(key)}
+            print(f"warning: GraphQL HTTP {error.code} {headers}: {error.read()[:300]!r}", file=sys.stderr)
+            if attempt == 3:
+                raise
+            if error.headers.get("retry-after"):
+                wait = int(error.headers["retry-after"])
+            elif error.headers.get("x-ratelimit-remaining") == "0":
+                wait = max(0, int(error.headers["x-ratelimit-reset"]) - int(time.time())) + 1
+            elif error.code == 403:
+                wait = 60
+        except Exception:
+            if attempt == 3:
+                raise
+        time.sleep(min(wait, 600))
+
+
+def rest_shape(node: dict) -> dict:
+    """A GraphQL release in the shape of GitHub's REST releases list, which the rest of
+    this script and DeckyHub read."""
+    return {
+        "tag_name": node["tagName"],
+        "name": node.get("name"),
+        "draft": node["isDraft"],
+        "prerelease": node["isPrerelease"],
+        "published_at": node.get("publishedAt"),
+        "html_url": node.get("url"),
+        "body": node.get("description"),
+        "assets": [{"name": asset["name"], "browser_download_url": asset["downloadUrl"], "size": asset["size"], "digest": asset.get("digest"), "download_count": asset["downloadCount"]} for asset in node["releaseAssets"]["nodes"]],
+    }
+
+
+def releases_query(repo: str, first: int, after: str | None = None) -> str:
+    owner, name = repo.split("/")
+    cursor = f", after: {json.dumps(after)}" if after else ""
+    return (f"repository(owner: {json.dumps(owner)}, name: {json.dumps(name)}) {{ nameWithOwner name description isArchived isFork stargazerCount "
+            f"releases(first: {first}{cursor}, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ pageInfo {{ hasNextPage endCursor }} nodes {{ {RELEASE_FIELDS} }} }} }}")
+
+
+def fetch_github(repos: list[str], every_release: bool = False) -> dict[str, dict]:
+    """Each repo's facts and newest RECENT releases (every_release: all of them, for an
+    all-time download count), in the REST API's shape, keyed by the lowercase owner/name
+    asked for. A repo GitHub doesn't answer for, or answers only partly, is left out.
+
+    GraphQL, BATCH repos per query: the REST API took two calls per repo, over 600 for
+    the list, against the workflow token's 1,000 an hour shared by every job here. A
+    query costs about 0.2 points per repo."""
+    found: dict[str, dict] = {}
+    for start in range(0, len(repos), BATCH):
+        batch = repos[start:start + BATCH]
+        data, failed = graphql("{ " + " ".join(f"r{index}: {releases_query(repo, RECENT)}" for index, repo in enumerate(batch)) + " }")
+        for index, repo in enumerate(batch):
+            try:
+                result = data.get(f"r{index}")
+                if f"r{index}" in failed:
+                    # Asked again on its own, where it may fit the limits.
+                    alone, failed_alone = graphql("{ r: " + releases_query(repo, RECENT) + " }")
+                    result = None if failed_alone else alone["r"]
+                if not result:
+                    raise RuntimeError("not found or incomplete")
+                releases, page = result["releases"]["nodes"], result["releases"]["pageInfo"]
+                # ponytail: one query per extra page; only the few repos with over 20 releases need one.
+                while every_release and page["hasNextPage"]:
+                    more, failed_more = graphql("{ r: " + releases_query(repo, 100, page["endCursor"]) + " }")
+                    if failed_more:
+                        raise RuntimeError("older releases incomplete")
+                    releases, page = releases + more["r"]["releases"]["nodes"], more["r"]["releases"]["pageInfo"]
+            except Exception as error:  # noqa: BLE001 - left out; callers say what that means
+                print(f"warning: {repo}: {error}", file=sys.stderr)
+                continue
+            found[repo.casefold()] = {
+                "full_name": result["nameWithOwner"], "name": result["name"], "description": result["description"],
+                "archived": result["isArchived"], "fork": result["isFork"], "stars": result["stargazerCount"],
+                "releases": [rest_shape(node) for node in releases],
+            }
+    return found
+
+
 def asset_digest(asset: dict) -> str:
     return str(asset.get("digest") or "").removeprefix("sha256:")
 
@@ -179,9 +268,10 @@ def main() -> int:
     apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
     errors, warnings = static_errors(apps) + readme_errors(apps, README.read_text(encoding="utf-8")), []
     if "--offline" not in sys.argv:
+        github = fetch_github(list({app["repo"].casefold(): app["repo"] for app in apps}.values()))
         for app in apps:
             try:
-                app_errors, app_warnings = github_problems(app)
+                app_errors, app_warnings = github_problems(app, github.get(app["repo"].casefold(), {}))
             except Exception as error:  # one unreachable repo shouldn't hide the rest
                 app_errors, app_warnings = [f"{app['id']}: {type(error).__name__}: {error}"], []
             errors += app_errors

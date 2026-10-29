@@ -3,7 +3,8 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from build_release_index import RECENT, build, plugin_stats, rest_shape  # noqa: E402
+from build_release_index import RECENT, build, plugin_stats  # noqa: E402
+from validate import rest_shape  # noqa: E402
 
 
 def entry(repo="o/a", include=(".zip",), exclude=("source",)):
