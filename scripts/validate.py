@@ -67,9 +67,10 @@ def matching_assets(app: dict, release: dict) -> list[dict]:
 
 
 def channel_releases(app: dict, releases: list[dict]) -> dict[str, dict | None]:
-    """The release each channel's card shows: newest of the last 20 (stable sees stable only)."""
+    """The release each channel's card shows: newest of the last 20 (stable sees stable only)
+    with a matching ZIP. DeckyHub skips a newer one without it (a Windows-only build, say)."""
     tag = (app.get("releaseTagInclude") or "").lower()
-    candidates = sorted((release for release in releases if not release.get("draft") and tag in str(release.get("tag_name") or release.get("name")).lower()), key=lambda release: release.get("published_at") or "", reverse=True)
+    candidates = sorted((release for release in releases if not release.get("draft") and tag in str(release.get("tag_name") or release.get("name")).lower() and matching_assets(app, release)), key=lambda release: release.get("published_at") or "", reverse=True)
     return {"stable": next((release for release in candidates if not release.get("prerelease")), None), "prerelease": next(iter(candidates), None)}
 
 
@@ -138,7 +139,8 @@ def github_problems(app: dict, repo: dict | None = None) -> tuple[list[str], lis
         warnings.append(f"{label}: {repo['full_name']} is archived")
     channels = channel_releases(app, repo["releases"])
     if not channels["prerelease"]:
-        return [f"{label}: no release matches releaseTagInclude {app.get('releaseTagInclude')!r}" if app.get("releaseTagInclude") else f"{label}: no releases"], warnings
+        where = f" matching releaseTagInclude {app.get('releaseTagInclude')!r}" if app.get("releaseTagInclude") else ""
+        return [f"{label}: no release{where} has a ZIP the asset filter matches"], warnings
     if not channels["stable"]:
         warnings.append(f"{label}: no stable release; the default (stable) channel shows an error")
     checked = set()

@@ -11,7 +11,7 @@ def app(id="a", repo="o/a", names=("A",), include=(".zip",), exclude=("source",)
     return {**entry, "releaseTagInclude": tag} if tag else entry
 
 
-def release(tag, published, prerelease=False, draft=False, assets=()):
+def release(tag, published, prerelease=False, draft=False, assets=("plugin.zip",)):
     return {"tag_name": tag, "published_at": published, "prerelease": prerelease, "draft": draft, "assets": [{"name": name} for name in assets]}
 
 
@@ -42,6 +42,11 @@ class ValidateTests(unittest.TestCase):
         channels = channel_releases(app(tag="v"), releases[:3])
         self.assertEqual((channels["stable"]["tag_name"], channels["prerelease"]["tag_name"]), ("v1", "v2-beta"))
         self.assertEqual(channel_releases(app(), [release("v2-beta", "2026-03-01", prerelease=True)])["stable"], None)
+
+    def test_channels_skip_a_newer_release_without_the_plugin_zip(self):
+        releases = [release("v1", "2026-01-01"), release("windows-v2", "2026-02-01", assets=("Setup.exe", "windows.zip.sha256"))]
+        self.assertEqual(channel_releases(app(), releases)["stable"]["tag_name"], "v1")
+        self.assertIsNone(channel_releases(app(), releases[1:])["prerelease"])
 
 
 if __name__ == "__main__":
