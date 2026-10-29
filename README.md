@@ -4,7 +4,7 @@
 
 # DeckyHub registry
 
-**The curated list of Steam Deck plugins that [DeckyHub](https://github.com/mazillka/deckyhub-plugin) shows on Discover.**
+**The list of Steam Deck plugins that [DeckyHub](https://github.com/mazillka/deckyhub-plugin) shows on Discover.**
 
 [![validate](https://github.com/mazillka/deckyhub-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/mazillka/deckyhub-registry/actions/workflows/ci.yml)
 [![apps](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmazillka%2Fdeckyhub-registry%2Frefs%2Fheads%2Fmain%2Fregistry%2Fapps.json&query=%24.apps.length&label=apps&color=1d75cc)](registry/apps.json)
@@ -222,7 +222,6 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | MotionCueDots | Utilities | [matttt/steamdeck-motion-cues](https://github.com/matttt/steamdeck-motion-cues) |
 | HV Launcher | Utilities | [RemakeCode/hv-launcher](https://github.com/RemakeCode/hv-launcher) |
 | Finally 3D Game Cases | Game Libraries | [otisabiburada/finally-3d-game-cases-plugin](https://github.com/otisabiburada/finally-3d-game-cases-plugin) |
-| OpenHeadset Control | Utilities | [Asfax03L/momentum-5-control](https://github.com/Asfax03L/momentum-5-control) |
 | Dimensions Toypad | Game Libraries | [SpiderNic96/dimensions-toypad-aio](https://github.com/SpiderNic96/dimensions-toypad-aio) |
 | Ally Companion | Customization | [bassobr/Decky-Ally-Companion](https://github.com/bassobr/Decky-Ally-Companion) |
 | Decky-Achievement | Game Libraries | [totallynotbakadestroyer/Decky-Achievement](https://github.com/totallynotbakadestroyer/Decky-Achievement) |
@@ -374,7 +373,7 @@ Plugins are suggested by people (issues and pull requests here) or found through
 - [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) by [beallio](https://github.com/beallio), which also publishes a [security audit](https://decky-extended-plugins.beallio.com/audit) of the plugins it lists.
 - [Decky Plugins Explorer](https://safetzahirovic.github.io/decky-plugins-explorer/) by [SafetZahirovic](https://github.com/SafetZahirovic), which finds every public GitHub repository with a Decky `plugin.json` every night ([MIT](https://github.com/SafetZahirovic/decky-plugins-explorer/blob/main/LICENSE)).
 
-However a plugin was found, it's only added once `validate.py` passes for it (a stable release, exactly one plugin ZIP, a matching `plugin.json` name) and a person has reviewed the pull request. Thanks to both catalogs' authors for making their data available.
+However a plugin was found, it's only added once `validate.py` passes for it (a stable release, exactly one plugin ZIP, a matching `plugin.json` name). Those are automatic checks for a working release; nobody reviews the plugins themselves. Thanks to both catalogs' authors for making their data available.
 
 ## Adding a plugin
 

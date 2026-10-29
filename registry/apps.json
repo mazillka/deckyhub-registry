@@ -1678,15 +1678,6 @@
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
-      "id": "momentum-5-control",
-      "name": "OpenHeadset Control",
-      "description": "Batterie, réduction de bruit et scènes du casque Sennheiser MOMENTUM 5 (non officiel), par le service OpenHeadset Control.",
-      "repo": "Asfax03L/momentum-5-control",
-      "category": "Utilities",
-      "detect": { "type": "decky-plugin", "names": ["OpenHeadset Control"] },
-      "asset": { "include": ["decky"], "exclude": ["source"] }
-    },
-    {
       "id": "dimensions-toypad-aio",
       "name": "Dimensions Toypad",
       "description": "Place, move and clear LEGO Dimensions figures on an emulated Toy Pad, with live pad LED mirroring.",
