@@ -369,7 +369,6 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | XREAL | Utilities | [kevindurb/xreal-linux](https://github.com/kevindurb/xreal-linux) |
 | SDH-Ludusavi | Utilities | [beallio/SDH-Ludusavi](https://github.com/beallio/SDH-Ludusavi) |
 | Trailer Hero | Game Libraries | [Ak4ai/decky-trailer-hero](https://github.com/Ak4ai/decky-trailer-hero) |
-| PS5 Dashboard | Utilities | [hayahsc3/decky-projetos](https://github.com/hayahsc3/decky-projetos) |
 
 ## Where the plugins come from
 

@@ -2999,15 +2999,6 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["Trailer Hero"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
-      "id": "decky-projetos",
-      "name": "PS5 Dashboard",
-      "description": "Lista seus jogos instalados, faz backup dos saves para o microSD e restaura quando precisar.",
-      "repo": "hayahsc3/decky-projetos",
-      "category": "Utilities",
-      "detect": { "type": "decky-plugin", "names": ["PS5 Dashboard"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
