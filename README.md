@@ -365,6 +365,10 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Codex Remote | Utilities | [VovasaeXranitel/decky-codex-remote](https://github.com/VovasaeXranitel/decky-codex-remote) |
 | Freedeck | Utilities | [YunGuiHe/freedeck-plugin-enhancements](https://github.com/YunGuiHe/freedeck-plugin-enhancements) |
 | Decky Sunshine | Utilities | [s0t7x/decky-sunshine](https://github.com/s0t7x/decky-sunshine) |
+| FusionHUD | Performance | [The412Banner/FusionHUD](https://github.com/The412Banner/FusionHUD) |
+| XREAL | Utilities | [kevindurb/xreal-linux](https://github.com/kevindurb/xreal-linux) |
+| SDH-Ludusavi | Utilities | [beallio/SDH-Ludusavi](https://github.com/beallio/SDH-Ludusavi) |
+| Trailer Hero | Game Libraries | [Ak4ai/decky-trailer-hero](https://github.com/Ak4ai/decky-trailer-hero) |
 
 ## Where the plugins come from
 
