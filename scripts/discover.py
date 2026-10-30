@@ -150,6 +150,26 @@ def check(item: dict, repo: dict | None) -> dict | None:
     return None if errors else {**entry, "source": item.get("source")}
 
 
+def pick(passed: list[dict], apps: list[dict], limit: int) -> list[dict]:
+    """The first limit entries whose name and id are still free. check() names an
+    entry after its ZIP, which can differ from the catalog name candidates() checked,
+    so names already in the registry count as taken here too."""
+    ids = {app["id"] for app in apps}
+    names = {name.casefold() for app in apps for name in app["detect"]["names"]} | {"deckyhub"}
+    picked = []
+    for entry in passed:
+        if entry["name"].casefold() in names:
+            continue
+        if entry["id"] in ids:
+            entry["id"] = slug(entry["repo"])
+        if entry["id"] in ids:
+            continue
+        ids.add(entry["id"])
+        names.add(entry["name"].casefold())
+        picked.append(entry)
+    return picked[:limit]
+
+
 def entry_json(entry: dict) -> str:
     """One entry in apps.json's house style (detect and asset on one line each)."""
     lines = [f'      "{key}": {json.dumps(value, ensure_ascii=False)}' for key, value in entry.items() if key not in ("detect", "asset", "source")]
@@ -194,18 +214,7 @@ def main() -> int:
 
     with ThreadPoolExecutor(8) as pool:
         passed = [entry for entry in pool.map(safe_check, found) if entry]
-    ids, names, picked = {app["id"] for app in apps}, set(), []
-    for entry in passed:
-        if entry["name"].casefold() in names:
-            continue
-        if entry["id"] in ids:
-            entry["id"] = slug(entry["repo"])
-        if entry["id"] in ids:
-            continue
-        ids.add(entry["id"])
-        names.add(entry["name"].casefold())
-        picked.append(entry)
-    picked = picked[:limit]
+    picked = pick(passed, apps, limit)
     print(f"{len(found)} candidates, {len(passed)} passed, adding {len(picked)}")
     for entry in picked:
         print(f"- {entry['name']} ({entry['category']}): https://github.com/{entry['repo']} (via {entry['source']})")
