@@ -1,11 +1,11 @@
 ---
 name: deckyhub-registry
-description: Maintain DeckyHub's curated registry in this repo (registry/apps.json). Use when adding, removing, renaming or editing a registry app, changing the registry schema, or fixing this repo's validate CI.
+description: Maintain DeckyHub's plugin registry in this repo (registry/apps.json). Use when adding, removing, renaming or editing a registry app, changing the registry schema, or fixing this repo's validate CI.
 ---
 
 # Maintaining the DeckyHub registry
 
-The curated list is `registry/apps.json` on `main`. DeckyHub ([mazillka/deckyhub-plugin](https://github.com/mazillka/deckyhub-plugin)) downloads it at startup and caches the last good copy. This repo's Pages site (`docs/`: catalog `index.html` and `editor.html`, served from `main` `/docs`) loads it live; the plugin repo's promo page renders it at deploy time.
+DeckyHub's plugin list is `registry/apps.json` on `main`. DeckyHub ([mazillka/deckyhub-plugin](https://github.com/mazillka/deckyhub-plugin)) downloads it at startup and caches the last good copy. This repo's Pages site (`docs/`: catalog `index.html` and `editor.html`, served from `main` `/docs`) loads it live; the plugin repo's promo page renders it at deploy time.
 
 The plugin repo's checkout sits next to this one: `../deckyhub-plugin`. Clone it with `gh repo clone mazillka/deckyhub-plugin` if it's missing. Follow its [CONTRIBUTING.md](https://github.com/mazillka/deckyhub-plugin/blob/develop/CONTRIBUTING.md#releases): work on a short kebab-case branch, never commit to `main`, one topic per PR, squash-merge.
 
