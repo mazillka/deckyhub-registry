@@ -369,6 +369,7 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | XREAL | Utilities | [kevindurb/xreal-linux](https://github.com/kevindurb/xreal-linux) |
 | SDH-Ludusavi | Utilities | [beallio/SDH-Ludusavi](https://github.com/beallio/SDH-Ludusavi) |
 | Trailer Hero | Game Libraries | [Ak4ai/decky-trailer-hero](https://github.com/Ak4ai/decky-trailer-hero) |
+| XMDeck | Utilities | [PrivateiFox/XMDeck](https://github.com/PrivateiFox/XMDeck) |
 
 ## Where the plugins come from
 
