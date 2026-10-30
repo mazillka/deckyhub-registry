@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from discover import candidates, category, entry_json, extended_items, ignored_repos, short_description  # noqa: E402
+from discover import candidates, category, entry_json, extended_items, ignored_repos, pick, short_description  # noqa: E402
 
 NOW = datetime(2026, 10, 28, tzinfo=timezone.utc)
 
@@ -53,6 +53,16 @@ class DiscoverTests(unittest.TestCase):
         self.assertEqual(items[1]["latest_release"], {"published_at": None})
         found = candidates([item("o/a", "A"), *items], LISTED, NOW)
         self.assertEqual([entry["repo"] for entry in found], ["o/a", "o/b"])
+
+    def test_pick_skips_zip_names_already_listed_and_renames_clashing_ids(self):
+        apps = [{"id": "a", "repo": "o/listed", "detect": {"names": ["Taken"]}}]
+        passed = [
+            {"id": "x", "name": "taken", "repo": "o/x"},
+            {"id": "a", "name": "New", "repo": "p/a"},
+            {"id": "y", "name": "NEW", "repo": "o/y"},
+            {"id": "z", "name": "Last", "repo": "o/z"},
+        ]
+        self.assertEqual([(entry["id"], entry["name"]) for entry in pick(passed, apps, 1)], [("p-a", "New")])
 
     def test_category_takes_the_first_matching_rule_and_defaults_to_utilities(self):
         self.assertEqual(category("Fan curve and TDP control"), "Performance")
