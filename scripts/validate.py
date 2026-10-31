@@ -226,7 +226,7 @@ def releases_query(repo: str, first: int, after: str | None = None) -> str:
     owner, name = repo.split("/")
     cursor = f", after: {json.dumps(after)}" if after else ""
     return (f"repository(owner: {json.dumps(owner)}, name: {json.dumps(name)}) {{ nameWithOwner name description isArchived isFork stargazerCount "
-            f"parent {{ nameWithOwner isArchived releases(first: 1, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ nodes {{ publishedAt }} }} }} "
+            f"parent {{ nameWithOwner isArchived isTemplate releases(first: 1, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ nodes {{ publishedAt }} }} }} "
             f"releases(first: {first}{cursor}, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ pageInfo {{ hasNextPage endCursor }} nodes {{ {RELEASE_FIELDS} }} }} }}")
 
 
@@ -263,7 +263,9 @@ def fetch_github(repos: list[str], every_release: bool = False) -> dict[str, dic
                 continue
             found[repo.casefold()] = {
                 "full_name": result["nameWithOwner"], "name": result["name"], "description": result["description"],
-                "archived": result["isArchived"], "fork": result["isFork"], "stars": result["stargazerCount"],
+                "archived": result["isArchived"], "stars": result["stargazerCount"],
+                # A fork of a template (Decky's plugin template) is a new plugin, not a copy of one.
+                "fork": result["isFork"] and not (result["parent"] or {}).get("isTemplate"),
                 # The repo it was forked from: its name, whether it's archived and its newest release date.
                 "parent": result["parent"] and {"full_name": result["parent"]["nameWithOwner"], "archived": result["parent"]["isArchived"],
                                                 "released": next((node["publishedAt"] for node in result["parent"]["releases"]["nodes"]), None)},
