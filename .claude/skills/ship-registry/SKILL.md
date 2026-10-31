@@ -1,6 +1,6 @@
 ---
 name: ship-registry
-description: Ship what's on the registry's develop branch to main, where every DeckyHub install reads it, then merge main back into develop. Use when asked to release, ship, publish or promote registry changes, open the develop → main PR, or fix a develop/main conflict.
+description: Ship what's on the registry's develop branch to main, where every DeckyHub install reads it, merge main back into develop, and check the registry releases' notes. Use when asked about registry release notes, or when asked to release, ship, publish or promote registry changes, open the develop → main PR, or fix a develop/main conflict.
 ---
 
 # Shipping the registry
@@ -51,3 +51,20 @@ Merge this one with **Create a merge commit**, the one PR that isn't squashed.
 - A change to `apps.json` also publishes a new registry release, which DeckyHub reads first: `gh run list --workflow registry-release.yml --limit 3` and `gh release view -R mazillka/deckyhub-registry`.
 - `curl -s https://raw.githubusercontent.com/mazillka/deckyhub-registry/release-index/stats.json | head -c 300` shows the new `generatedAt`.
 - The catalog at https://mazillka.github.io/deckyhub-registry/ loads (Pages can take a few minutes).
+
+## 5. Check the release notes
+
+Every registry release, `develop` pre-releases too, gets notes a Steam Deck user can read. `registry-release.yml` writes them itself: `scripts/release_notes.py` compares `apps.json` with the channel's previous release (tags ending `-develop` are `develop`'s, the others `main`'s) and lists plugins **Added** (by category, with forks named), **Removed** and **Changed**, then the plugin count. This covers the release this ship made on `main`, and the `-develop` pre-release made when a PR that changes `apps.json` (a `discover/` PR too) merges into `develop`.
+
+Once its run finishes, read the notes (`gh release view <tag>`) and fix what the script can't know, with `gh release edit <tag> --notes-file <file>`:
+
+- **Removed**: add why, in a few words: archived, its releases stopped working, replaced by a fork (name it).
+- **Changed**: say what a fix does when "installs the right ZIP" undersells it.
+- Plain language, no commit hashes, PR numbers or field names.
+
+To write notes by hand (an older release, a rerun), give the script both files:
+
+```bash
+gh release download <previous tag> -p apps.json -O previous.json
+python scripts/release_notes.py previous.json registry/apps.json > notes.md   # `-` for no previous release
+```
