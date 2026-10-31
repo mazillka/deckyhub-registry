@@ -3008,6 +3008,456 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["XMDeck"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-dlss-enabler",
+      "name": "DLSS Enabler",
+      "description": "Patch and unpatch DLSS Enabler into a game's Proton prefix with managed DLL backups and launch options.",
+      "repo": "xXJSONDeruloXx/decky-dlss-enabler",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["DLSS Enabler"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "sdh-audioloader",
+      "name": "Audio Loader",
+      "description": "Replaces Steam UI sound effects with custom sounds and adds music to menus.",
+      "repo": "DeckThemes/SDH-AudioLoader",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Audio Loader"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-wifi-locker",
+      "name": "WiFi Locker",
+      "description": "Lock WiFi to a specific access point to prevent background scanning.",
+      "repo": "felipejfc/decky-wifi-locker",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["WiFi Locker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "sub-deck",
+      "name": "sub-deck",
+      "description": "Subscription manager for VLESS, VMess, Trojan, Shadowsocks, Hysteria 2 with automatic TUN routing.",
+      "repo": "rosakodu/sub-deck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["sub-deck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyhelixsrmanager",
+      "name": "HelixSR Manager",
+      "description": "Install HelixSR into Steam games in place of FSR 3.1, directly or through OptiScaler, and check that it runs.",
+      "repo": "PeroTuncay/DeckyHelixSRManager",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["HelixSR Manager"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-cloud-save",
+      "name": "Decky Cloud Save",
+      "description": "Manage cloud saves for games that do not support it in current year.",
+      "repo": "GedasFX/decky-cloud-save",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Cloud Save"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-emudeck-romm",
+      "name": "EmuDeck RomM Sync",
+      "description": "Turns your RomM server into a library for EmuDeck: places ROMs and BIOS in EmuDeck's folders and keeps saves in sync with RomM.",
+      "repo": "chenasraf/decky-emudeck-romm",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["EmuDeck RomM Sync"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "helixsr-decky",
+      "name": "HelixSR Decky",
+      "description": "Per-game HelixSR management, compatibility assessment, updates and rendering diagnostics.",
+      "repo": "dawoodtogoo2020-code/HelixSR-Decky",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["HelixSR Decky"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "reshadeck",
+      "name": "Reshadeck",
+      "description": "A plugin for loading reshade shaders on steam deck",
+      "repo": "mspeedo/Reshadeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Reshadeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "lumadeck",
+      "name": "LumaDeck",
+      "description": "Decky Loader plugin for game library and configuration management on Steam Deck",
+      "repo": "jayool/LumaDeck",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["LumaDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-windows-tool",
+      "name": "DeckyWindowsTools",
+      "description": "DeckyWindowsTools.",
+      "repo": "namquang93/decky-windows-tool",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckyWindowsTools"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ally-fix",
+      "name": "Ally Fix",
+      "description": "One-click fixes for the ROG Xbox Ally X on SteamOS: CPU boost, vibration intensity, fan noise after resume, gyro yaw and the controller...",
+      "repo": "lonsdaleite/Ally-Fix",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Ally Fix"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "armadalsfg",
+      "name": "Armada LSFG",
+      "description": "Unofficial Decky plugin for managing LSFG-VK profiles on ArmadaOS.",
+      "repo": "BakaPute/ArmadaLSFG",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["Armada LSFG"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "net-merge-decky",
+      "name": "NetMerge",
+      "description": "Combine Wi-Fi, Ethernet, and Phone Tethering into one aggregated connection for faster Steam downloads and parallel transfers.",
+      "repo": "FlashWreck/net-merge-decky",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["NetMerge"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-bazaar",
+      "name": "Decky Bazaar",
+      "description": "Manage every installed Decky plugin, including ones from outside the official store.",
+      "repo": "danielcamilo1/decky-bazaar",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Bazaar"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckatv",
+      "name": "DeckaTV",
+      "description": "Pair and control network TVs, and auto-switch HDMI input when the machine is docked to a specific screen.",
+      "repo": "jeanbottein/DeckaTV",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckaTV"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "egpu-switch",
+      "name": "eGPU-Switch",
+      "description": "Discontinued: use Yby eGPU (github.com/TiPSilva/yby-egpu).",
+      "repo": "TiPSilva/egpu-switch",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["eGPU-Switch"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "trailerhero",
+      "name": "TrailerHero",
+      "description": "Fade Steam Big Picture hero art into quiet game trailers.",
+      "repo": "LoZazaMastro/TrailerHero",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["TrailerHero"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "helixsr-decky-plugin-muse",
+      "name": "HelixSR Muse Plugin",
+      "description": "Download HelixSR releases, build the network, and install it into compatible games.",
+      "repo": "enzodiloreto/helixsr-decky-plugin-muse",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["HelixSR Muse Plugin"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "now-playing",
+      "name": "Now Playing",
+      "description": "A console-style Windows music companion with Spotify, YouTube Music, local playback, SMTC controls and fullscreen visuals.",
+      "repo": "LoZazaMastro/Now-Playing",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Now Playing"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "sdc-benchmark",
+      "name": "SDC Benchmark",
+      "description": "Multilingual Gamescope benchmark with per-frame metrics, CSV and PNG reports.",
+      "repo": "Steamdeckchecker/SDC-Benchmark-",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["SDC Benchmark"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-stormbreaker",
+      "name": "Stormbreaker",
+      "description": "Prevents and treats a rare SteamOS glitch where the Quick Access Menu (QAM) gets stuck upon opening, leaving controls unresponsive.",
+      "repo": "FAILINATOR5000/decky-stormbreaker",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Stormbreaker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "launch-curtain",
+      "name": "Launch Curtain",
+      "description": "A Windows launch curtain for Steam Big Picture with per-game artwork, iiDB Soundbites, and Modern or Classic launch modes.",
+      "repo": "LoZazaMastro/Launch-Curtain",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Launch Curtain"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "forza-dualsense-decky",
+      "name": "Forza DualSense Haptics",
+      "description": "Forza telemetry-driven DualSense adaptive triggers with live traction feedback.",
+      "repo": "woodsi3/forza-dualsense-decky",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Forza DualSense Haptics"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-nvidia-update",
+      "name": "Decky NVIDIA Update",
+      "description": "Prepare an NVIDIA driver in the inactive SteamOS A/B system.",
+      "repo": "moi952/decky-nvidia-update",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Decky NVIDIA Update"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "controllerpriority",
+      "name": "ControllerPriority",
+      "description": "Decky Loader Plugin to automatically change the controller priority when a new controller is detected",
+      "repo": "FGOD1983/ControllerPriority",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["ControllerPriority"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "livetranslate-decky",
+      "name": "LiveTranslator-kun",
+      "description": "Decky control panel for the PlayTranslate capture engine.",
+      "repo": "neatsorg/livetranslate-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["LiveTranslator-kun"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-fsg",
+      "name": "FSG",
+      "description": "Lists the Steam games that are 100% off (free to keep) and adds them to your library, automatically if you want.",
+      "repo": "koua29/decky-fsg",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["FSG"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-screen-colors",
+      "name": "Screen Colors",
+      "description": "Screen color adjustment (saturation, vibrance, temperature, OLED look) via a gamescope 3D LUT. Works on modern SteamOS.",
+      "repo": "PacificSilent/decky-screen-colors",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Screen Colors"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-recorder-fork",
+      "name": "Decky Recorder",
+      "description": "Record your games with Decky Recorder",
+      "repo": "evanjs/decky-recorder-fork",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Recorder"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "amneziawg-deck",
+      "name": "AmneziaWG",
+      "description": "Connect to your AmneziaWG (obfuscated WireGuard) VPN from Steam Deck Game Mode.",
+      "repo": "basuev/amneziawg-deck",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["AmneziaWG"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "weather",
+      "name": "Weather",
+      "description": "A compact weather panel for Decky Loader, with optional current weather next to the Steam top-bar clock.",
+      "repo": "LoZazaMastro/Weather",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Weather"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "gfg-extreme",
+      "name": "GFG Extreme",
+      "description": "GFG Extreme 3.3: frame generation x2–x3.75 on its own engine (GSF Kedavra in Gamescope), Autopilot with Benchmark, TDP Governor and a...",
+      "repo": "wavessevaw/GFG-Extreme",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["GFG Extreme"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-capydeploy",
+      "name": "CapyDeploy",
+      "description": "Receive games from your PC and create Steam shortcuts automatically. No restart needed.",
+      "repo": "lobinuxsoft/decky-capydeploy",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["CapyDeploy"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-plugin-homeassistant",
+      "name": "Home Assistant MQTT",
+      "description": "Publish Steam Deck telemetry (battery, disk, game, network) to Home Assistant via MQTT Discovery.",
+      "repo": "jamesbiederbeck/decky-plugin-homeassistant",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Home Assistant MQTT"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "uran",
+      "name": "Uran",
+      "description": "Companion Decky plugin for ASSella: register Steam games into SLSsteam using AT0-M mode, and manage your AT0-M library and Hubcap API key.",
+      "repo": "niwia/Uran",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Uran"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "spoutremoteplay",
+      "name": "SpoutRemotePlay",
+      "description": "Companion for native Steam Remote Play: wake your PC, pair once, and while you stream the game stays on a virtual display matching your...",
+      "repo": "justjoseorg/SpoutRemotePlay",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SpoutRemotePlay"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "armada-box64",
+      "name": "Armada Box64",
+      "description": "Run existing x8664 Proton builds under Box64 instead of FEX, with per-game NTSync, WoW64 and Box64 settings.",
+      "repo": "Ken5998/armada-box64",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["Armada Box64"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "playhub-surround",
+      "name": "Playhub Surround",
+      "description": "A friendly surround speaker checker for Decky Loader with Playhub styling, game-inspired tones, and automatic language matching.",
+      "repo": "LoZazaMastro/Playhub-Surround",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Playhub Surround"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steam-deck-colorful",
+      "name": "Colorful",
+      "description": "Shows a console panel with artwork and per-game info (playtime, saves, RetroAchievements, Steam achievements) next to the library grid,...",
+      "repo": "cedricdelpoux/steam-deck-colorful",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Colorful"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "friend-plaza",
+      "name": "Friend Plaza",
+      "description": "A town square for the friends who use the same plugin: 3D characters, minigames, points and a character store.",
+      "repo": "otisabiburada/friend-plaza",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Friend Plaza"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-time-changer",
+      "name": "Time Changer",
+      "description": "Change the system time from Game Mode: quick offsets, custom date & time picker, and one-click NTP restore.",
+      "repo": "nanwangjkl/decky-time-changer",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Time Changer"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-handheld-rgb",
+      "name": "Handheld RGB",
+      "description": "Universal RGB LED Controller for Handheld Gaming Consoles on SteamOS & Decky Loader",
+      "repo": "drewano/decky-handheld-rgb",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Handheld RGB"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-waydroid-toolbox",
+      "name": "WaydroidToolbox",
+      "description": "Waydroid status, container control, and SteamOS compatibility indicator",
+      "repo": "linkj-r/decky-waydroid-toolbox",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["WaydroidToolbox"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-stt-keyboard",
+      "name": "STT Keyboard",
+      "description": "Adds speech-to-text functionality to Steam Deck's virtual keyboard for faster text input",
+      "repo": "sebastianuxd/decky-stt-keyboard",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["STT Keyboard"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-wifi-streaming-optimizer",
+      "name": "WiFi Optimizer Streaming",
+      "description": "WiFi optimizations for game streaming, applied automatically only while a streaming app runs.",
+      "repo": "bassobr/Decky-Wifi-Streaming-Optimizer",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["WiFi Optimizer Streaming"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-auto-ac3",
+      "name": "Dolby Digital 5.1",
+      "description": "Activa transcodificación AC-3 5.1 en tiempo real para HDMI en SteamOS.",
+      "repo": "inthe92/decky-auto-ac3",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Dolby Digital 5.1"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-llm-translator",
+      "name": "Decky LLM Translator",
+      "description": "Translate on-screen game text with configurable LLM endpoints",
+      "repo": "Raindropx/Decky-LLM-Translator",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky LLM Translator"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-translator-llm",
+      "name": "Translator LLM",
+      "description": "Translate anything on your screen to your language",
+      "repo": "worldnine/Decky-Translator-LLM",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Translator LLM"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "bc250-perf-profile-switcher",
+      "name": "BC-250 Performance",
+      "description": "Set the BC-250 GPU max clock live via a slider and custom profiles, driving the cyan-skillfish-smu governor.",
+      "repo": "mix3d/bc250-perf-profile-switcher",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["BC-250 Performance"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }

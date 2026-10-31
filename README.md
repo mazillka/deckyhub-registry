@@ -374,6 +374,56 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | SDH-Ludusavi | Utilities | [beallio/SDH-Ludusavi](https://github.com/beallio/SDH-Ludusavi) |
 | Trailer Hero | Game Libraries | [Ak4ai/decky-trailer-hero](https://github.com/Ak4ai/decky-trailer-hero) |
 | XMDeck | Utilities | [PrivateiFox/XMDeck](https://github.com/PrivateiFox/XMDeck) |
+| DLSS Enabler | Launch Options | [xXJSONDeruloXx/decky-dlss-enabler](https://github.com/xXJSONDeruloXx/decky-dlss-enabler) |
+| Audio Loader | Customization | [DeckThemes/SDH-AudioLoader](https://github.com/DeckThemes/SDH-AudioLoader) |
+| WiFi Locker | Utilities | [felipejfc/decky-wifi-locker](https://github.com/felipejfc/decky-wifi-locker) |
+| sub-deck | Utilities | [rosakodu/sub-deck](https://github.com/rosakodu/sub-deck) |
+| HelixSR Manager | Frame Generation | [PeroTuncay/DeckyHelixSRManager](https://github.com/PeroTuncay/DeckyHelixSRManager) |
+| Decky Cloud Save | Utilities | [GedasFX/decky-cloud-save](https://github.com/GedasFX/decky-cloud-save) |
+| EmuDeck RomM Sync | Game Libraries | [chenasraf/decky-emudeck-romm](https://github.com/chenasraf/decky-emudeck-romm) |
+| HelixSR Decky | Frame Generation | [dawoodtogoo2020-code/HelixSR-Decky](https://github.com/dawoodtogoo2020-code/HelixSR-Decky) |
+| Reshadeck | Utilities | [mspeedo/Reshadeck](https://github.com/mspeedo/Reshadeck) |
+| LumaDeck | Game Libraries | [jayool/LumaDeck](https://github.com/jayool/LumaDeck) |
+| DeckyWindowsTools | Utilities | [namquang93/decky-windows-tool](https://github.com/namquang93/decky-windows-tool) |
+| Ally Fix | Controllers | [lonsdaleite/Ally-Fix](https://github.com/lonsdaleite/Ally-Fix) |
+| Armada LSFG | Frame Generation | [BakaPute/ArmadaLSFG](https://github.com/BakaPute/ArmadaLSFG) |
+| NetMerge | Performance | [FlashWreck/net-merge-decky](https://github.com/FlashWreck/net-merge-decky) |
+| Decky Bazaar | Utilities | [danielcamilo1/decky-bazaar](https://github.com/danielcamilo1/decky-bazaar) |
+| DeckaTV | Utilities | [jeanbottein/DeckaTV](https://github.com/jeanbottein/DeckaTV) |
+| eGPU-Switch | Performance | [TiPSilva/egpu-switch](https://github.com/TiPSilva/egpu-switch) |
+| TrailerHero | Game Libraries | [LoZazaMastro/TrailerHero](https://github.com/LoZazaMastro/TrailerHero) |
+| HelixSR Muse Plugin | Frame Generation | [enzodiloreto/helixsr-decky-plugin-muse](https://github.com/enzodiloreto/helixsr-decky-plugin-muse) |
+| Now Playing | Game Libraries | [LoZazaMastro/Now-Playing](https://github.com/LoZazaMastro/Now-Playing) |
+| SDC Benchmark | Performance | [Steamdeckchecker/SDC-Benchmark-](https://github.com/Steamdeckchecker/SDC-Benchmark-) |
+| Stormbreaker | Utilities | [FAILINATOR5000/decky-stormbreaker](https://github.com/FAILINATOR5000/decky-stormbreaker) |
+| Launch Curtain | Utilities | [LoZazaMastro/Launch-Curtain](https://github.com/LoZazaMastro/Launch-Curtain) |
+| Forza DualSense Haptics | Controllers | [woodsi3/forza-dualsense-decky](https://github.com/woodsi3/forza-dualsense-decky) |
+| Decky NVIDIA Update | Performance | [moi952/decky-nvidia-update](https://github.com/moi952/decky-nvidia-update) |
+| ControllerPriority | Controllers | [FGOD1983/ControllerPriority](https://github.com/FGOD1983/ControllerPriority) |
+| LiveTranslator-kun | Utilities | [neatsorg/livetranslate-decky](https://github.com/neatsorg/livetranslate-decky) |
+| FSG | Game Libraries | [koua29/decky-fsg](https://github.com/koua29/decky-fsg) |
+| Screen Colors | Customization | [PacificSilent/decky-screen-colors](https://github.com/PacificSilent/decky-screen-colors) |
+| Decky Recorder | Utilities | [evanjs/decky-recorder-fork](https://github.com/evanjs/decky-recorder-fork) |
+| AmneziaWG | Customization | [basuev/amneziawg-deck](https://github.com/basuev/amneziawg-deck) |
+| Weather | Utilities | [LoZazaMastro/Weather](https://github.com/LoZazaMastro/Weather) |
+| GFG Extreme | Frame Generation | [wavessevaw/GFG-Extreme](https://github.com/wavessevaw/GFG-Extreme) |
+| CapyDeploy | Utilities | [lobinuxsoft/decky-capydeploy](https://github.com/lobinuxsoft/decky-capydeploy) |
+| Home Assistant MQTT | Performance | [jamesbiederbeck/decky-plugin-homeassistant](https://github.com/jamesbiederbeck/decky-plugin-homeassistant) |
+| Uran | Game Libraries | [niwia/Uran](https://github.com/niwia/Uran) |
+| SpoutRemotePlay | Utilities | [justjoseorg/SpoutRemotePlay](https://github.com/justjoseorg/SpoutRemotePlay) |
+| Armada Box64 | Launch Options | [Ken5998/armada-box64](https://github.com/Ken5998/armada-box64) |
+| Playhub Surround | Utilities | [LoZazaMastro/Playhub-Surround](https://github.com/LoZazaMastro/Playhub-Surround) |
+| Colorful | Game Libraries | [cedricdelpoux/steam-deck-colorful](https://github.com/cedricdelpoux/steam-deck-colorful) |
+| Friend Plaza | Utilities | [otisabiburada/friend-plaza](https://github.com/otisabiburada/friend-plaza) |
+| Time Changer | Utilities | [nanwangjkl/decky-time-changer](https://github.com/nanwangjkl/decky-time-changer) |
+| Handheld RGB | Controllers | [drewano/decky-handheld-rgb](https://github.com/drewano/decky-handheld-rgb) |
+| WaydroidToolbox | Utilities | [linkj-r/decky-waydroid-toolbox](https://github.com/linkj-r/decky-waydroid-toolbox) |
+| STT Keyboard | Utilities | [sebastianuxd/decky-stt-keyboard](https://github.com/sebastianuxd/decky-stt-keyboard) |
+| WiFi Optimizer Streaming | Utilities | [bassobr/Decky-Wifi-Streaming-Optimizer](https://github.com/bassobr/Decky-Wifi-Streaming-Optimizer) |
+| Dolby Digital 5.1 | Utilities | [inthe92/decky-auto-ac3](https://github.com/inthe92/decky-auto-ac3) |
+| Decky LLM Translator | Utilities | [Raindropx/Decky-LLM-Translator](https://github.com/Raindropx/Decky-LLM-Translator) |
+| Translator LLM | Utilities | [worldnine/Decky-Translator-LLM](https://github.com/worldnine/Decky-Translator-LLM) |
+| BC-250 Performance | Performance | [mix3d/bc250-perf-profile-switcher](https://github.com/mix3d/bc250-perf-profile-switcher) |
 
 ## Where the plugins come from
 
