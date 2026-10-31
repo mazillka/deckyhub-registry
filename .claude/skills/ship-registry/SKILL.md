@@ -1,6 +1,6 @@
 ---
 name: ship-registry
-description: Ship what's on the registry's develop branch to main, where every DeckyHub install reads it, merge main back into develop, and write the registry releases' notes. Use when asked to write registry release notes, or when asked to release, ship, publish or promote registry changes, open the develop → main PR, or fix a develop/main conflict.
+description: Ship what's on the registry's develop branch to main, where every DeckyHub install reads it, merge main back into develop, and check the registry releases' notes. Use when asked about registry release notes, or when asked to release, ship, publish or promote registry changes, open the develop → main PR, or fix a develop/main conflict.
 ---
 
 # Shipping the registry
@@ -52,31 +52,19 @@ Merge this one with **Create a merge commit**, the one PR that isn't squashed.
 - `curl -s https://raw.githubusercontent.com/mazillka/deckyhub-registry/release-index/stats.json | head -c 300` shows the new `generatedAt`.
 - The catalog at https://mazillka.github.io/deckyhub-registry/ loads (Pages can take a few minutes).
 
-## 5. Write the release notes
+## 5. Check the release notes
 
-Every registry release, `develop` pre-releases too, gets notes a Steam Deck user can read. `registry-release.yml` only writes "registry/apps.json from main at <sha>", so once its run finishes, replace that with `gh release edit <tag> --notes-file <file>`. This covers the release this ship made on `main`, and the `-develop` pre-release made when a PR that changes `apps.json` (a `discover/` PR too) merges into `develop`.
+Every registry release, `develop` pre-releases too, gets notes a Steam Deck user can read. `registry-release.yml` writes them itself: `scripts/release_notes.py` compares `apps.json` with the channel's previous release (tags ending `-develop` are `develop`'s, the others `main`'s) and lists plugins **Added** (by category, with forks named), **Removed** and **Changed**, then the plugin count. This covers the release this ship made on `main`, and the `-develop` pre-release made when a PR that changes `apps.json` (a `discover/` PR too) merges into `develop`.
 
-Compare with the previous release of the same channel (tags ending `-develop` are `develop`'s; the others are `main`'s; the first release of a channel has nothing to compare):
+Once its run finishes, read the notes (`gh release view <tag>`) and fix what the script can't know, with `gh release edit <tag> --notes-file <file>`:
+
+- **Removed**: add why, in a few words: archived, its releases stopped working, replaced by a fork (name it).
+- **Changed**: say what a fix does when "installs the right ZIP" undersells it.
+- Plain language, no commit hashes, PR numbers or field names.
+
+To write notes by hand (an older release, a rerun), give the script both files:
 
 ```bash
-git fetch origin --tags
-gh release list --limit 20 --json tagName --jq '.[].tagName'
-python - <previous tag> <new tag> <<'PY'
-import json, subprocess, sys
-load = lambda ref: {a["id"]: a for a in json.loads(subprocess.check_output(["git", "show", f"{ref}:registry/apps.json"]))["apps"]}
-old, new = load(sys.argv[1]), load(sys.argv[2])
-for i in new.keys() - old.keys(): print(f"+ {new[i]['name']} ({new[i]['repo']}, {new[i]['category']}): {new[i]['description']}")
-for i in old.keys() - new.keys(): print(f"- {old[i]['name']} ({old[i]['repo']})")
-for i in old.keys() & new.keys():
-    changed = [k for k in old[i].keys() | new[i].keys() if old[i].get(k) != new[i].get(k)]
-    if changed: print(f"~ {new[i]['name']}: {', '.join(sorted(changed))}")
-PY
+gh release download <previous tag> -p apps.json -O previous.json
+python scripts/release_notes.py previous.json registry/apps.json > notes.md   # `-` for no previous release
 ```
-
-Write it from that list, not from commit titles:
-
-- **Added**: each new plugin as `**Name**: what it does` (its description), grouped by category when there are more than a few.
-- **Removed**: each plugin and why, in a few words: archived, its releases stopped working, replaced by a fork (name it).
-- **Changed**: what a user notices, such as a new name, category or description, or a fixed install (an `asset` or `releaseTagInclude` fix: "installs the right ZIP again"). Leave out `detect` and other changes nobody sees.
-- Plain language, no commit hashes, PR numbers or field names. Leave out empty groups. If nothing a user sees changed, one line says so ("No plugin changes: registry maintenance only.").
-- End with how many plugins the list has now (`apps` length).
