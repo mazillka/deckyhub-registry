@@ -11,7 +11,7 @@ on:
     paths: [registry/apps.json, scripts/build_release_index.py]
   workflow_dispatch:
   schedule:
-    - cron: "17,47 * * * *"
+    - cron: "17 * * * *"
 
 permissions:
   contents: write

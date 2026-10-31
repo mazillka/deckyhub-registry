@@ -4,7 +4,7 @@
 
 Without a token DeckyHub may make 60 GitHub API calls an hour, and it needs one per
 listed repo, so a big list runs out on a single page load. The release-index workflow
-runs this every 30 minutes and publishes the file on the release-index branch, where DeckyHub
+runs this every hour and publishes the file on the release-index branch, where DeckyHub
 reads it from raw.githubusercontent.com (outside the API limit) in one request,
 calling the API itself only for repos the file doesn't have.
 
