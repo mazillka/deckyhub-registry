@@ -2999,6 +2999,15 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["Trailer Hero"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "xmdeck",
+      "name": "XMDeck",
+      "description": "Monitor and control Sony WH/WF-1000XM headphones directly from the Steam Quick Access Menu.",
+      "repo": "PrivateiFox/XMDeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["XMDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
