@@ -1,11 +1,13 @@
 name: Release index
 
-# Publishes releases.json and stats.json (scripts/build_release_index.py) on the release-index branch,
-# which DeckyHub reads instead of asking GitHub's API once per listed repo. Only main
-# is protected, so this job can replace that branch's single commit each run.
+# Publishes releases.json and stats.json (scripts/build_release_index.py), which DeckyHub
+# reads instead of asking GitHub's API once per listed repo: main's on the release-index
+# branch for everyone, develop's on release-index-develop for DeckyHub's pre-release
+# registry setting. Neither branch is protected, so this job can replace each one's
+# single commit every run.
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
     paths: [registry/apps.json, scripts/build_release_index.py]
   workflow_dispatch:
   schedule:
@@ -13,24 +15,60 @@ on:
 
 permissions:
   contents: write
-
-concurrency:
-  group: release-index
-  cancel-in-progress: true
+  # For the audit warning issue.
+  issues: write
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # A push rebuilds its own branch's index; the schedule and a manual run do both.
+        branch: ${{ fromJSON(github.event_name == 'push' && format('["{0}"]', github.ref_name) || '["main", "develop"]') }}
+    concurrency:
+      group: release-index-${{ matrix.branch }}
+      cancel-in-progress: true
+    env:
+      TARGET: ${{ matrix.branch == 'main' && 'release-index' || 'release-index-develop' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - run: python3 scripts/build_release_index.py "$RUNNER_TEMP/index"
+        with:
+          ref: ${{ matrix.branch }}
+      # develop with the same list and script as main would publish the same index: copy
+      # main's (at most one run older) instead of spending the shared token's GraphQL budget twice.
+      - id: same
+        if: matrix.branch == 'develop'
+        run: |
+          git fetch -q --depth 1 origin main
+          if git diff --quiet FETCH_HEAD HEAD -- registry/apps.json scripts/; then
+            git fetch -q --depth 1 origin release-index
+            mkdir -p "$RUNNER_TEMP/index"
+            for file in releases.json stats.json; do git show "FETCH_HEAD:$file" > "$RUNNER_TEMP/index/$file"; done
+            echo "copied=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.same.outputs.copied != 'true'
+        run: python3 scripts/build_release_index.py "$RUNNER_TEMP/index"
         env:
           GITHUB_TOKEN: ${{ github.token }}
+      # New audit warnings since the last published stats.json become an issue to review.
+      # Only for main, what people get. Never blocks publishing: DeckyHub reads this index.
+      - if: matrix.branch == 'main'
+        continue-on-error: true
+        run: |
+          git fetch -q --depth 1 origin release-index && git show FETCH_HEAD:stats.json > "$RUNNER_TEMP/old-stats.json" || echo '{}' > "$RUNNER_TEMP/old-stats.json"
+          python3 scripts/audit_alerts.py "$RUNNER_TEMP/old-stats.json" "$RUNNER_TEMP/index/stats.json" > "$RUNNER_TEMP/alerts.md"
+          grep -q . "$RUNNER_TEMP/alerts.md" || exit 0
+          gh issue create --title "New audit warnings ($(date -u +%Y-%m-%d))" --body-file "$RUNNER_TEMP/alerts.md"
+        env:
+          GH_TOKEN: ${{ github.token }}
       # One orphan commit, force-pushed, so the branch never grows a history.
       - run: |
-          git checkout --orphan release-index
+          git checkout --orphan "$TARGET"
           git rm -rfq .
           cp "$RUNNER_TEMP"/index/*.json .
           git add releases.json stats.json
-          git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qm "Release index"
-          git push -fq origin release-index
+          git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qm "Release index ($MATRIX_BRANCH)"
+          git push -fq origin "$TARGET"
+        env:
+          MATRIX_BRANCH: ${{ matrix.branch }}

@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from discover import candidates, category, entry_json, extended_items, ignored_repos, pick, short_description  # noqa: E402
+from discover import candidates, category, entry_json, extended_items, github_items, ignored_repos, pick, search_repos, short_description  # noqa: E402
 
 NOW = datetime(2026, 10, 28, tzinfo=timezone.utc)
 
@@ -81,6 +81,34 @@ class DiscoverTests(unittest.TestCase):
         self.assertEqual(json.loads(text), entry)
         self.assertIn('"detect": { "type": "decky-plugin", "names": ["Ä"] }', text)
 
+
+    def test_github_search_keeps_repos_with_a_named_root_plugin_json(self):
+        found = [
+            {"full_name": "o/plugin", "description": "Repo text", "stargazers_count": 7, "pushed_at": "2026-10-01T00:00:00Z", "archived": False},
+            {"full_name": "O/Plugin", "description": "same repo from a second search"},
+            {"full_name": "o/no-manifest"},
+            {"full_name": "o/broken", "description": None},
+        ]
+        manifests = {"o/plugin": {"name": "Plugin", "publish": {"description": "Does things", "tags": ["x"]}}, "o/broken": ["not", "a", "dict"]}
+        items = github_items(found, lambda repo: manifests.get(repo))
+        self.assertEqual(items, [{"repo": "o/plugin", "plugin": {"name": "Plugin", "publish": {"description": "Does things", "tags": ["x"]}}, "downloads": 7,
+                                  "archived": False, "latest_release": {"published_at": "2026-10-01T00:00:00Z"}, "source": "GitHub search"}])
+        # The last push stands in for the release date, so an untouched repo is skipped.
+        stale = github_items([{"full_name": "o/old", "pushed_at": "2023-01-01T00:00:00Z"}], lambda repo: {"name": "Old"})
+        self.assertEqual(candidates(stale, LISTED, NOW), [])
+
+    def test_search_pages_until_a_short_page(self):
+        pages = []
+
+        def search(url):
+            pages.append(url)
+            return {"items": [{"full_name": f"o/{len(pages)}-{n}"} for n in range(100 if len(pages) < 3 else 4)]}
+
+        import discover
+        discover.SEARCH_PAUSE = 0
+        self.assertEqual(len(search_repos("topic:decky", search)), 204)
+        self.assertEqual(len(pages), 3)
+        self.assertIn("fork%3Afalse", pages[0])
 
 if __name__ == "__main__":
     unittest.main()
