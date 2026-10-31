@@ -3458,6 +3458,456 @@
       "category": "Performance",
       "detect": { "type": "decky-plugin", "names": ["BC-250 Performance"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deck-cec-remote",
+      "name": "CEC Remote",
+      "description": "Map TV remote HDMI-CEC buttons to SteamOS actions (QAM, library, downloads, Steam menu).",
+      "repo": "tayicknay/deck-cec-remote",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["CEC Remote"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "sdhq-plugin",
+      "name": "Steam Deck HQ",
+      "description": "Official plugin from Steam Deck HQ. Allows you to browse game reviews and recommended settings.",
+      "repo": "DeckFilter/sdhq-plugin",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Steam Deck HQ"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "caretcontrol",
+      "name": "Caret Control",
+      "description": "Decky Loader plugin for moving the text caret while typing on Steam Deck.",
+      "repo": "woovs-cg/CaretControl",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Caret Control"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "armada-installer",
+      "name": "Armada Installer",
+      "description": "Decky plugin for installing Armada onto the internal disk from the SD-card installer environment",
+      "repo": "mydanyi/armada-installer",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Armada Installer"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "powertools",
+      "name": "PowerTools",
+      "description": "Power tweaks for power users",
+      "repo": "kmatzen/PowerTools",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["PowerTools"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "vitprog-allycenter",
+      "name": "ROG Xbox Ally X Center",
+      "description": "A comprehensive control center for the ASUS ROG Xbox Ally X - RGB lighting, battery health, device info, performance profiles, and...",
+      "repo": "VitProg/allycenter",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["ROG Xbox Ally X Center"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-add-non-steam-games",
+      "name": "Add Non-Steam Games",
+      "description": "Add non-Steam games to your Steam library without leaving Game Mode.",
+      "repo": "danielcamilo1/decky-add-non-steam-games",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["Add Non-Steam Games"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-podman-compose",
+      "name": "Podman Compose",
+      "description": "Manage Podman Compose stacks from Decky.",
+      "repo": "dr1s/decky-podman-compose",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Podman Compose"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-macro",
+      "name": "Decky Macro",
+      "description": "Record and replay precise gamepad macros.",
+      "repo": "olivervbk/decky-macro",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Decky Macro"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "playhub-notifications",
+      "name": "Playhub Notifications",
+      "description": "Replace Steam Big Picture toasts and style the system volume overlay with seven native Playhub themes.",
+      "repo": "LoZazaMastro/Playhub-Notifications",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Playhub Notifications"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "sharp-filter-selector",
+      "name": "Sharp Filter Selector",
+      "description": "Control Gamescope Sharp scaling between native SGSR, AMD FSR and NVIDIA NIS from Decky's Quick Access Menu.",
+      "repo": "N3ruk/Sharp-Filter-Selector",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["Sharp Filter Selector"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "couchlink",
+      "name": "CouchLink",
+      "description": "Steam Remote Play helpers: Wake-on-LAN, remote sleep/power-off, auto-sleep after streaming, stream display profile.",
+      "repo": "Nico8324/CouchLink",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["CouchLink"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "dsh-deck-pet",
+      "name": "DSH 鲸鱼娘桌宠",
+      "description": "DSH（DeepSeek Harness）+ 鲸鱼娘 Live2D 桌宠的 Steam Deck 插件：Game Mode 里截图问攻略、语音提问、桌宠悬浮，语气由她本体人设驱动。A Decky Loader plugin that brings DSH and the...",
+      "repo": "228co/dsh-deck-pet",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DSH 鲸鱼娘桌宠"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "caroufix",
+      "name": "CarouFix",
+      "description": "True centering for the Big Picture recent games carousel: the selected cover sits exactly at the center of the screen, while behavior at...",
+      "repo": "vibekun/CarouFix",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["CarouFix"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-wake-on-controller",
+      "name": "Wake on Controller",
+      "description": "Wake your Steam Deck from sleep by pressing the home button on any Bluetooth controller — Xbox, DualSense, Switch Pro, 8BitDo, and more",
+      "repo": "steve133t/decky-wake-on-controller",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Wake on Controller"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-portal",
+      "name": "Portal",
+      "description": "Open a portable in-game web portal for streaming, browsing, and media while you play.",
+      "repo": "ajustinjames/decky-portal",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Portal"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "savewaypoint",
+      "name": "SaveWaypoint",
+      "description": "Auto-detect and sync your non-Steam game saves (emulators, Proton) to your own private GitHub repo. Set a waypoint for your saves.",
+      "repo": "koua29/savewaypoint",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["SaveWaypoint"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckypip",
+      "name": "Decky PiP",
+      "description": "Picture-in-Picture web video overlay for Gaming Mode with per-game profiles and DRM-mode browser launch.",
+      "repo": "Raanh/DeckyPiP",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky PiP"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckywardenvault",
+      "name": "Bitwarden Vault",
+      "description": "Access your Bitwarden password vault directly from Steam Deck Gaming Mode.",
+      "repo": "Bluin0/DeckyWardenVault",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Bitwarden Vault"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckycord",
+      "name": "Deckycord",
+      "description": "Discord voice, chat, notifications and Go Live screensharing, controller-first, backed by a hidden Vesktop.",
+      "repo": "BwahFox/deckycord",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Deckycord"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-trailers",
+      "name": "Decky Trailers",
+      "description": "Brings official cinematic game trailers to your game details page with a native-feeling UI.",
+      "repo": "kEnder242/decky-trailers",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Decky Trailers"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-qam",
+      "name": "decky-QAM",
+      "description": "Remap the Quick Access Menu to a back grip button (L4/L5/R4/R5). For Steam Decks whose QAM (\"...\") hardware button is broken.",
+      "repo": "nphil/decky-QAM",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["decky-QAM"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "drafg-decky",
+      "name": "DraFG",
+      "description": "Turn on DraFG frame generation in Game Mode and set it up from the Quick Access menu. Needs DraFG from Steam.",
+      "repo": "DraskeLabs/drafg-decky",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["DraFG"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-grimoire",
+      "name": "Grimoire",
+      "description": "Your ARPG build guides one button press away.",
+      "repo": "Sabissimo/decky-grimoire",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Grimoire"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckops-decky",
+      "name": "DeckOps",
+      "description": "Tailscale on/off, start/stop your self-hosted services (OpenClaw gateway) exposed over Tailscale Serve, and chat with the on-device...",
+      "repo": "aanze/deckops-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckOps"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "vpn-decky",
+      "name": "VPN Decky",
+      "description": "VPN plugin for steam decky loader",
+      "repo": "darkwolf3411/vpn-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["VPN Decky"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-audiobookshelf",
+      "name": "Audiobookshelf",
+      "description": "Browse and control Audiobookshelf without leaving your game.",
+      "repo": "Zach-Allen/decky-audiobookshelf",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Audiobookshelf"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-sound-toasts",
+      "name": "Decky Sound Toasts",
+      "description": "Play custom, per-category notification sounds on the Steam Deck.",
+      "repo": "K1tsune12/decky-sound-toasts",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Sound Toasts"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-display-switcher",
+      "name": "Display Switcher",
+      "description": "Discover connected displays, show the active Gamescope output and switch directly from the Quick Access Menu.",
+      "repo": "tomsch/decky-display-switcher",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Display Switcher"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-drive-label",
+      "name": "DriveLabel",
+      "description": "Labels every game cover in your library with the drive it is installed on (SSD, microSD, external HDD...), including non-Steam games.",
+      "repo": "DavidDeNicola/decky-drive-label",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["DriveLabel"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamos-companion-decky",
+      "name": "SteamOS Companion",
+      "description": "Authenticated LAN Client, Server, or Both plugin for SteamOS Companion.",
+      "repo": "tuthan/steamos-companion-decky",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["SteamOS Companion"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-wifi-guard",
+      "name": "Wi-Fi Guard",
+      "description": "Automatically pause Steam downloads on your chosen Wi-Fi network.",
+      "repo": "drewboardman/decky-wifi-guard",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Wi-Fi Guard"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-odin-gyro",
+      "name": "Odin Gyro",
+      "description": "Install/update and calibrate the AYN Odin 3 gyro fix on Armada.",
+      "repo": "razoomnik/decky-odin-gyro",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Odin Gyro"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "fhds-in-decky-loader",
+      "name": "FHDS Adaptive Triggers",
+      "description": "Forza Horizon DualSense adaptive trigger effects on Steam Deck.",
+      "repo": "Sci-fi-Borg/fhds-in-decky-loader",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["FHDS Adaptive Triggers"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "allyfancontrol",
+      "name": "AllyFanControl",
+      "description": "Decky Loader plugin for ROG Ally fan curve control",
+      "repo": "PedroReyVarela/AllyFanControl-",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["AllyFanControl"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "amneziavpntoggle",
+      "name": "AmneziaVpnToggle",
+      "description": "Simple on/off toggle for AmneziaVPN with live connection status, from Game Mode.",
+      "repo": "tyrypyrking/AmneziaVpnToggle",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["AmneziaVpnToggle"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-digimon-sts-team-builder",
+      "name": "Digimon Time Stranger Team Builder",
+      "description": "Plan Digimon Story: Time Stranger evolution lines from the Quick Access Menu. A gamepad-native port of diegogliarte's web team builder.",
+      "repo": "danielcamilo1/decky-digimon-sts-team-builder",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Digimon Time Stranger Team Builder"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckwebbrowser",
+      "name": "Web Browser",
+      "description": "A web browser with multiple features including tabs!, limited gamepad support, favorites and a multifunction search/url bar.",
+      "repo": "Lexodeus/DeckWebBrowser",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Web Browser"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "dualsensedeck",
+      "name": "DualSenseDeck",
+      "description": "DualSense / DualSense Edge adaptive triggers, lightbar, mic LED and DSX mod UDP compatibility.",
+      "repo": "the8055u/DualSenseDeck",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["DualSenseDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "syncdeck",
+      "name": "SyncDeck",
+      "description": "A control layer for Syncthing on Steam Deck.",
+      "repo": "infernokun/SyncDeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SyncDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-stwebsrv",
+      "name": "STWebSRV",
+      "description": "Starts a web file manager on your device: browse, download, upload, rename and edit files from any browser on your network.",
+      "repo": "koua29/decky-stwebsrv",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["STWebSRV"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-local-saves-sync",
+      "name": "Local Saves Sync",
+      "description": "Sync non-Steam game saves between your Steam Deck / handheld and a Windows PC over your local network, the way Steam Cloud does it for...",
+      "repo": "danielcamilo1/decky-local-saves-sync",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Local Saves Sync"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-prism",
+      "name": "Decky Prism",
+      "description": "Sync Prism Launcher instances to your Steam library with SteamGridDB artwork.",
+      "repo": "shadeov/decky-prism",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Decky Prism"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "forzahorizon-dualsense-steamos",
+      "name": "ForzaHorizon-DualSense",
+      "description": "Telemetry-driven DualSense triggers and grip haptics for Forza Horizon on SteamOS.",
+      "repo": "ccc007ccc/ForzaHorizon-DualSense-SteamOS",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["ForzaHorizon-DualSense"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-speed-test-china",
+      "name": "decky-speed-test-China",
+      "description": "面向 Steam Deck 和 SteamOS 中文用户的网络测速工具，可直接在游戏模式（Game Mode）下进行测速，无需切换到桌面模式。支持中国科学技术大学（中科大）、南京大学、南京航空航天大学三大高校测速节点，更准确反映中国大陆网络环境。",
+      "repo": "hayschan/decky-speed-test-China",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["decky-speed-test-China"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "vibrance-deck",
+      "name": "Vibrance",
+      "description": "Digital vibrance like NVIDIA: boosts screen saturation for games and the Steam UI using a gamescope look (3D LUT).",
+      "repo": "Pashka0950/vibrance-deck",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Vibrance"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ssh-helper-decky",
+      "name": "SSH Helper",
+      "description": "Enable and manage SSH access, autostart, connection details, and the SSH port.",
+      "repo": "thegreat7man/ssh-helper-decky",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["SSH Helper"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "claude-deck",
+      "name": "Claude",
+      "description": "Your Claude Code in the Quick Access menu: look at your game, talk it through, and control your Deck.",
+      "repo": "RyanWReid/claude-deck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Claude"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "gcm-launcher",
+      "name": "GCM-Launcher",
+      "description": "Install and launch the official Game Cheats Manager Windows build through Proton from your Steam library.",
+      "repo": "waynegeng/GCM-Launcher",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["GCM-Launcher"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-hyperhdr-toggle",
+      "name": "HyperHDR Toggle",
+      "description": "Turn HyperHDR ambient lighting on/off in Game Mode, capturing the gamescope output via PipeWire.",
+      "repo": "DarkTiengo/decky-hyperhdr-toggle",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["HyperHDR Toggle"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }

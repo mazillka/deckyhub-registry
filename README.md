@@ -19,9 +19,9 @@
 
 ## How it works
 
-DeckyHub downloads [`registry/apps.json`](registry/apps.json) from `main` every time it starts and keeps the last good copy for offline use. A change shipped to `main` reaches every installed DeckyHub on its next restart, with no DeckyHub release needed.
+DeckyHub downloads [`registry/apps.json`](registry/apps.json) every time it starts and keeps the last good copy for offline use. A change shipped to `main` reaches every installed DeckyHub on its next restart, with no DeckyHub release needed. Each change to the file is also published as a [release](https://github.com/mazillka/deckyhub-registry/releases) with notes on what changed ([registry-release workflow](.github/workflows/registry-release.yml)): DeckyHub 3.1.0 and newer read `apps.json` from the newest one first and fall back to `main`'s file, which older releases read directly.
 
-Testers can see changes before they ship: DeckyHub's opt-in **Settings** → **Repositories** → **Registry Channel: Pre-release** reads `develop` instead, both its `registry/apps.json` and a release index the same workflow publishes on the `release-index-develop` branch (copied from `main`'s when the two branches match). It falls back to `main`'s files when `develop`'s can't be read. **Stable** is the default.
+Testers can see changes before they ship: the opt-in **Registry Channel: Pre-release**, in DeckyHub's own **Manage** window (Quick Access → DeckyHub → **Manage**), reads `develop` instead (the newest registry release, pre-releases included, else `develop`'s file), both its `registry/apps.json` and a release index the same workflow publishes on the `release-index-develop` branch (copied from `main`'s when the two branches match). It falls back to `main`'s files when `develop`'s can't be read. **Stable** is the default.
 
 DeckyHub also reads every listed plugin's recent releases from one file (its 5 newest installable releases, plus the newest stable one if that's older), so it doesn't spend a GitHub API call per plugin (60 an hour without a token). The [release-index workflow](.github/workflows/release-index.yml) runs [`scripts/build_release_index.py`](scripts/build_release_index.py) every hour and whenever `apps.json` changes, and publishes `releases.json` on the [`release-index`](https://github.com/mazillka/deckyhub-registry/tree/release-index) branch. A new release can take up to an hour to show up in DeckyHub.
 
@@ -424,6 +424,56 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Decky LLM Translator | Utilities | [Raindropx/Decky-LLM-Translator](https://github.com/Raindropx/Decky-LLM-Translator) |
 | Translator LLM | Utilities | [worldnine/Decky-Translator-LLM](https://github.com/worldnine/Decky-Translator-LLM) |
 | BC-250 Performance | Performance | [mix3d/bc250-perf-profile-switcher](https://github.com/mix3d/bc250-perf-profile-switcher) |
+| CEC Remote | Game Libraries | [tayicknay/deck-cec-remote](https://github.com/tayicknay/deck-cec-remote) |
+| Steam Deck HQ | Utilities | [DeckFilter/sdhq-plugin](https://github.com/DeckFilter/sdhq-plugin) |
+| Caret Control | Utilities | [woovs-cg/CaretControl](https://github.com/woovs-cg/CaretControl) |
+| Armada Installer | Utilities | [mydanyi/armada-installer](https://github.com/mydanyi/armada-installer) |
+| PowerTools | Performance | [kmatzen/PowerTools](https://github.com/kmatzen/PowerTools) |
+| ROG Xbox Ally X Center | Performance | [VitProg/allycenter](https://github.com/VitProg/allycenter) |
+| Add Non-Steam Games | Launch Options | [danielcamilo1/decky-add-non-steam-games](https://github.com/danielcamilo1/decky-add-non-steam-games) |
+| Podman Compose | Utilities | [dr1s/decky-podman-compose](https://github.com/dr1s/decky-podman-compose) |
+| Decky Macro | Controllers | [olivervbk/decky-macro](https://github.com/olivervbk/decky-macro) |
+| Playhub Notifications | Customization | [LoZazaMastro/Playhub-Notifications](https://github.com/LoZazaMastro/Playhub-Notifications) |
+| Sharp Filter Selector | Frame Generation | [N3ruk/Sharp-Filter-Selector](https://github.com/N3ruk/Sharp-Filter-Selector) |
+| CouchLink | Performance | [Nico8324/CouchLink](https://github.com/Nico8324/CouchLink) |
+| DSH 鲸鱼娘桌宠 | Utilities | [228co/dsh-deck-pet](https://github.com/228co/dsh-deck-pet) |
+| CarouFix | Customization | [vibekun/CarouFix](https://github.com/vibekun/CarouFix) |
+| Wake on Controller | Controllers | [steve133t/decky-wake-on-controller](https://github.com/steve133t/decky-wake-on-controller) |
+| Portal | Utilities | [ajustinjames/decky-portal](https://github.com/ajustinjames/decky-portal) |
+| SaveWaypoint | Launch Options | [koua29/savewaypoint](https://github.com/koua29/savewaypoint) |
+| Decky PiP | Utilities | [Raanh/DeckyPiP](https://github.com/Raanh/DeckyPiP) |
+| Bitwarden Vault | Utilities | [Bluin0/DeckyWardenVault](https://github.com/Bluin0/DeckyWardenVault) |
+| Deckycord | Controllers | [BwahFox/deckycord](https://github.com/BwahFox/deckycord) |
+| Decky Trailers | Customization | [kEnder242/decky-trailers](https://github.com/kEnder242/decky-trailers) |
+| decky-QAM | Utilities | [nphil/decky-QAM](https://github.com/nphil/decky-QAM) |
+| DraFG | Frame Generation | [DraskeLabs/drafg-decky](https://github.com/DraskeLabs/drafg-decky) |
+| Grimoire | Utilities | [Sabissimo/decky-grimoire](https://github.com/Sabissimo/decky-grimoire) |
+| DeckOps | Utilities | [aanze/deckops-decky](https://github.com/aanze/deckops-decky) |
+| VPN Decky | Utilities | [darkwolf3411/vpn-decky](https://github.com/darkwolf3411/vpn-decky) |
+| Audiobookshelf | Controllers | [Zach-Allen/decky-audiobookshelf](https://github.com/Zach-Allen/decky-audiobookshelf) |
+| Decky Sound Toasts | Utilities | [K1tsune12/decky-sound-toasts](https://github.com/K1tsune12/decky-sound-toasts) |
+| Display Switcher | Utilities | [tomsch/decky-display-switcher](https://github.com/tomsch/decky-display-switcher) |
+| DriveLabel | Game Libraries | [DavidDeNicola/decky-drive-label](https://github.com/DavidDeNicola/decky-drive-label) |
+| SteamOS Companion | Performance | [tuthan/steamos-companion-decky](https://github.com/tuthan/steamos-companion-decky) |
+| Wi-Fi Guard | Utilities | [drewboardman/decky-wifi-guard](https://github.com/drewboardman/decky-wifi-guard) |
+| Odin Gyro | Controllers | [razoomnik/decky-odin-gyro](https://github.com/razoomnik/decky-odin-gyro) |
+| FHDS Adaptive Triggers | Controllers | [Sci-fi-Borg/fhds-in-decky-loader](https://github.com/Sci-fi-Borg/fhds-in-decky-loader) |
+| AllyFanControl | Performance | [PedroReyVarela/AllyFanControl-](https://github.com/PedroReyVarela/AllyFanControl-) |
+| AmneziaVpnToggle | Utilities | [tyrypyrking/AmneziaVpnToggle](https://github.com/tyrypyrking/AmneziaVpnToggle) |
+| Digimon Time Stranger Team Builder | Controllers | [danielcamilo1/decky-digimon-sts-team-builder](https://github.com/danielcamilo1/decky-digimon-sts-team-builder) |
+| Web Browser | Controllers | [Lexodeus/DeckWebBrowser](https://github.com/Lexodeus/DeckWebBrowser) |
+| DualSenseDeck | Controllers | [the8055u/DualSenseDeck](https://github.com/the8055u/DualSenseDeck) |
+| SyncDeck | Utilities | [infernokun/SyncDeck](https://github.com/infernokun/SyncDeck) |
+| STWebSRV | Utilities | [koua29/decky-stwebsrv](https://github.com/koua29/decky-stwebsrv) |
+| Local Saves Sync | Game Libraries | [danielcamilo1/decky-local-saves-sync](https://github.com/danielcamilo1/decky-local-saves-sync) |
+| Decky Prism | Game Libraries | [shadeov/decky-prism](https://github.com/shadeov/decky-prism) |
+| ForzaHorizon-DualSense | Controllers | [ccc007ccc/ForzaHorizon-DualSense-SteamOS](https://github.com/ccc007ccc/ForzaHorizon-DualSense-SteamOS) |
+| decky-speed-test-China | Utilities | [hayschan/decky-speed-test-China](https://github.com/hayschan/decky-speed-test-China) |
+| Vibrance | Customization | [Pashka0950/vibrance-deck](https://github.com/Pashka0950/vibrance-deck) |
+| SSH Helper | Controllers | [thegreat7man/ssh-helper-decky](https://github.com/thegreat7man/ssh-helper-decky) |
+| Claude | Utilities | [RyanWReid/claude-deck](https://github.com/RyanWReid/claude-deck) |
+| GCM-Launcher | Launch Options | [waynegeng/GCM-Launcher](https://github.com/waynegeng/GCM-Launcher) |
+| HyperHDR Toggle | Utilities | [DarkTiengo/decky-hyperhdr-toggle](https://github.com/DarkTiengo/decky-hyperhdr-toggle) |
 
 ## Where the plugins come from
 
@@ -493,7 +543,7 @@ CI runs on every pull request, on pushes to `main` and `develop`, and weekly bec
 
 ## Your own registry
 
-DeckyHub's **Repositories** → **Custom Registries** accepts `owner/repo` for any repository laid out like this one (`registry/apps.json` on the default branch), or any HTTPS `.json` URL. Fork this repository as a starting point, or build a list in the [registry editor](https://mazillka.github.io/deckyhub-registry/editor.html) and host the file it exports. An added registry can add apps but never replace one from this list.
+DeckyHub's **Settings** → **Repositories** → **Custom Registries** accepts `owner/repo` for any repository laid out like this one (`registry/apps.json` on the default branch), or any HTTPS `.json` URL. Fork this repository as a starting point, or build a list in the [registry editor](https://mazillka.github.io/deckyhub-registry/editor.html) and host the file it exports. An added registry can add apps but never replace one from this list.
 
 ## Disclaimer
 
