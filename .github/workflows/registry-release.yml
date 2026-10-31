@@ -28,14 +28,32 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # DeckyHub skips an empty or unknown list and reads the branch instead; don't publish one.
       - run: python3 -c "import json; d = json.load(open('registry/apps.json', encoding='utf-8')); assert d['schemaVersion'] == 1 and d['apps'], 'empty or unknown registry'"
+      # Notes from comparing this list with the channel's previous release (scripts/release_notes.py);
+      # the release index's stats.json only adds which new plugins are forks. Notes never hold up
+      # the release: if this step fails, the next one publishes with a one-line note instead.
+      - continue-on-error: true
+        run: |
+          if [ "$GITHUB_REF_NAME" = main ]; then filter='map(select(.isPrerelease | not))'; else filter='map(select(.tagName | endswith("-develop")))'; fi
+          previous="$(gh release list --limit 100 --json tagName,isPrerelease --jq "$filter | .[0].tagName // empty")"
+          old=-
+          if [ -n "$previous" ] && gh release download "$previous" -p apps.json -O "$RUNNER_TEMP/previous.json" --clobber; then old="$RUNNER_TEMP/previous.json"; fi
+          # A plugin added in this push isn't in its own channel's stats.json until the hourly
+          # rebuild; develop's index usually has it already, since plugins reach develop first.
+          for index in release-index-develop release-index; do
+            curl -fsSL "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$index/stats.json" -o "$RUNNER_TEMP/stats.json" && break
+          done || echo '{}' > "$RUNNER_TEMP/stats.json"
+          python3 scripts/release_notes.py "$old" registry/apps.json "$RUNNER_TEMP/stats.json" > "$RUNNER_TEMP/notes.md"
+          cat "$RUNNER_TEMP/notes.md"
       # One release per change, so each list stays downloadable as it was published.
       # gh uploads the file before publishing, so a release is never seen without it.
       - run: |
           day="$(date -u +%Y.%m.%d)"
+          notes="$RUNNER_TEMP/notes.md"
+          [ -s "$notes" ] || echo "registry/apps.json from $GITHUB_REF_NAME at ${GITHUB_SHA::7}." > "$notes"
           if [ "$GITHUB_REF_NAME" = main ]; then
             gh release create "registry-$day-$GITHUB_RUN_NUMBER" registry/apps.json --target "$GITHUB_SHA" --latest \
-              --title "Registry $day" --notes "registry/apps.json from main at ${GITHUB_SHA::7}."
+              --title "Registry $day" --notes-file "$notes"
           else
             gh release create "registry-$day-$GITHUB_RUN_NUMBER-develop" registry/apps.json --target "$GITHUB_SHA" --prerelease --latest=false \
-              --title "Registry $day (develop)" --notes "registry/apps.json from develop at ${GITHUB_SHA::7}, for DeckyHub's Pre-release registry channel."
+              --title "Registry $day (develop)" --notes-file "$notes"
           fi
