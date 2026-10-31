@@ -45,6 +45,6 @@ Run `scripts/validate.py` until the new entries print `ok`. A connection error o
 
 ## 3. Report
 
-Tell the user, per plugin: added or rejected and why, the category and description you chose (they're judgment calls), and anything odd (preview-only releases, a second ZIP, a name close to an existing entry's).
+Tell the user, per plugin: added or rejected and why, the category and description you chose (they're judgment calls), and anything odd (preview-only releases, a second ZIP, a name close to an existing entry's). Also say if it looks unfinished (find its id in `GITHUB_TOKEN=$(gh auth token) python scripts/quality.py`'s output: too new, no users, a placeholder version, no description) and whether [the audit](https://decky-extended-plugins.beallio.com/audit) flags its release; neither blocks a person's suggestion, but the user should know.
 
-Several plugins from one request go in one PR. For an issue or an outside PR, draft the reply (thanks, what was added or what to fix) and post it only after the user says so. For an outside PR, review its diff against the rules above instead of rewriting it, and suggest changes on the PR.
+Several plugins from one request go in one PR, against `develop` (see the README's Branches section). For an issue or an outside PR, draft the reply (thanks, what was added or what to fix) and post it only after the user says so. For an outside PR, review its diff against the rules above instead of rewriting it, and suggest changes on the PR.
