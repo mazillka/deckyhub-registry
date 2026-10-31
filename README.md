@@ -19,9 +19,9 @@
 
 ## How it works
 
-DeckyHub downloads [`registry/apps.json`](registry/apps.json) from `main` every time it starts and keeps the last good copy for offline use. A change shipped to `main` reaches every installed DeckyHub on its next restart, with no DeckyHub release needed.
+DeckyHub downloads [`registry/apps.json`](registry/apps.json) every time it starts and keeps the last good copy for offline use. A change shipped to `main` reaches every installed DeckyHub on its next restart, with no DeckyHub release needed. Each change to the file is also published as a [release](https://github.com/mazillka/deckyhub-registry/releases) with notes on what changed ([registry-release workflow](.github/workflows/registry-release.yml)): DeckyHub 3.1.0 and newer read `apps.json` from the newest one first and fall back to `main`'s file, which older releases read directly.
 
-Testers can see changes before they ship: DeckyHub's opt-in **Settings** → **Repositories** → **Registry Channel: Pre-release** reads `develop` instead, both its `registry/apps.json` and a release index the same workflow publishes on the `release-index-develop` branch (copied from `main`'s when the two branches match). It falls back to `main`'s files when `develop`'s can't be read. **Stable** is the default.
+Testers can see changes before they ship: the opt-in **Registry Channel: Pre-release**, in DeckyHub's own **Manage** window (Quick Access → DeckyHub → **Manage**), reads `develop` instead (the newest registry release, pre-releases included, else `develop`'s file), both its `registry/apps.json` and a release index the same workflow publishes on the `release-index-develop` branch (copied from `main`'s when the two branches match). It falls back to `main`'s files when `develop`'s can't be read. **Stable** is the default.
 
 DeckyHub also reads every listed plugin's recent releases from one file (its 5 newest installable releases, plus the newest stable one if that's older), so it doesn't spend a GitHub API call per plugin (60 an hour without a token). The [release-index workflow](.github/workflows/release-index.yml) runs [`scripts/build_release_index.py`](scripts/build_release_index.py) every hour and whenever `apps.json` changes, and publishes `releases.json` on the [`release-index`](https://github.com/mazillka/deckyhub-registry/tree/release-index) branch. A new release can take up to an hour to show up in DeckyHub.
 
@@ -493,7 +493,7 @@ CI runs on every pull request, on pushes to `main` and `develop`, and weekly bec
 
 ## Your own registry
 
-DeckyHub's **Repositories** → **Custom Registries** accepts `owner/repo` for any repository laid out like this one (`registry/apps.json` on the default branch), or any HTTPS `.json` URL. Fork this repository as a starting point, or build a list in the [registry editor](https://mazillka.github.io/deckyhub-registry/editor.html) and host the file it exports. An added registry can add apps but never replace one from this list.
+DeckyHub's **Settings** → **Repositories** → **Custom Registries** accepts `owner/repo` for any repository laid out like this one (`registry/apps.json` on the default branch), or any HTTPS `.json` URL. Fork this repository as a starting point, or build a list in the [registry editor](https://mazillka.github.io/deckyhub-registry/editor.html) and host the file it exports. An added registry can add apps but never replace one from this list.
 
 ## Disclaimer
 
