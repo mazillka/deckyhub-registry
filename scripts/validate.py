@@ -66,11 +66,17 @@ def matching_assets(app: dict, release: dict) -> list[dict]:
     return [asset for asset in release.get("assets", []) if (name := asset["name"].lower()).endswith(".zip") and not any(word in name for word in exclude) and all(word in name for word in include)]
 
 
+def installable_releases(app: dict, releases: list[dict]) -> list[dict]:
+    """The releases DeckyHub can install from, newest first: not drafts, matching
+    releaseTagInclude, with a ZIP the asset filter matches."""
+    tag = (app.get("releaseTagInclude") or "").lower()
+    return sorted((release for release in releases if not release.get("draft") and tag in str(release.get("tag_name") or release.get("name")).lower() and matching_assets(app, release)), key=lambda release: release.get("published_at") or "", reverse=True)
+
+
 def channel_releases(app: dict, releases: list[dict]) -> dict[str, dict | None]:
     """The release each channel's card shows: newest of the last 20 (stable sees stable only)
     with a matching ZIP. DeckyHub skips a newer one without it (a Windows-only build, say)."""
-    tag = (app.get("releaseTagInclude") or "").lower()
-    candidates = sorted((release for release in releases if not release.get("draft") and tag in str(release.get("tag_name") or release.get("name")).lower() and matching_assets(app, release)), key=lambda release: release.get("published_at") or "", reverse=True)
+    candidates = installable_releases(app, releases)
     return {"stable": next((release for release in candidates if not release.get("prerelease")), None), "prerelease": next(iter(candidates), None)}
 
 
