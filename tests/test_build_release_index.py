@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from build_release_index import RECENT, audit_index, build, plugin_stats  # noqa: E402
+from build_release_index import KEEP, audit_index, build, plugin_stats  # noqa: E402
 from validate import rest_shape  # noqa: E402
 
 
@@ -38,11 +38,17 @@ class BuildReleaseIndexTests(unittest.TestCase):
         self.assertEqual(index["stats"], {"o/a": {}})
         self.assertRegex(index["generatedAt"], r"^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$")
 
-    def test_index_keeps_only_the_newest_releases(self):
-        history = [release(f"v{day}", day, [("plugin.zip", 1)]) for day in range(1, RECENT + 6)]
+    def test_index_keeps_the_newest_installable_releases_and_the_newest_stable_one(self):
+        history = [release(f"v{day}-beta", day, [("plugin.zip", 1)], prerelease=True) for day in range(10, 10 + KEEP + 3)]
+        history += [release("v9-windows", 9, [("Setup.exe", 1)]), release("v8", 8, [("plugin.zip", 1)]), release("v7", 7, [("plugin.zip", 1)])]
         tags = [item["tag_name"] for item in build([entry()], lambda repo: history, no_stats)["releases"]["o/a"]]
-        self.assertEqual(len(tags), RECENT)
-        self.assertEqual(tags[:2], [f"v{RECENT + 5}", f"v{RECENT + 4}"])
+        # The KEEP newest with the plugin ZIP (all pre-releases here), then the newest
+        # stable one so the Stable channel still finds it; no ZIP-less or older ones.
+        self.assertEqual(tags, [f"v{day}-beta" for day in range(9 + KEEP + 3, 9 + 3, -1)] + ["v8"])
+        stable = [release(f"v{day}", day, [("plugin.zip", 1)]) for day in range(1, KEEP + 4)]
+        self.assertEqual(len(build([entry()], lambda repo: stable, no_stats)["releases"]["o/a"]), KEEP)
+        # Nothing installable: an empty list, which DeckyHub reads as "no release" without asking GitHub.
+        self.assertEqual(build([entry()], lambda repo: [release("v1", 1, [("Setup.exe", 1)])], no_stats)["releases"]["o/a"], [])
 
     def test_stats_count_plugin_zips_over_every_release_and_read_the_shown_release(self):
         history = [release(f"v{day}", day, [("plugin.zip", 10), ("plugin-source.zip", 7), ("Setup.exe", 3)]) for day in range(1, 26)]
