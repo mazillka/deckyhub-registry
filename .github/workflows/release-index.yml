@@ -35,7 +35,20 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ matrix.branch }}
-      - run: python3 scripts/build_release_index.py "$RUNNER_TEMP/index"
+      # develop with the same list and script as main would publish the same index: copy
+      # main's (at most one run older) instead of spending the shared token's GraphQL budget twice.
+      - id: same
+        if: matrix.branch == 'develop'
+        run: |
+          git fetch -q --depth 1 origin main
+          if git diff --quiet FETCH_HEAD HEAD -- registry/apps.json scripts/; then
+            git fetch -q --depth 1 origin release-index
+            mkdir -p "$RUNNER_TEMP/index"
+            for file in releases.json stats.json; do git show "FETCH_HEAD:$file" > "$RUNNER_TEMP/index/$file"; done
+            echo "copied=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.same.outputs.copied != 'true'
+        run: python3 scripts/build_release_index.py "$RUNNER_TEMP/index"
         env:
           GITHUB_TOKEN: ${{ github.token }}
       # New audit warnings since the last published stats.json become an issue to review.
