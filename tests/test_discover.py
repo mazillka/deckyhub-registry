@@ -108,7 +108,8 @@ class DiscoverTests(unittest.TestCase):
         discover.SEARCH_PAUSE = 0
         self.assertEqual(len(search_repos("topic:decky", search)), 204)
         self.assertEqual(len(pages), 3)
-        self.assertIn("fork%3Afalse", pages[0])
+        # Forks included (fork:true); active_fork() later keeps only the active ones.
+        self.assertIn("fork%3Atrue", pages[0])
 
     def test_a_fork_is_listed_only_while_it_carries_the_plugin_on(self):
         mine = {"published_at": "2026-10-01T00:00:00Z"}

@@ -107,7 +107,7 @@ def search_repos(query: str, search=None) -> list[dict]:
     search = search or (lambda url: json.loads(fetch(url)))
     repos = []
     for page in range(1, 11):
-        result = search(f"{API}/search/repositories?q={urllib.parse.quote(query + ' fork:false archived:false')}&per_page=100&page={page}")
+        result = search(f"{API}/search/repositories?q={urllib.parse.quote(query + ' fork:true archived:false')}&per_page=100&page={page}")
         repos += result.get("items", [])
         if len(result.get("items", [])) < 100:
             break
