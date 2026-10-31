@@ -53,7 +53,8 @@ class PluginContractTests(unittest.TestCase):
         fields = re.search(r"type PluginStats = \{([^}]*)\}", (PLUGIN / "src" / "types.ts").read_text(encoding="utf-8")).group(1)
         read = set(re.findall(r"(\w+)\?:", fields))
         written = set(plugin_stats({"repo": "o/a", "asset": {"include": [".zip"], "exclude": []}}, [], stars=lambda repo: 0, manifest=lambda asset: {}))
-        written |= {"warnings", "prereleaseWarnings"}
+        # Written only when there's something to say.
+        written |= {"warnings", "prereleaseWarnings", "fork"}
         self.assertLessEqual(read, written)
 
     def test_registry_still_sends_every_warning_deckyhub_knows(self):

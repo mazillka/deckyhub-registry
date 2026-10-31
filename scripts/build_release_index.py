@@ -4,7 +4,7 @@
 
 Without a token DeckyHub may make 60 GitHub API calls an hour, and it needs one per
 listed repo, so a big list runs out on a single page load. The release-index workflow
-runs this every 30 minutes and publishes the file on the release-index branch, where DeckyHub
+runs this every hour and publishes the file on the release-index branch, where DeckyHub
 reads it from raw.githubusercontent.com (outside the API limit) in one request,
 calling the API itself only for repos the file doesn't have.
 
@@ -14,9 +14,15 @@ It also writes stats.json for the catalog page, per plugin:
 - stars: the repo's GitHub stars.
 - updated: when the release DeckyHub shows (newest stable, else newest pre-release) came out.
 - root: whether that release's plugin.json asks Decky to run it as root.
+- fork: the owner/name a repo was forked from, for repos that are forks (missing otherwise).
 - warnings / prereleaseWarnings: what Decky Extended Plugins' audit found in that release
   (and in a newer pre-release, if any) that's worth warning about (see WARNINGS). Matched
   by the ZIP's sha256, else by tag. Missing when there's nothing to warn about.
+
+releases.json keeps, per repo, only the KEEP newest releases DeckyHub can install (with
+the entry's plugin ZIP), plus the newest stable one when it's older, so the default
+Stable channel always finds it. DeckyHub skips the others anyway; leaving them out keeps
+the file it downloads small.
 
 Releases and stars come from GitHub's GraphQL API (fetch_github in validate.py).
 """
@@ -26,7 +32,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from validate import RECENT, REGISTRY, channel_releases, fetch, fetch_github, matching_assets, zip_plugin_manifest
+from validate import REGISTRY, channel_releases, fetch, fetch_github, installable_releases, matching_assets, zip_plugin_manifest
 
 AUDIT_URL = "https://decky-extended-plugins.beallio.com/audit.json"
 # The audit's rule ID prefixes worth a warning on a card, like Runs as root. Routine ones
@@ -42,6 +48,9 @@ WARNINGS = {
     "SHELL_CURL_PIPE": "runs-downloads",
     "TRIVY_": "vulnerable",  # bundled libraries with published CVEs
 }
+
+# Installable releases per repo in releases.json: what a version picker offers.
+KEEP = 5
 
 # Not a registry entry, but DeckyHub checks its own releases too.
 EXTRA_ENTRIES = [{"repo": "mazillka/deckyhub-plugin", "asset": {"include": ["deckyhub-"], "exclude": []}}]
@@ -93,7 +102,7 @@ def warnings_of(entry: dict, release: dict | None, audits: dict) -> list[str]:
     return audits.get((entry["repo"].casefold(), release.get("tag_name"))) or []
 
 
-def plugin_stats(entry: dict, releases: list[dict], stars, manifest=zip_plugin_manifest, audits: dict | None = None) -> dict:
+def plugin_stats(entry: dict, releases: list[dict], stars, manifest=zip_plugin_manifest, audits: dict | None = None, fork: str | None = None) -> dict:
     channels = channel_releases(entry, releases)
     shown = channels["stable"] or channels["prerelease"]
     assets = matching_assets(entry, shown) if shown else []
@@ -104,6 +113,8 @@ def plugin_stats(entry: dict, releases: list[dict], stars, manifest=zip_plugin_m
         "updated": shown.get("published_at") if shown else None,
         "root": "root" in flags if isinstance(flags, list) else None,
     }
+    if fork:
+        stats["fork"] = fork
     if audits:
         if warnings := warnings_of(entry, shown, audits):
             stats["warnings"] = warnings
@@ -112,8 +123,16 @@ def plugin_stats(entry: dict, releases: list[dict], stars, manifest=zip_plugin_m
     return stats
 
 
+def kept_releases(entry: dict, releases: list[dict]) -> list[dict]:
+    """The KEEP newest installable releases, plus the newest stable one if it's older."""
+    installable = installable_releases(entry, releases)
+    kept = installable[:KEEP]
+    stable = next((release for release in installable if not release.get("prerelease")), None)
+    return kept + [stable] if stable and stable not in kept else kept
+
+
 def build(entries: list[dict], fetch, stats) -> dict:
-    """Keyed by lowercase owner/name: each repo's newest releases, and its stats (see the
+    """Keyed by lowercase owner/name: each repo's kept releases, and its stats (see the
     module docstring). A repo whose lookup fails is left out, so DeckyHub asks GitHub for
     it directly rather than trusting an empty list."""
     def one(entry):
@@ -122,7 +141,7 @@ def build(entries: list[dict], fetch, stats) -> dict:
         except Exception as error:  # noqa: BLE001 - one broken repo mustn't sink the index
             print(f"warning: {entry['repo']}: {error}", file=sys.stderr)
             return None
-        return entry["repo"].casefold(), [slim(release) for release in releases[:RECENT]], stats(entry, releases)
+        return entry["repo"].casefold(), [slim(release) for release in kept_releases(entry, releases)], stats(entry, releases)
 
     unique: dict[str, dict] = {}
     for entry in entries:
@@ -136,6 +155,10 @@ def build(entries: list[dict], fetch, stats) -> dict:
     }
 
 
+def fork_of(repo: dict) -> str | None:
+    return (repo.get("parent") or {}).get("full_name") if repo.get("fork") else None
+
+
 def main() -> int:
     apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
     entries = apps + EXTRA_ENTRIES
@@ -146,7 +169,7 @@ def main() -> int:
         return 1
     # The audit is someone else's site: without it the index just goes out without verdicts.
     audits = audit_index(best_effort(lambda url: json.loads(fetch(url, auth=False)), AUDIT_URL) or {})
-    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], audits=audits))
+    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], audits=audits, fork=fork_of(github[entry["repo"].casefold()])))
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     # DeckyHub reads releases; the catalog page reads the much smaller stats file.

@@ -5,7 +5,7 @@ description: Ship what's on the registry's develop branch to main, where every D
 
 # Shipping the registry
 
-`main` is production: every DeckyHub fetches `registry/apps.json` from it at startup (`REMOTE_REGISTRY_URL` in deckyhub-plugin's `main.py`), the Pages catalog serves `docs/` from it, and the release-index workflow builds `releases.json` and `stats.json` from it every 30 minutes. `develop` is where changes land first. Both branches are protected by rulesets ("Protect main": squash only; "Protect develop": squash, or a merge commit for the back-merge), and both need the `validate` check.
+`main` is production: every DeckyHub fetches `registry/apps.json` from it at startup (`REMOTE_REGISTRY_URL` in deckyhub-plugin's `main.py`), the Pages catalog serves `docs/` from it, and the release-index workflow builds `releases.json` and `stats.json` from it every hour. `develop` is where changes land first. Both branches are protected by rulesets ("Protect main": squash only; "Protect develop": squash, or a merge commit for the back-merge), and both need the `validate` check.
 
 Never push to either branch, and never merge a PR here without the user's OK.
 
@@ -47,6 +47,6 @@ Merge this one with **Create a merge commit**, the one PR that isn't squashed.
 
 ## 4. Check it reached people
 
-- The release-index workflow runs on pushes to `main` that touch `apps.json` or `build_release_index.py`, otherwise within 30 minutes: `gh run list --workflow release-index.yml --limit 3`.
+- The release-index workflow runs on pushes to `main` that touch `apps.json` or `build_release_index.py`, otherwise within the hour: `gh run list --workflow release-index.yml --limit 3`.
 - `curl -s https://raw.githubusercontent.com/mazillka/deckyhub-registry/release-index/stats.json | head -c 300` shows the new `generatedAt`.
 - The catalog at https://mazillka.github.io/deckyhub-registry/ loads (Pages can take a few minutes).

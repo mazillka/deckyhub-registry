@@ -1,6 +1,6 @@
 """Find Decky plugins that aren't listed yet and add the ones that pass validation.
 
-    GITHUB_TOKEN=$(gh auth token) python scripts/discover.py [--limit N] [--dry-run] [--ignore FILE] [--sources explorer,extended,github]
+    GITHUB_TOKEN=$(gh auth token) python scripts/discover.py [--limit N] [--dry-run] [--ignore FILE]
 
 The candidates come from two community catalogs and our own search:
 - Decky Plugins Explorer (https://github.com/SafetZahirovic/decky-plugins-explorer,
@@ -10,8 +10,11 @@ The candidates come from two community catalogs and our own search:
   the official Decky store plus community plugins, each with its source repository.
 - GitHub search (github_items), so discovery keeps working if both catalogs go away:
   repositories tagged or named like Decky plugins that have a plugin.json at their root.
+All three always run; one being down never stops the others.
 Each candidate is checked the way validate.py checks an entry (its own releases, one
-plugin ZIP, the ZIP's plugin.json name), and needs a stable release. One that looks
+plugin ZIP, the ZIP's plugin.json name), and needs a stable release. A fork qualifies only
+while it's the active one (active_fork(): its original is archived, gone or behind it),
+and its PR line says what it's a fork of. One that looks
 unfinished (quality.py: too new, no users, a placeholder version, no description) is
 skipped this time and proposed again once it grows out of it. Passing ones are
 appended to registry/apps.json and the README table; the discover workflow then opens
@@ -74,10 +77,6 @@ def slug(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
 
 
-def explorer_items(explorer: list[dict]) -> list[dict]:
-    return [{**item, "source": "Decky Plugins Explorer"} for item in explorer]
-
-
 def extended_items(storefront: dict, store: list[dict]) -> list[dict]:
     """Decky Extended Plugins' catalog in the explorer's shape. Its storefront.json
     names each plugin's GitHub repository (the one most of its versions came from);
@@ -108,7 +107,7 @@ def search_repos(query: str, search=None) -> list[dict]:
     search = search or (lambda url: json.loads(fetch(url)))
     repos = []
     for page in range(1, 11):
-        result = search(f"{API}/search/repositories?q={urllib.parse.quote(query + ' fork:false archived:false')}&per_page=100&page={page}")
+        result = search(f"{API}/search/repositories?q={urllib.parse.quote(query + ' fork:true archived:false')}&per_page=100&page={page}")
         repos += result.get("items", [])
         if len(result.get("items", [])) < 100:
             break
@@ -169,17 +168,24 @@ def candidates(explorer: list[dict], apps: list[dict], now: datetime, ignored: s
     return sorted(picked, key=lambda item: -(item.get("downloads") or 0))
 
 
+def active_fork(repo: dict, release: dict) -> bool:
+    """A fork worth listing carries the plugin on: its original is archived or gone, or
+    hasn't released since this fork's release. A fork behind its original is a copy."""
+    parent = repo.get("parent")
+    return not parent or parent["archived"] or (parent["released"] or "") < (release.get("published_at") or "")
+
+
 def check(item: dict, repo: dict | None) -> dict | None:
     """A registry entry for the candidate if it passes validate.py's checks, else None.
-    Says which catalog it came from under "source", which entry_json() leaves out.
-    repo is the candidate's fetch_github() answer."""
-    if not repo or repo["archived"] or repo["fork"]:
+    Says which catalog it came from under "source", and which repo it's a fork of under
+    "fork_of", both of which entry_json() leaves out. repo is the candidate's fetch_github() answer."""
+    if not repo or repo["archived"]:
         return None
     plugin = item.get("plugin") or {}
     entry = {"repo": repo["full_name"], "asset": DEFAULT_ASSET}
     stable = channel_releases(entry, repo["releases"])["stable"]
     assets = matching_assets(entry, stable) if stable else []
-    if len(assets) != 1:
+    if len(assets) != 1 or (repo["fork"] and not active_fork(repo, stable)):
         return None
     # What Decky will report once it's installed, which can differ from the repo's copy.
     name = zip_plugin_name(assets[0])
@@ -199,7 +205,8 @@ def check(item: dict, repo: dict | None) -> dict | None:
         "asset": DEFAULT_ASSET,
     }
     errors, _ = github_problems(entry, repo)
-    return None if errors else {**entry, "source": item.get("source")}
+    fork_of = (repo.get("parent") or {}).get("full_name") if repo["fork"] else None
+    return None if errors else {**entry, "source": item.get("source"), **({"fork_of": fork_of} if fork_of else {})}
 
 
 def pick(passed: list[dict], apps: list[dict], limit: int) -> list[dict]:
@@ -224,7 +231,7 @@ def pick(passed: list[dict], apps: list[dict], limit: int) -> list[dict]:
 
 def entry_json(entry: dict) -> str:
     """One entry in apps.json's house style (detect and asset on one line each)."""
-    lines = [f'      "{key}": {json.dumps(value, ensure_ascii=False)}' for key, value in entry.items() if key not in ("detect", "asset", "source")]
+    lines = [f'      "{key}": {json.dumps(value, ensure_ascii=False)}' for key, value in entry.items() if key not in ("detect", "asset", "source", "fork_of")]
     lines.append(f'      "detect": {{ "type": "decky-plugin", "names": {json.dumps(entry["detect"]["names"], ensure_ascii=False)} }}')
     lines.append(f'      "asset": {{ "include": {json.dumps(entry["asset"]["include"])}, "exclude": {json.dumps(entry["asset"]["exclude"])} }}')
     return "    {\n" + ",\n".join(lines) + "\n    }"
@@ -244,7 +251,6 @@ def add(entries: list[dict]) -> None:
 
 def main() -> int:
     limit = int(sys.argv[sys.argv.index("--limit") + 1]) if "--limit" in sys.argv else 50
-    sources = sys.argv[sys.argv.index("--sources") + 1].split(",") if "--sources" in sys.argv else ["explorer", "extended", "github"]
     apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
     listed = {app["repo"].casefold() for app in apps}
 
@@ -257,10 +263,11 @@ def main() -> int:
         # Only unlisted repos are worth a plugin.json download.
         return github_items([repo for repo in found if repo["full_name"].casefold() not in listed], raw_manifest)
 
-    loaders = {"explorer": ("Decky Plugins Explorer", lambda: explorer_items(json.loads(fetch(EXPLORER_URL, auth=False)))), "extended": ("Decky Extended Plugins", extended), "github": ("GitHub search", github)}
+    def explorer():
+        return [{**item, "source": "Decky Plugins Explorer"} for item in json.loads(fetch(EXPLORER_URL, auth=False))]
+
     items = []
-    for source in sources:
-        label, load = loaders[source]
+    for label, load in (("Decky Plugins Explorer", explorer), ("Decky Extended Plugins", extended), ("GitHub search", github)):
         try:
             loaded = load()
         except Exception as error:  # noqa: BLE001 - one source being down shouldn't stop the others
@@ -298,7 +305,8 @@ def main() -> int:
     for reason, count in skipped.most_common():
         print(f"  unfinished: {reason} ({count})", file=sys.stderr)
     for entry in picked:
-        print(f"- {entry['name']} ({entry['category']}): https://github.com/{entry['repo']} (via {entry['source']})")
+        fork = f", fork of https://github.com/{entry['fork_of']}" if entry.get("fork_of") else ""
+        print(f"- {entry['name']} ({entry['category']}): https://github.com/{entry['repo']} (via {entry['source']}{fork})")
     if picked and "--dry-run" not in sys.argv:
         add(picked)
     return 0

@@ -19,19 +19,22 @@
 
 ## How it works
 
-DeckyHub downloads [`registry/apps.json`](registry/apps.json) from `main` every time it starts and keeps the last good copy for offline use. A merged change reaches every installed DeckyHub on its next restart, with no DeckyHub release needed.
+DeckyHub downloads [`registry/apps.json`](registry/apps.json) from `main` every time it starts and keeps the last good copy for offline use. A change shipped to `main` reaches every installed DeckyHub on its next restart, with no DeckyHub release needed.
 
-DeckyHub also reads every listed plugin's recent releases from one file, so it doesn't spend a GitHub API call per plugin (60 an hour without a token). The [release-index workflow](.github/workflows/release-index.yml) runs [`scripts/build_release_index.py`](scripts/build_release_index.py) every 30 minutes and whenever `apps.json` changes, and publishes `releases.json` on the [`release-index`](https://github.com/mazillka/deckyhub-registry/tree/release-index) branch. A new release can take up to 30 minutes to show up in DeckyHub.
+Testers can see changes before they ship: DeckyHub's opt-in **Settings** → **Repositories** → **Registry Channel: Pre-release** reads `develop` instead, both its `registry/apps.json` and a release index the same workflow publishes on the `release-index-develop` branch (copied from `main`'s when the two branches match). It falls back to `main`'s files when `develop`'s can't be read. **Stable** is the default.
+
+DeckyHub also reads every listed plugin's recent releases from one file (its 5 newest installable releases, plus the newest stable one if that's older), so it doesn't spend a GitHub API call per plugin (60 an hour without a token). The [release-index workflow](.github/workflows/release-index.yml) runs [`scripts/build_release_index.py`](scripts/build_release_index.py) every hour and whenever `apps.json` changes, and publishes `releases.json` on the [`release-index`](https://github.com/mazillka/deckyhub-registry/tree/release-index) branch. A new release can take up to an hour to show up in DeckyHub.
 
 The same job writes `stats.json` for the [catalog](https://mazillka.github.io/deckyhub-registry/), which shows these on each card and can sort by them:
 
 - **Downloads:** all-time, summed over the plugin's ZIPs (the entry's `asset` filter) across every release. GitHub counts every download of a file, whether from DeckyHub, Decky, a browser or a script, so these are downloads, not installs.
 - **Stars:** the repository's GitHub stars.
 - **Last updated:** when the release DeckyHub shows came out; over a year ago reads **No release in a year**.
+- **Fork:** the repository is a fork; the catalog says of what. Discovery lists a fork only while it's the active one: its original is archived, gone, or hasn't released since.
 - **Runs as root:** that release's `plugin.json` has `"root"` in its `flags`, so Decky Loader runs the plugin's backend as the `root` user. It can then read and change anything on the Deck: system files, other plugins, your data. Plenty of plugins need that for real reasons (fan and power control, drivers, VPNs, system settings), so it isn't a red flag by itself, but a bug or a malicious update can do far more harm.
-- **Audit warnings:** what [Decky Extended Plugins' automated audit](https://decky-extended-plugins.beallio.com/audit) found in that release (matched by the ZIP's sha256, else by tag), or in a newer pre-release, that's worth a warning: **Blocked by audit** (malware or a broken archive), **Reads private data** (Steam login data, SSH keys, environment secrets), **Changes system startup** (shell profiles, `LD_PRELOAD`, kernel modules, udev rules), **Code not in its repo** (scripts or programs in the ZIP that aren't in its source), **Hidden code** (encoded or packed code), **Skips HTTPS checks**, **Runs downloaded scripts** (`curl … | sh`) and **Known vulnerabilities** (bundled libraries with published CVEs). Routine findings like `sudo`, `mount` or `systemctl` aren't shown: many plugins need them on SteamOS, and **Runs as root** already covers that. The mapping is `WARNINGS` in `build_release_index.py`. A warning isn't proof of harm and no warning isn't proof of safety. If the audit site is down, the stats go out without warnings.
+- **Audit warnings:** what [Decky Extended Plugins' automated audit](https://decky-extended-plugins.beallio.com/audit) found in that release (matched by the ZIP's sha256, else by tag), or in a newer pre-release, that's worth a warning: **Blocked by audit** (malware or a broken archive), **Reads private data** (Steam login data, SSH keys, environment secrets), **Changes system startup** (shell profiles, `LD_PRELOAD`, kernel modules, udev rules), **Code not in its repo** (scripts or programs in the ZIP that aren't in its source), **Hidden code** (encoded or packed code), **Skips HTTPS checks**, **Runs downloaded scripts** (`curl … | sh`) and **Known vulnerabilities** (bundled libraries with published CVEs). Routine findings like `sudo`, `mount` or `systemctl` aren't shown: many plugins need them on SteamOS, and **Runs as root** already covers that. The mapping is `WARNINGS` in `build_release_index.py`. A warning isn't proof of harm and no warning isn't proof of safety. When a listed plugin gains a warning, the workflow opens an issue to look at it. If the audit site is down, the stats go out without warnings.
 
-New plugins are found automatically too. Every day the [discover workflow](.github/workflows/discover.yml) runs [`scripts/discover.py`](scripts/discover.py) over two community catalogs, [Decky Plugins Explorer](https://safetzahirovic.github.io/decky-plugins-explorer/)'s nightly list of every public repository with a Decky `plugin.json` and [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) (the Decky store plus community plugins), and our own GitHub search: repositories tagged or named like Decky plugins (`topic:decky-plugin`, `decky in:name` and a few more) with a `plugin.json` at their root. The search keeps discovery working if both catalogs go away; `--sources github` runs it alone. Plugins that aren't listed yet, pass the same checks as `validate.py` (and have a stable release) and don't look unfinished ([`scripts/quality.py`](scripts/quality.py): a first release under 14 days old, no stars and under 10 downloads, a `0.0.x` version or no description; those are tried again later) are opened as a pull request against `develop`, at most 50 at a time. Nothing is merged without review.
+New plugins are found automatically too. Every day the [discover workflow](.github/workflows/discover.yml) runs [`scripts/discover.py`](scripts/discover.py) over two community catalogs, [Decky Plugins Explorer](https://safetzahirovic.github.io/decky-plugins-explorer/)'s nightly list of every public repository with a Decky `plugin.json` and [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) (the Decky store plus community plugins), and our own GitHub search: repositories tagged or named like Decky plugins (`topic:decky-plugin`, `decky in:name` and a few more) with a `plugin.json` at their root. The search keeps discovery working if both catalogs go away. Plugins that aren't listed yet, pass the same checks as `validate.py` (and have a stable release) and don't look unfinished ([`scripts/quality.py`](scripts/quality.py): a first release under 14 days old, no stars and under 10 downloads, a `0.0.x` version or no description; those are tried again later) are opened as a pull request against `develop`, at most 50 at a time. Nothing is merged without review.
 
 ## Repositories
 
@@ -371,6 +374,56 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | SDH-Ludusavi | Utilities | [beallio/SDH-Ludusavi](https://github.com/beallio/SDH-Ludusavi) |
 | Trailer Hero | Game Libraries | [Ak4ai/decky-trailer-hero](https://github.com/Ak4ai/decky-trailer-hero) |
 | XMDeck | Utilities | [PrivateiFox/XMDeck](https://github.com/PrivateiFox/XMDeck) |
+| DLSS Enabler | Launch Options | [xXJSONDeruloXx/decky-dlss-enabler](https://github.com/xXJSONDeruloXx/decky-dlss-enabler) |
+| Audio Loader | Customization | [DeckThemes/SDH-AudioLoader](https://github.com/DeckThemes/SDH-AudioLoader) |
+| WiFi Locker | Utilities | [felipejfc/decky-wifi-locker](https://github.com/felipejfc/decky-wifi-locker) |
+| sub-deck | Utilities | [rosakodu/sub-deck](https://github.com/rosakodu/sub-deck) |
+| HelixSR Manager | Frame Generation | [PeroTuncay/DeckyHelixSRManager](https://github.com/PeroTuncay/DeckyHelixSRManager) |
+| Decky Cloud Save | Utilities | [GedasFX/decky-cloud-save](https://github.com/GedasFX/decky-cloud-save) |
+| EmuDeck RomM Sync | Game Libraries | [chenasraf/decky-emudeck-romm](https://github.com/chenasraf/decky-emudeck-romm) |
+| HelixSR Decky | Frame Generation | [dawoodtogoo2020-code/HelixSR-Decky](https://github.com/dawoodtogoo2020-code/HelixSR-Decky) |
+| Reshadeck | Utilities | [mspeedo/Reshadeck](https://github.com/mspeedo/Reshadeck) |
+| LumaDeck | Game Libraries | [jayool/LumaDeck](https://github.com/jayool/LumaDeck) |
+| DeckyWindowsTools | Utilities | [namquang93/decky-windows-tool](https://github.com/namquang93/decky-windows-tool) |
+| Ally Fix | Controllers | [lonsdaleite/Ally-Fix](https://github.com/lonsdaleite/Ally-Fix) |
+| Armada LSFG | Frame Generation | [BakaPute/ArmadaLSFG](https://github.com/BakaPute/ArmadaLSFG) |
+| NetMerge | Performance | [FlashWreck/net-merge-decky](https://github.com/FlashWreck/net-merge-decky) |
+| Decky Bazaar | Utilities | [danielcamilo1/decky-bazaar](https://github.com/danielcamilo1/decky-bazaar) |
+| DeckaTV | Utilities | [jeanbottein/DeckaTV](https://github.com/jeanbottein/DeckaTV) |
+| eGPU-Switch | Performance | [TiPSilva/egpu-switch](https://github.com/TiPSilva/egpu-switch) |
+| TrailerHero | Game Libraries | [LoZazaMastro/TrailerHero](https://github.com/LoZazaMastro/TrailerHero) |
+| HelixSR Muse Plugin | Frame Generation | [enzodiloreto/helixsr-decky-plugin-muse](https://github.com/enzodiloreto/helixsr-decky-plugin-muse) |
+| Now Playing | Game Libraries | [LoZazaMastro/Now-Playing](https://github.com/LoZazaMastro/Now-Playing) |
+| SDC Benchmark | Performance | [Steamdeckchecker/SDC-Benchmark-](https://github.com/Steamdeckchecker/SDC-Benchmark-) |
+| Stormbreaker | Utilities | [FAILINATOR5000/decky-stormbreaker](https://github.com/FAILINATOR5000/decky-stormbreaker) |
+| Launch Curtain | Utilities | [LoZazaMastro/Launch-Curtain](https://github.com/LoZazaMastro/Launch-Curtain) |
+| Forza DualSense Haptics | Controllers | [woodsi3/forza-dualsense-decky](https://github.com/woodsi3/forza-dualsense-decky) |
+| Decky NVIDIA Update | Performance | [moi952/decky-nvidia-update](https://github.com/moi952/decky-nvidia-update) |
+| ControllerPriority | Controllers | [FGOD1983/ControllerPriority](https://github.com/FGOD1983/ControllerPriority) |
+| LiveTranslator-kun | Utilities | [neatsorg/livetranslate-decky](https://github.com/neatsorg/livetranslate-decky) |
+| FSG | Game Libraries | [koua29/decky-fsg](https://github.com/koua29/decky-fsg) |
+| Screen Colors | Customization | [PacificSilent/decky-screen-colors](https://github.com/PacificSilent/decky-screen-colors) |
+| Decky Recorder | Utilities | [evanjs/decky-recorder-fork](https://github.com/evanjs/decky-recorder-fork) |
+| AmneziaWG | Customization | [basuev/amneziawg-deck](https://github.com/basuev/amneziawg-deck) |
+| Weather | Utilities | [LoZazaMastro/Weather](https://github.com/LoZazaMastro/Weather) |
+| GFG Extreme | Frame Generation | [wavessevaw/GFG-Extreme](https://github.com/wavessevaw/GFG-Extreme) |
+| CapyDeploy | Utilities | [lobinuxsoft/decky-capydeploy](https://github.com/lobinuxsoft/decky-capydeploy) |
+| Home Assistant MQTT | Performance | [jamesbiederbeck/decky-plugin-homeassistant](https://github.com/jamesbiederbeck/decky-plugin-homeassistant) |
+| Uran | Game Libraries | [niwia/Uran](https://github.com/niwia/Uran) |
+| SpoutRemotePlay | Utilities | [justjoseorg/SpoutRemotePlay](https://github.com/justjoseorg/SpoutRemotePlay) |
+| Armada Box64 | Launch Options | [Ken5998/armada-box64](https://github.com/Ken5998/armada-box64) |
+| Playhub Surround | Utilities | [LoZazaMastro/Playhub-Surround](https://github.com/LoZazaMastro/Playhub-Surround) |
+| Colorful | Game Libraries | [cedricdelpoux/steam-deck-colorful](https://github.com/cedricdelpoux/steam-deck-colorful) |
+| Friend Plaza | Utilities | [otisabiburada/friend-plaza](https://github.com/otisabiburada/friend-plaza) |
+| Time Changer | Utilities | [nanwangjkl/decky-time-changer](https://github.com/nanwangjkl/decky-time-changer) |
+| Handheld RGB | Controllers | [drewano/decky-handheld-rgb](https://github.com/drewano/decky-handheld-rgb) |
+| WaydroidToolbox | Utilities | [linkj-r/decky-waydroid-toolbox](https://github.com/linkj-r/decky-waydroid-toolbox) |
+| STT Keyboard | Utilities | [sebastianuxd/decky-stt-keyboard](https://github.com/sebastianuxd/decky-stt-keyboard) |
+| WiFi Optimizer Streaming | Utilities | [bassobr/Decky-Wifi-Streaming-Optimizer](https://github.com/bassobr/Decky-Wifi-Streaming-Optimizer) |
+| Dolby Digital 5.1 | Utilities | [inthe92/decky-auto-ac3](https://github.com/inthe92/decky-auto-ac3) |
+| Decky LLM Translator | Utilities | [Raindropx/Decky-LLM-Translator](https://github.com/Raindropx/Decky-LLM-Translator) |
+| Translator LLM | Utilities | [worldnine/Decky-Translator-LLM](https://github.com/worldnine/Decky-Translator-LLM) |
+| BC-250 Performance | Performance | [mix3d/bc250-perf-profile-switcher](https://github.com/mix3d/bc250-perf-profile-switcher) |
 
 ## Where the plugins come from
 
@@ -379,7 +432,7 @@ Plugins are suggested by people (issues and pull requests here) or found by the 
 - [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) by [beallio](https://github.com/beallio), which also publishes a [security audit](https://decky-extended-plugins.beallio.com/audit) of the plugins it lists.
 - [Decky Plugins Explorer](https://safetzahirovic.github.io/decky-plugins-explorer/) by [SafetZahirovic](https://github.com/SafetZahirovic), which finds every public GitHub repository with a Decky `plugin.json` every night ([MIT](https://github.com/SafetZahirovic/decky-plugins-explorer/blob/main/LICENSE)).
 
-However a plugin was found, it's only added once `validate.py` passes for it (a stable release, exactly one plugin ZIP, a matching `plugin.json` name). Those are automatic checks for a working release; nobody reviews the plugins themselves. Thanks to both catalogs' authors for making their data available.
+However a plugin was found, it's only added once `validate.py` passes for it (a stable release, exactly one plugin ZIP, a matching `plugin.json` name), and the discover workflow also skips plugins that look unfinished. Those are automatic checks for a working release; nobody reviews the plugins themselves. Thanks to both catalogs' authors for making their data available.
 
 ## Branches
 
@@ -426,7 +479,7 @@ Every released DeckyHub reads this file, so keep changes additive. A change olde
 
 ### Checks
 
-CI runs on every pull request, and weekly because a plugin's new release can break its entry:
+CI runs on every pull request, on pushes to `main` and `develop`, and weekly because a plugin's new release can break its entry:
 
 - **Schema:** DeckyHub's own parser and v1 schema test. Locally, from a [`deckyhub-plugin`](https://github.com/mazillka/deckyhub-plugin) checkout next to this one:
   ```bash
@@ -436,6 +489,7 @@ CI runs on every pull request, and weekly because a plugin's new release can bre
   ```bash
   GITHUB_TOKEN=$(gh auth token) python scripts/validate.py
   ```
+- **Tests:** `python -m unittest discover -s tests` covers the scripts, and also checks that `apps.json` stays under the 512 KB DeckyHub 3.0.0 and older accept, that the catalog page's script parses, and that `stats.json` keeps every field and warning the DeckyHub people run reads (against deckyhub-plugin's `main`, which CI checks out).
 
 ## Your own registry
 

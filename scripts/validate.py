@@ -66,11 +66,17 @@ def matching_assets(app: dict, release: dict) -> list[dict]:
     return [asset for asset in release.get("assets", []) if (name := asset["name"].lower()).endswith(".zip") and not any(word in name for word in exclude) and all(word in name for word in include)]
 
 
+def installable_releases(app: dict, releases: list[dict]) -> list[dict]:
+    """The releases DeckyHub can install from, newest first: not drafts, matching
+    releaseTagInclude, with a ZIP the asset filter matches."""
+    tag = (app.get("releaseTagInclude") or "").lower()
+    return sorted((release for release in releases if not release.get("draft") and tag in str(release.get("tag_name") or release.get("name")).lower() and matching_assets(app, release)), key=lambda release: release.get("published_at") or "", reverse=True)
+
+
 def channel_releases(app: dict, releases: list[dict]) -> dict[str, dict | None]:
     """The release each channel's card shows: newest of the last 20 (stable sees stable only)
     with a matching ZIP. DeckyHub skips a newer one without it (a Windows-only build, say)."""
-    tag = (app.get("releaseTagInclude") or "").lower()
-    candidates = sorted((release for release in releases if not release.get("draft") and tag in str(release.get("tag_name") or release.get("name")).lower() and matching_assets(app, release)), key=lambda release: release.get("published_at") or "", reverse=True)
+    candidates = installable_releases(app, releases)
     return {"stable": next((release for release in candidates if not release.get("prerelease")), None), "prerelease": next(iter(candidates), None)}
 
 
@@ -153,7 +159,7 @@ def github_problems(app: dict, repo: dict | None = None) -> tuple[list[str], lis
         if len(assets) != 1:
             errors.append(f"{where}: asset filter matches {len(assets)} ZIPs {[asset['name'] for asset in assets]}, needs exactly 1")
             continue
-        if not asset_digest(assets[0]):
+        if not assets[0].get("digest"):
             warnings.append(f"{where}: {assets[0]['name']} has no SHA-256 digest; Decky installs it unverified")
         name = zip_plugin_name(assets[0])
         if name is None:
@@ -220,6 +226,7 @@ def releases_query(repo: str, first: int, after: str | None = None) -> str:
     owner, name = repo.split("/")
     cursor = f", after: {json.dumps(after)}" if after else ""
     return (f"repository(owner: {json.dumps(owner)}, name: {json.dumps(name)}) {{ nameWithOwner name description isArchived isFork stargazerCount "
+            f"parent {{ nameWithOwner isArchived isTemplate releases(first: 1, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ nodes {{ publishedAt }} }} }} "
             f"releases(first: {first}{cursor}, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ pageInfo {{ hasNextPage endCursor }} nodes {{ {RELEASE_FIELDS} }} }} }}")
 
 
@@ -256,14 +263,15 @@ def fetch_github(repos: list[str], every_release: bool = False) -> dict[str, dic
                 continue
             found[repo.casefold()] = {
                 "full_name": result["nameWithOwner"], "name": result["name"], "description": result["description"],
-                "archived": result["isArchived"], "fork": result["isFork"], "stars": result["stargazerCount"],
+                "archived": result["isArchived"], "stars": result["stargazerCount"],
+                # A fork of a template (Decky's plugin template) is a new plugin, not a copy of one.
+                "fork": result["isFork"] and not (result["parent"] or {}).get("isTemplate"),
+                # The repo it was forked from: its name, whether it's archived and its newest release date.
+                "parent": result["parent"] and {"full_name": result["parent"]["nameWithOwner"], "archived": result["parent"]["isArchived"],
+                                                "released": next((node["publishedAt"] for node in result["parent"]["releases"]["nodes"]), None)},
                 "releases": [rest_shape(node) for node in releases],
             }
     return found
-
-
-def asset_digest(asset: dict) -> str:
-    return str(asset.get("digest") or "").removeprefix("sha256:")
 
 
 def main() -> int:
