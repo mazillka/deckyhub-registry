@@ -1,15 +1,19 @@
 """Find Decky plugins that aren't listed yet and add the ones that pass validation.
 
-    GITHUB_TOKEN=$(gh auth token) python scripts/discover.py [--limit N] [--dry-run] [--ignore FILE]
+    GITHUB_TOKEN=$(gh auth token) python scripts/discover.py [--limit N] [--dry-run] [--ignore FILE] [--sources explorer,extended,github]
 
-The candidates come from two community catalogs:
+The candidates come from two community catalogs and our own search:
 - Decky Plugins Explorer (https://github.com/SafetZahirovic/decky-plugins-explorer,
   MIT), which finds every public GitHub repository with a Decky plugin.json through
   code search, nightly.
 - Decky Extended Plugins (https://decky-extended-plugins.beallio.com/) by beallio,
   the official Decky store plus community plugins, each with its source repository.
+- GitHub search (github_items), so discovery keeps working if both catalogs go away:
+  repositories tagged or named like Decky plugins that have a plugin.json at their root.
 Each candidate is checked the way validate.py checks an entry (its own releases, one
-plugin ZIP, the ZIP's plugin.json name), and needs a stable release. Passing ones are
+plugin ZIP, the ZIP's plugin.json name), and needs a stable release. One that looks
+unfinished (quality.py: too new, no users, a placeholder version, no description) is
+skipped this time and proposed again once it grows out of it. Passing ones are
 appended to registry/apps.json and the README table; the discover workflow then opens
 a pull request, so a person still reviews every addition before it's merged.
 
@@ -19,15 +23,22 @@ or its entry deleted before merging) isn't proposed again.
 """
 import json
 import re
+import time
+import urllib.parse
 from collections import Counter
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 
-from validate import README, REGISTRY, channel_releases, fetch, fetch_github, github_problems, matching_assets, zip_plugin_name
+from quality import unfinished
+from validate import API, README, REGISTRY, channel_releases, fetch, fetch_github, github_problems, matching_assets, zip_plugin_name
 
 EXPLORER_URL = "https://raw.githubusercontent.com/SafetZahirovic/decky-plugins-explorer/HEAD/data/plugins.json"
 EXTENDED_URL = "https://decky-extended-plugins.beallio.com"
+# Repository searches for our own source. Each returns at most 1,000 repos; GitHub's
+# search API allows 30 requests a minute with a token, so pages are spaced out.
+SEARCHES = ["topic:decky-plugin", "topic:decky-loader", "topic:decky", "topic:deckyloader", "decky in:name", "decky plugin in:description"]
+SEARCH_PAUSE = 2.1
 # A plugin last released longer ago than this is probably abandoned.
 MAX_AGE = timedelta(days=730)
 # Names a plugin template ships with, or that never got changed from it.
@@ -90,6 +101,47 @@ def extended_items(storefront: dict, store: list[dict]) -> list[dict]:
             "source": "Decky Extended Plugins",
         })
     return items
+
+
+def search_repos(query: str, search=None) -> list[dict]:
+    """Every repo GitHub's repository search finds for the query (up to its 1,000 cap)."""
+    search = search or (lambda url: json.loads(fetch(url)))
+    repos = []
+    for page in range(1, 11):
+        result = search(f"{API}/search/repositories?q={urllib.parse.quote(query + ' fork:false archived:false')}&per_page=100&page={page}")
+        repos += result.get("items", [])
+        if len(result.get("items", [])) < 100:
+            break
+        time.sleep(SEARCH_PAUSE)
+    return repos
+
+
+def github_items(repos: list[dict], manifest) -> list[dict]:
+    """Search results in the explorer's shape, for those with a root plugin.json (read by
+    manifest(full_name), None when there's none). The last push stands in for the
+    release date, so a repo untouched for MAX_AGE is skipped; check() still needs a release."""
+    unique: dict[str, dict] = {}
+    for repo in repos:
+        unique.setdefault(repo["full_name"].casefold(), repo)
+    unique = list(unique.values())
+    with ThreadPoolExecutor(8) as pool:
+        manifests = list(pool.map(lambda repo: manifest(repo["full_name"]), unique))
+    return [{
+        "repo": repo["full_name"],
+        "plugin": {"name": plugin.get("name"), "publish": plugin.get("publish") or {"description": repo.get("description")}},
+        "downloads": repo.get("stargazers_count") or 0,
+        "archived": repo.get("archived"),
+        "latest_release": {"published_at": repo.get("pushed_at")},
+        "source": "GitHub search",
+    } for repo, plugin in zip(unique, manifests) if isinstance(plugin, dict) and plugin.get("name")]
+
+
+def raw_manifest(repo: str) -> dict | None:
+    """A repo's root plugin.json from raw.githubusercontent.com (outside the API limit)."""
+    try:
+        return json.loads(fetch(f"https://raw.githubusercontent.com/{repo}/HEAD/plugin.json", auth=False))
+    except Exception:  # noqa: BLE001 - no plugin.json, or not JSON: not a Decky plugin
+        return None
 
 
 def ignored_repos(text: str) -> set[str]:
@@ -191,14 +243,31 @@ def add(entries: list[dict]) -> None:
 
 
 def main() -> int:
-    limit = int(sys.argv[sys.argv.index("--limit") + 1]) if "--limit" in sys.argv else 25
+    limit = int(sys.argv[sys.argv.index("--limit") + 1]) if "--limit" in sys.argv else 50
+    sources = sys.argv[sys.argv.index("--sources") + 1].split(",") if "--sources" in sys.argv else ["explorer", "extended", "github"]
     apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
-    items = explorer_items(json.loads(fetch(EXPLORER_URL, auth=False)))
-    try:
+    listed = {app["repo"].casefold() for app in apps}
+
+    def extended():
         store = [plugin for name in ("plugins.json", "testing_plugins.json") for plugin in json.loads(fetch(f"{EXTENDED_URL}/{name}", auth=False))]
-        items += extended_items(json.loads(fetch(f"{EXTENDED_URL}/storefront.json", auth=False)), store)
-    except Exception as error:  # noqa: BLE001 - one catalog being down shouldn't stop the other
-        print(f"warning: Decky Extended Plugins unavailable: {error}", file=sys.stderr)
+        return extended_items(json.loads(fetch(f"{EXTENDED_URL}/storefront.json", auth=False)), store)
+
+    def github():
+        found = [repo for query in SEARCHES for repo in search_repos(query)]
+        # Only unlisted repos are worth a plugin.json download.
+        return github_items([repo for repo in found if repo["full_name"].casefold() not in listed], raw_manifest)
+
+    loaders = {"explorer": ("Decky Plugins Explorer", lambda: explorer_items(json.loads(fetch(EXPLORER_URL, auth=False)))), "extended": ("Decky Extended Plugins", extended), "github": ("GitHub search", github)}
+    items = []
+    for source in sources:
+        label, load = loaders[source]
+        try:
+            loaded = load()
+        except Exception as error:  # noqa: BLE001 - one source being down shouldn't stop the others
+            print(f"warning: {label} unavailable: {error}", file=sys.stderr)
+            continue
+        print(f"{label}: {len(loaded)} plugins", file=sys.stderr)
+        items += loaded
     ignored = ignored_repos(open(sys.argv[sys.argv.index("--ignore") + 1], encoding="utf-8").read()) if "--ignore" in sys.argv else set()
     found = candidates(items, apps, datetime.now(timezone.utc), ignored)
 
@@ -214,8 +283,20 @@ def main() -> int:
 
     with ThreadPoolExecutor(8) as pool:
         passed = [entry for entry in pool.map(safe_check, found) if entry]
-    picked = pick(passed, apps, limit)
-    print(f"{len(found)} candidates, {len(passed)} passed, adding {len(picked)}")
+    now = datetime.now(timezone.utc)
+    # By the name check() used, which differs from the catalog's for a renamed repo.
+    repos = {repo["full_name"].casefold(): repo for repo in github.values()}
+    skipped = Counter()
+    ready = []
+    for entry in passed:
+        reasons = unfinished(entry, repos[entry["repo"].casefold()], now)
+        skipped.update(re.sub(r"\d+|'.*'", "N", reason) for reason in reasons)
+        if not reasons:
+            ready.append(entry)
+    picked = pick(ready, apps, limit)
+    print(f"{len(found)} candidates, {len(passed)} passed, {len(passed) - len(ready)} look unfinished, adding {len(picked)}")
+    for reason, count in skipped.most_common():
+        print(f"  unfinished: {reason} ({count})", file=sys.stderr)
     for entry in picked:
         print(f"- {entry['name']} ({entry['category']}): https://github.com/{entry['repo']} (via {entry['source']})")
     if picked and "--dry-run" not in sys.argv:

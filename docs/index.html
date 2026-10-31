@@ -52,9 +52,10 @@ input[type=search]:focus{outline:2px solid var(--accent2);outline-offset:1px}
 .badge{padding:1px 8px;border-radius:999px;border:1px solid currentColor;font-size:.72rem;white-space:nowrap}
 .root{color:#ffb35c}
 .stale{color:#ff8a8a}
+.warn{color:var(--warn)}
 .legend{margin:0 0 18px;color:var(--muted);font-size:.85rem;line-height:1.7}
 .legend .badge{margin-right:4px}
-.legend .stale{margin-left:8px}
+.legend .stale,.legend .warn{margin-left:8px}
 .tools select{align-self:flex-start;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit;font-size:.9rem}
 .empty,.status{color:var(--muted);padding:24px 0}
 .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
@@ -93,6 +94,8 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 <select id="sort" aria-label="Sort plugins"><option value="az">A to Z</option><option value="downloads">Most downloaded</option><option value="stars">Most stars</option><option value="updated">Recently updated</option><option value="added">Recently added</option></select>
 </div>
 <p class="legend"><span class="badge root">Runs as root</span> The plugin asks Decky Loader to run its backend as the <code>root</code> user, which can read and change anything on the Deck, including system files, other plugins and your data. Many plugins need it for real reasons (fan or power control, drivers, VPNs, system settings), so it isn't a warning sign on its own. It does mean a bug or a malicious update can do far more harm, so install these only from authors you trust. <span class="badge stale">No release in a year</span> The newest release is over a year old, so it may not work with current SteamOS or Decky Loader.</p>
+
+<p class="legend">Warnings come from <a href="https://decky-extended-plugins.beallio.com/audit">Decky Extended Plugins' automated audit</a> of the release DeckyHub installs (or a newer pre-release, marked as such). Routine findings like <code>sudo</code>, <code>mount</code> or <code>systemctl</code>, which many plugins need on SteamOS, aren't shown. A warning isn't proof of harm and no warning isn't proof of safety, so check the repository. <span class="badge stale">Blocked by audit</span> The audit found malware or a broken archive. Not recommended for installation. <span class="badge warn">Reads private data</span> Its code reads Steam login data, SSH keys or secrets from the environment. <span class="badge warn">Changes system startup</span> It edits shell profiles, preloads libraries, loads kernel modules or adds device rules, which keep working outside Decky. <span class="badge warn">Code not in its repo</span> The release ZIP has scripts or programs that aren't in its GitHub source, so you can't read what they do. <span class="badge warn">Hidden code</span> It contains encoded or packed code that's hard to read. <span class="badge warn">Skips HTTPS checks</span> It turns off certificate checks, so what it downloads could be tampered with. <span class="badge warn">Runs downloaded scripts</span> It downloads a script and runs it straight away. <span class="badge warn">Known vulnerabilities</span> It bundles libraries with published security flaws.</p>
 <div class="catalog" id="list"><p class="status">Loading…</p></div>
 </div></section>
 
@@ -112,9 +115,20 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 
 <script>
 const URL_ = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/refs/heads/main/registry/apps.json";
-// Per-plugin downloads, stars, last release and root flag, rebuilt every 30 minutes by the
+// Per-plugin downloads, stars, last release, root flag and audit warnings, rebuilt every 30 minutes by the
 // release-index workflow (scripts/build_release_index.py). The catalog works without it.
 const STATS_URL = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/release-index/stats.json";
+// Warnings from Decky Extended Plugins' audit (see the legend above the catalog): label, hint.
+const WARNINGS = {
+  "blocked": ["Blocked by audit", "The audit found malware or a broken archive. Not recommended for installation."],
+  "private-data": ["Reads private data", "Its code reads Steam login data, SSH keys or secrets from the environment."],
+  "persistence": ["Changes system startup", "It edits shell profiles, preloads libraries, loads kernel modules or adds device rules, which keep working outside Decky."],
+  "not-in-source": ["Code not in its repo", "The release ZIP has scripts or programs that aren't in its GitHub source, so you can't read what they do."],
+  "obfuscated": ["Hidden code", "It contains encoded or packed code that's hard to read."],
+  "no-tls-check": ["Skips HTTPS checks", "It turns off certificate checks, so what it downloads could be tampered with."],
+  "runs-downloads": ["Runs downloaded scripts", "It downloads a script and runs it straight away."],
+  "vulnerable": ["Known vulnerabilities", "It bundles libraries with published security flaws."],
+};
 const YEAR = 365 * 24 * 60 * 60 * 1000;
 const list = document.getElementById("list"), chips = document.getElementById("chips"), q = document.getElementById("q"), sort = document.getElementById("sort");
 const compact = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
@@ -128,13 +142,15 @@ function age(time) {
   return Math.abs(days) < 31 ? relative.format(days, "day") : Math.abs(days) < 365 ? relative.format(Math.round(days / 30), "month") : relative.format(Math.round(days / 365), "year");
 }
 function meta(app) {
-  const { downloads, stars, root } = statsOf(app), updated = updatedAt(app), items = [];
+  const { downloads, stars, root, warnings = [], prereleaseWarnings = [] } = statsOf(app), updated = updatedAt(app), items = [];
   if (downloads !== undefined) items.push(el("span", { title: `${downloads.toLocaleString("en")} downloads`, textContent: `↓ ${compact.format(downloads)}` }));
   if (stars != null) items.push(el("span", { title: `${stars.toLocaleString("en")} GitHub stars`, textContent: `★ ${compact.format(stars)}` }));
   if (updated) items.push(Date.now() - updated > YEAR
     ? el("span", { className: "badge stale", title: `Last release ${new Date(updated).toLocaleDateString("en")}`, textContent: "No release in a year" })
     : el("span", { title: new Date(updated).toLocaleDateString("en"), textContent: `Updated ${age(updated)}` }));
   if (root) items.push(el("span", { className: "badge root", title: "Its plugin.json asks Decky Loader to run it as root, with full access to the system", textContent: "Runs as root" }));
+  for (const [key, prefix] of [...warnings.map((key) => [key, ""]), ...prereleaseWarnings.filter((key) => !warnings.includes(key)).map((key) => [key, "Pre-release: "])]) if (WARNINGS[key])
+    items.push(el("span", { className: `badge ${key === "blocked" ? "stale" : "warn"}`, title: WARNINGS[key][1], textContent: prefix + WARNINGS[key][0] }));
   return items.length ? [el("div", { className: "meta" }, ...items)] : [];
 }
 

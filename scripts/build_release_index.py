@@ -14,6 +14,9 @@ It also writes stats.json for the catalog page, per plugin:
 - stars: the repo's GitHub stars.
 - updated: when the release DeckyHub shows (newest stable, else newest pre-release) came out.
 - root: whether that release's plugin.json asks Decky to run it as root.
+- warnings / prereleaseWarnings: what Decky Extended Plugins' audit found in that release
+  (and in a newer pre-release, if any) that's worth warning about (see WARNINGS). Matched
+  by the ZIP's sha256, else by tag. Missing when there's nothing to warn about.
 
 Releases and stars come from GitHub's GraphQL API (fetch_github in validate.py).
 """
@@ -23,7 +26,22 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from validate import RECENT, REGISTRY, channel_releases, fetch_github, matching_assets, zip_plugin_manifest
+from validate import RECENT, REGISTRY, channel_releases, fetch, fetch_github, matching_assets, zip_plugin_manifest
+
+AUDIT_URL = "https://decky-extended-plugins.beallio.com/audit.json"
+# The audit's rule ID prefixes worth a warning on a card, like Runs as root. Routine ones
+# (sudo, mount, systemctl, subprocess) aren't: many useful plugins need them on SteamOS,
+# and Runs as root already says the plugin has the system.
+WARNINGS = {
+    "SENSITIVE_": "private-data",  # Steam login data, SSH keys, environment secrets
+    "PERSIST_": "persistence",  # shell profiles, LD_PRELOAD, kernel modules, udev rules
+    "ZIP_ONLY_": "not-in-source",  # scripts or programs in the ZIP but not the repo
+    "MODIFIED_SOURCE_FILE": "not-in-source",
+    "OBFUSCATION_": "obfuscated",
+    "NETWORK_DISABLED_TLS": "no-tls-check",
+    "SHELL_CURL_PIPE": "runs-downloads",
+    "TRIVY_": "vulnerable",  # bundled libraries with published CVEs
+}
 
 # Not a registry entry, but DeckyHub checks its own releases too.
 EXTRA_ENTRIES = [{"repo": "mazillka/deckyhub-plugin", "asset": {"include": ["deckyhub-"], "exclude": []}}]
@@ -50,17 +68,48 @@ def best_effort(lookup, *args):
         return None
 
 
-def plugin_stats(entry: dict, releases: list[dict], stars, manifest=zip_plugin_manifest) -> dict:
+def audit_index(data: dict) -> dict:
+    """Each audited release's warnings, keyed by artifact sha256 and by (lowercase
+    owner/name, tag). A rolling tag (nightly, dev-build) is audited once per upload, so
+    the newest wins."""
+    index = {}
+    for record in sorted(data.get("releases", []), key=lambda record: record.get("audited_at") or ""):
+        found = {warning for rule in record.get("rule_ids") or [] for prefix, warning in WARNINGS.items() if rule.startswith(prefix)}
+        verdict = (["blocked"] if record["classification"] == "BLOCK" else []) + sorted(found)
+        repo = record["repository"].removeprefix("https://github.com/").casefold()
+        index[(repo, record["tag"])] = verdict
+        if record.get("current_artifact_sha256"):
+            index[record["current_artifact_sha256"]] = verdict
+    return index
+
+
+def warnings_of(entry: dict, release: dict | None, audits: dict) -> list[str]:
+    if not release:
+        return []
+    for asset in matching_assets(entry, release):
+        warnings = audits.get((asset.get("digest") or "").removeprefix("sha256:"))
+        if warnings is not None:
+            return warnings
+    return audits.get((entry["repo"].casefold(), release.get("tag_name"))) or []
+
+
+def plugin_stats(entry: dict, releases: list[dict], stars, manifest=zip_plugin_manifest, audits: dict | None = None) -> dict:
     channels = channel_releases(entry, releases)
     shown = channels["stable"] or channels["prerelease"]
     assets = matching_assets(entry, shown) if shown else []
     flags = (best_effort(manifest, assets[0]) or {}).get("flags") if assets else None
-    return {
+    stats = {
         "downloads": sum(asset.get("download_count") or 0 for release in releases for asset in matching_assets(entry, release)),
         "stars": best_effort(stars, entry["repo"]),
         "updated": shown.get("published_at") if shown else None,
         "root": "root" in flags if isinstance(flags, list) else None,
     }
+    if audits:
+        if warnings := warnings_of(entry, shown, audits):
+            stats["warnings"] = warnings
+        if channels["prerelease"] is not shown and (warnings := warnings_of(entry, channels["prerelease"], audits)):
+            stats["prereleaseWarnings"] = warnings
+    return stats
 
 
 def build(entries: list[dict], fetch, stats) -> dict:
@@ -95,7 +144,9 @@ def main() -> int:
         # Something's wrong on GitHub's side: keep the published index rather than replace it with a thin one.
         print(f"error: only {len(github)} of {len(entries)} repos answered", file=sys.stderr)
         return 1
-    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"]))
+    # The audit is someone else's site: without it the index just goes out without verdicts.
+    audits = audit_index(best_effort(lambda url: json.loads(fetch(url, auth=False)), AUDIT_URL) or {})
+    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], audits=audits))
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     # DeckyHub reads releases; the catalog page reads the much smaller stats file.

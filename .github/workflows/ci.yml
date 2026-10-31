@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
   workflow_dispatch:
   # Weekly too: a plugin's new release can break its entry with no change here.
@@ -26,7 +26,11 @@ jobs:
         working-directory: deckyhub-plugin
         env:
           DECKYHUB_REGISTRY: ${{ github.workspace }}/registry/apps.json
+      # Includes the catalog's script check (Node) and the stats.json fields that the
+      # DeckyHub people run (deckyhub-plugin's default branch) reads.
       - run: python3 -m unittest discover -s tests
+        env:
+          DECKYHUB_PLUGIN: ${{ github.workspace }}/deckyhub-plugin
       # Each entry against its repository: releases, asset filter, plugin.json name.
       - run: python3 scripts/validate.py
         env:
