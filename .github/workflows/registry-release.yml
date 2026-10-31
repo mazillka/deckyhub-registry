@@ -1,0 +1,41 @@
+name: Registry release
+
+# Publishes registry/apps.json as a file on a GitHub release, which DeckyHub reads before
+# the branch file (newest_registry_release() in deckyhub-plugin's main.py): main's as a
+# stable release, develop's as a pre-release. Like DeckyHub's own channels, the Stable
+# registry channel takes the newest stable release and Pre-release the newest of all.
+# The branch files stay what older DeckyHub reads, and every DeckyHub's fallback.
+on:
+  push:
+    branches: [main, develop]
+    paths: [registry/apps.json]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: registry-release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref_name == 'main' || github.ref_name == 'develop'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # DeckyHub skips an empty or unknown list and reads the branch instead; don't publish one.
+      - run: python3 -c "import json; d = json.load(open('registry/apps.json', encoding='utf-8')); assert d['schemaVersion'] == 1 and d['apps'], 'empty or unknown registry'"
+      # One release per change, so each list stays downloadable as it was published.
+      # gh uploads the file before publishing, so a release is never seen without it.
+      - run: |
+          day="$(date -u +%Y.%m.%d)"
+          if [ "$GITHUB_REF_NAME" = main ]; then
+            gh release create "registry-$day-$GITHUB_RUN_NUMBER" registry/apps.json --target "$GITHUB_SHA" --latest \
+              --title "Registry $day" --notes "registry/apps.json from main at ${GITHUB_SHA::7}."
+          else
+            gh release create "registry-$day-$GITHUB_RUN_NUMBER-develop" registry/apps.json --target "$GITHUB_SHA" --prerelease --latest=false \
+              --title "Registry $day (develop)" --notes "registry/apps.json from develop at ${GITHUB_SHA::7}, for DeckyHub's Pre-release registry channel."
+          fi
