@@ -159,7 +159,7 @@ def github_problems(app: dict, repo: dict | None = None) -> tuple[list[str], lis
         if len(assets) != 1:
             errors.append(f"{where}: asset filter matches {len(assets)} ZIPs {[asset['name'] for asset in assets]}, needs exactly 1")
             continue
-        if not asset_digest(assets[0]):
+        if not assets[0].get("digest"):
             warnings.append(f"{where}: {assets[0]['name']} has no SHA-256 digest; Decky installs it unverified")
         name = zip_plugin_name(assets[0])
         if name is None:
@@ -226,6 +226,7 @@ def releases_query(repo: str, first: int, after: str | None = None) -> str:
     owner, name = repo.split("/")
     cursor = f", after: {json.dumps(after)}" if after else ""
     return (f"repository(owner: {json.dumps(owner)}, name: {json.dumps(name)}) {{ nameWithOwner name description isArchived isFork stargazerCount "
+            f"parent {{ nameWithOwner isArchived releases(first: 1, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ nodes {{ publishedAt }} }} }} "
             f"releases(first: {first}{cursor}, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ pageInfo {{ hasNextPage endCursor }} nodes {{ {RELEASE_FIELDS} }} }} }}")
 
 
@@ -263,13 +264,12 @@ def fetch_github(repos: list[str], every_release: bool = False) -> dict[str, dic
             found[repo.casefold()] = {
                 "full_name": result["nameWithOwner"], "name": result["name"], "description": result["description"],
                 "archived": result["isArchived"], "fork": result["isFork"], "stars": result["stargazerCount"],
+                # The repo it was forked from: its name, whether it's archived and its newest release date.
+                "parent": result["parent"] and {"full_name": result["parent"]["nameWithOwner"], "archived": result["parent"]["isArchived"],
+                                                "released": next((node["publishedAt"] for node in result["parent"]["releases"]["nodes"]), None)},
                 "releases": [rest_shape(node) for node in releases],
             }
     return found
-
-
-def asset_digest(asset: dict) -> str:
-    return str(asset.get("digest") or "").removeprefix("sha256:")
 
 
 def main() -> int:

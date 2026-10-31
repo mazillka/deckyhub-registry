@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from discover import candidates, category, entry_json, extended_items, github_items, ignored_repos, pick, search_repos, short_description  # noqa: E402
+from discover import active_fork, candidates, category, entry_json, extended_items, github_items, ignored_repos, pick, search_repos, short_description  # noqa: E402
 
 NOW = datetime(2026, 10, 28, tzinfo=timezone.utc)
 
@@ -109,6 +109,18 @@ class DiscoverTests(unittest.TestCase):
         self.assertEqual(len(search_repos("topic:decky", search)), 204)
         self.assertEqual(len(pages), 3)
         self.assertIn("fork%3Afalse", pages[0])
+
+    def test_a_fork_is_listed_only_while_it_carries_the_plugin_on(self):
+        mine = {"published_at": "2026-10-01T00:00:00Z"}
+        def fork(parent):
+            return {"fork": True, "parent": parent}
+        self.assertTrue(active_fork(fork({"full_name": "o/a", "archived": True, "released": "2026-10-20T00:00:00Z"}), mine))
+        self.assertTrue(active_fork(fork({"full_name": "o/a", "archived": False, "released": "2024-01-01T00:00:00Z"}), mine))
+        self.assertTrue(active_fork(fork({"full_name": "o/a", "archived": False, "released": None}), mine))
+        # The original was deleted: GitHub reports no parent.
+        self.assertTrue(active_fork(fork(None), mine))
+        # The original released after this fork did: the fork is a copy that fell behind.
+        self.assertFalse(active_fork(fork({"full_name": "o/a", "archived": False, "released": "2026-10-20T00:00:00Z"}), mine))
 
 if __name__ == "__main__":
     unittest.main()

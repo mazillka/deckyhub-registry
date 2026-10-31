@@ -33,7 +33,7 @@ jobs:
         # Plugins listed in closed discovery PRs that aren't in apps.json were turned down.
         run: |
           gh pr list --state closed --search 'head:discover/' --limit 200 --json body --jq '.[].body' > "$RUNNER_TEMP/closed.txt"
-          python3 scripts/discover.py --limit 50 --ignore "$RUNNER_TEMP/closed.txt" | tee "$RUNNER_TEMP/found.txt"
+          python3 scripts/discover.py --ignore "$RUNNER_TEMP/closed.txt" | tee "$RUNNER_TEMP/found.txt"
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - if: steps.open.outputs.count == '0'

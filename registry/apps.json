@@ -1122,7 +1122,7 @@
     {
       "id": "simpledeckytdp",
       "name": "SimpleDeckyTDP",
-      "description": "Hardware control plugin for PC handhelds, including TDP, GPU, etc",
+      "description": "Controls TDP, GPU clocks and other hardware settings on PC handhelds.",
       "repo": "aarron-lee/SimpleDeckyTDP",
       "category": "Performance",
       "detect": { "type": "decky-plugin", "names": ["SimpleDeckyTDP"] },
@@ -1140,7 +1140,7 @@
     {
       "id": "powercontrol",
       "name": "PowerControl",
-      "description": "PowerControl plugin.",
+      "description": "Adjusts performance settings on handheld PCs.",
       "repo": "mengmeet/PowerControl",
       "category": "Performance",
       "detect": { "type": "decky-plugin", "names": ["PowerControl"] },
@@ -1149,7 +1149,7 @@
     {
       "id": "decky-rom-library",
       "name": "EmuDeck Retro Library",
-      "description": "New Retro Library to play your favourite retro games",
+      "description": "A retro game library for playing your favourite retro games.",
       "repo": "EmuDeck/decky-rom-library",
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["EmuDeck Retro Library"] },
@@ -1230,7 +1230,7 @@
     {
       "id": "decky-plugin-fix-lego2-brightness-cachyos",
       "name": "Legion Go 2 Brightness fix CachyOS",
-      "description": "Brightness control for Legion Go 2 (bypasses Steam's broken PWM control)",
+      "description": "Brightness control for the Legion Go 2 that bypasses Steam's broken PWM control.",
       "repo": "jorgemmsilva/decky-plugin-fix-lego2-brightness-cachyos",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Legion Go 2 Brightness fix CachyOS"] },
@@ -1383,7 +1383,7 @@
     {
       "id": "powerdeck",
       "name": "PowerDeck",
-      "description": "Advanced power management for Steam Deck and handheld PCs - TDP, thermal controls, performance profiles",
+      "description": "Advanced power management for the Steam Deck and handheld PCs: TDP, thermal controls and performance profiles.",
       "repo": "fewtarius/PowerDeck",
       "category": "Performance",
       "detect": { "type": "decky-plugin", "names": ["PowerDeck"] },
@@ -1464,7 +1464,7 @@
     {
       "id": "emusync-deckyplugin",
       "name": "EmuSync",
-      "description": "EmuSync decky plugin.",
+      "description": "Shows and syncs your EmuSync game saves from Gaming Mode.",
       "repo": "emu-sync/EmuSync-DeckyPlugin",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["EmuSync"] },
@@ -1482,7 +1482,7 @@
     {
       "id": "decky-file-manager",
       "name": "Decky Manager",
-      "description": "Decky Manager for Decky Loader.",
+      "description": "Browses and manages your files with a controller in Gaming Mode.",
       "repo": "Ciphay/Decky-File-Manager",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decky Manager"] },
@@ -1491,7 +1491,7 @@
     {
       "id": "egpubridge",
       "name": "eGPUBridge",
-      "description": "EGPU manager for SteamOS Game Mode",
+      "description": "Manages an eGPU in SteamOS Gaming Mode.",
       "repo": "WowOne987/eGPUBridge",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["eGPUBridge"] },
@@ -1644,7 +1644,7 @@
     {
       "id": "ha-deck",
       "name": "HA Deck",
-      "description": "Control Home Assistant from your Steam Deck",
+      "description": "Controls Home Assistant from your Steam Deck.",
       "repo": "Marker284/ha-deck",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["HA Deck"] },
@@ -1662,7 +1662,7 @@
     {
       "id": "hv-launcher",
       "name": "HV Launcher",
-      "description": "A quick readiness check and launch manager for those who need to manage the hypervisor",
+      "description": "A quick readiness check and launch manager for those who need to manage the hypervisor.",
       "repo": "RemakeCode/hv-launcher",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["HV Launcher"] },
@@ -1698,7 +1698,7 @@
     {
       "id": "decky-achievement",
       "name": "Decky-Achievement",
-      "description": "An achievement manager for the Steam Deck",
+      "description": "An achievement manager for the Steam Deck.",
       "repo": "totallynotbakadestroyer/Decky-Achievement",
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["Decky-Achievement"] },
@@ -1743,7 +1743,7 @@
     {
       "id": "decksight-brightness-fix",
       "name": "Decksight Brightness Fix",
-      "description": "A plugin to fix the brightness slider on Steam Decks with the DeckSight OLED panel",
+      "description": "Fixes the brightness slider on Steam Decks with the DeckSight OLED panel.",
       "repo": "Xnopyt/decksight-brightness-fix",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decksight Brightness Fix"] },
@@ -1779,7 +1779,7 @@
     {
       "id": "deckybatteryhealth",
       "name": "DeckyBatteryHealth",
-      "description": "Decky example plugin.",
+      "description": "Shows your Steam Deck's battery health as a percentage.",
       "repo": "koda-git/DeckyBatteryHealth",
       "category": "Performance",
       "detect": { "type": "decky-plugin", "names": ["DeckyBatteryHealth"] },
@@ -1860,7 +1860,7 @@
     {
       "id": "decky-netbird",
       "name": "NetBird VPN",
-      "description": "Manage NetBird VPN directly from your Steam Deck",
+      "description": "Manages the NetBird VPN from your Steam Deck.",
       "repo": "MentallyOverwhelmed/decky-netbird",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["NetBird VPN"] },
@@ -1905,7 +1905,7 @@
     {
       "id": "deckymods",
       "name": "DeckyMods",
-      "description": "Decky plugin for reversible SteamOS game MOD management and Nexus downloads",
+      "description": "Manages reversible game mods on SteamOS, with Nexus downloads.",
       "repo": "18798aa12/DeckyMods",
       "category": "Mod Managers",
       "detect": { "type": "decky-plugin", "names": ["DeckyMods"] },
@@ -1977,7 +1977,7 @@
     {
       "id": "decky-nested-desktop",
       "name": "Nested Desktop",
-      "description": "Create and launch nested desktop shortcuts for Steam Deck",
+      "description": "Creates and launches nested desktop shortcuts on the Steam Deck.",
       "repo": "xXJSONDeruloXx/decky-nested-desktop",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Nested Desktop"] },
@@ -2013,7 +2013,7 @@
     {
       "id": "tunup",
       "name": "TunUp",
-      "description": "Decky network plugin.",
+      "description": "Enables TUN mode on the Steam Deck.",
       "repo": "Seraphli/TunUp",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["TunUp"] },
@@ -2031,7 +2031,7 @@
     {
       "id": "deck-muse",
       "name": "Deck Muse",
-      "description": "AI game help.",
+      "description": "Answers gameplay questions with AI while you play.",
       "repo": "gloverthe/deck-muse",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Deck Muse"] },
@@ -2058,7 +2058,7 @@
     {
       "id": "decky-cachyos-update",
       "name": "CachyOS Update",
-      "description": "Aktualisiert CachyOS direkt im Gamemode: Pacman-Repos, AUR, Flatpak und optional Firmware - ohne Desktop-Modus, ohne Terminal, ohne Passwort.",
+      "description": "Updates CachyOS Handheld Edition from Gaming Mode: system packages, AUR packages and Flatpaks.",
       "repo": "Felitendo/decky-cachyos-update",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["CachyOS Update"] },
@@ -2166,7 +2166,7 @@
     {
       "id": "sdachievement",
       "name": "SDAchievement",
-      "description": "Decky plugin to track game progress and achievements",
+      "description": "Tracks game progress and achievements.",
       "repo": "Wariie/SDAchievement",
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["SDAchievement"] },
@@ -2274,7 +2274,7 @@
     {
       "id": "discord-lite",
       "name": "Discord Lite",
-      "description": "Discord Lite - Controle completo do Discord via Steam Deck",
+      "description": "Controls Discord voice calls from the Quick Access Menu.",
       "repo": "lopesleo/Discord-Lite",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Discord Lite"] },
