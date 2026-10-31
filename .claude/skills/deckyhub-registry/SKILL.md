@@ -34,7 +34,7 @@ DeckyHub is in production: anything it reads (`apps.json`, the release index, `s
    Fix every error. Warnings (no stable release, no SHA-256 digest) are worth a look but don't fail CI.
 
    Always check that every repo link is still valid, not just the entries you touched: `validate.py` checks every entry's `repo` against GitHub. Treat a renamed repo as a fix: update `repo` and every README link to the new `owner/name` (`grep -rl old/name` across the checkout) in its own PR. Treat an archived or missing repo as a question for the user: keep the entry or remove it.
-3. Commit, push and open the PR against `develop`; it only accepts squash-merged PRs whose `validate` check passed. Its CI runs both checks. Merge it, then ship with a `develop` → `main` PR.
+3. Commit, push and open the PR against `develop`; it only accepts squash-merged PRs whose `validate` check passed. Its CI runs both checks. Merge it, write the notes of the `-develop` pre-release that merge publishes (step 5 of the `ship-registry` skill), then ship with a `develop` → `main` PR.
 
 ## Daily discovery PRs
 
