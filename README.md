@@ -29,8 +29,9 @@ The same job writes `stats.json` for the [catalog](https://mazillka.github.io/de
 - **Stars:** the repository's GitHub stars.
 - **Last updated:** when the release DeckyHub shows came out; over a year ago reads **No release in a year**.
 - **Runs as root:** that release's `plugin.json` has `"root"` in its `flags`, so Decky Loader runs the plugin's backend as the `root` user. It can then read and change anything on the Deck: system files, other plugins, your data. Plenty of plugins need that for real reasons (fan and power control, drivers, VPNs, system settings), so it isn't a red flag by itself, but a bug or a malicious update can do far more harm.
+- **Audit warnings:** what [Decky Extended Plugins' automated audit](https://decky-extended-plugins.beallio.com/audit) found in that release (matched by the ZIP's sha256, else by tag), or in a newer pre-release, that's worth a warning: **Blocked by audit** (malware or a broken archive), **Reads private data** (Steam login data, SSH keys, environment secrets), **Changes system startup** (shell profiles, `LD_PRELOAD`, kernel modules, udev rules), **Code not in its repo** (scripts or programs in the ZIP that aren't in its source), **Hidden code** (encoded or packed code), **Skips HTTPS checks**, **Runs downloaded scripts** (`curl … | sh`) and **Known vulnerabilities** (bundled libraries with published CVEs). Routine findings like `sudo`, `mount` or `systemctl` aren't shown: many plugins need them on SteamOS, and **Runs as root** already covers that. The mapping is `WARNINGS` in `build_release_index.py`. A warning isn't proof of harm and no warning isn't proof of safety. If the audit site is down, the stats go out without warnings.
 
-New plugins are found automatically too. Every day the [discover workflow](.github/workflows/discover.yml) runs [`scripts/discover.py`](scripts/discover.py) over two community catalogs: [Decky Plugins Explorer](https://safetzahirovic.github.io/decky-plugins-explorer/)'s nightly list of every public repository with a Decky `plugin.json`, and [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) (the Decky store plus community plugins). Plugins that aren't listed yet and pass the same checks as `validate.py` (and have a stable release) are opened as a pull request, at most 25 at a time. Nothing is merged without review.
+New plugins are found automatically too. Every day the [discover workflow](.github/workflows/discover.yml) runs [`scripts/discover.py`](scripts/discover.py) over two community catalogs, [Decky Plugins Explorer](https://safetzahirovic.github.io/decky-plugins-explorer/)'s nightly list of every public repository with a Decky `plugin.json` and [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) (the Decky store plus community plugins), and our own GitHub search: repositories tagged or named like Decky plugins (`topic:decky-plugin`, `decky in:name` and a few more) with a `plugin.json` at their root. The search keeps discovery working if both catalogs go away; `--sources github` runs it alone. Plugins that aren't listed yet, pass the same checks as `validate.py` (and have a stable release) and don't look unfinished ([`scripts/quality.py`](scripts/quality.py): a first release under 14 days old, no stars and under 10 downloads, a `0.0.x` version or no description; those are tried again later) are opened as a pull request against `develop`, at most 50 at a time. Nothing is merged without review.
 
 ## Repositories
 
@@ -373,16 +374,20 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 
 ## Where the plugins come from
 
-Plugins are suggested by people (issues and pull requests here) or found through two community catalogs, which the [discover workflow](.github/workflows/discover.yml) checks every day:
+Plugins are suggested by people (issues and pull requests here) or found by the [discover workflow](.github/workflows/discover.yml) every day, through two community catalogs and our own GitHub search for repositories tagged or named like Decky plugins:
 
 - [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) by [beallio](https://github.com/beallio), which also publishes a [security audit](https://decky-extended-plugins.beallio.com/audit) of the plugins it lists.
 - [Decky Plugins Explorer](https://safetzahirovic.github.io/decky-plugins-explorer/) by [SafetZahirovic](https://github.com/SafetZahirovic), which finds every public GitHub repository with a Decky `plugin.json` every night ([MIT](https://github.com/SafetZahirovic/decky-plugins-explorer/blob/main/LICENSE)).
 
 However a plugin was found, it's only added once `validate.py` passes for it (a stable release, exactly one plugin ZIP, a matching `plugin.json` name). Those are automatic checks for a working release; nobody reviews the plugins themselves. Thanks to both catalogs' authors for making their data available.
 
+## Branches
+
+`main` is what DeckyHub reads: every install fetches `registry/apps.json` from it, and the release index is built from it. Changes land on `develop` first: branch from `develop`, open the pull request against `develop`, and merge it with **Squash and merge**. A pull request from `develop` into `main` then ships them; after it's merged, merge `main` back into `develop` with **Create a merge commit**, so the next one doesn't conflict. The discover workflow opens its pull requests against `develop` too. `.githooks/pre-commit` blocks commits on `main` and `develop`; turn it on once per checkout with `git config core.hooksPath .githooks`.
+
 ## Adding a plugin
 
-Open a pull request that adds one entry to [`registry/apps.json`](registry/apps.json), plus its row in the table above (same order). Not sure about the details? [Open an issue](https://github.com/mazillka/deckyhub-registry/issues/new) with the plugin's repository instead.
+Open a pull request against `develop` that adds one entry to [`registry/apps.json`](registry/apps.json), plus its row in the table above (same order). Not sure about the details? [Open an issue](https://github.com/mazillka/deckyhub-registry/issues/new) with the plugin's repository instead.
 
 ```json
 {

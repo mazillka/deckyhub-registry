@@ -1,9 +1,9 @@
 name: Discover
 
-# Daily: scripts/discover.py adds plugins from Decky Plugins Explorer and Decky
-# Extended Plugins that pass
-# validate.py's checks, and this opens a pull request with them for review. Never
-# merges. Skips the run while an earlier discover PR is still open.
+# Daily: scripts/discover.py adds plugins from Decky Plugins Explorer, Decky Extended
+# Plugins and our own GitHub search that pass validate.py's checks, and this opens a
+# pull request against develop with them for review. Never merges. Skips the run while
+# an earlier discover PR is still open.
 on:
   workflow_dispatch:
   schedule:
@@ -25,13 +25,15 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: develop
       - id: open
         run: echo "count=$(gh pr list --state open --search 'head:discover/' --json number --jq length)" >> "$GITHUB_OUTPUT"
       - if: steps.open.outputs.count == '0'
         # Plugins listed in closed discovery PRs that aren't in apps.json were turned down.
         run: |
           gh pr list --state closed --search 'head:discover/' --limit 200 --json body --jq '.[].body' > "$RUNNER_TEMP/closed.txt"
-          python3 scripts/discover.py --limit 25 --ignore "$RUNNER_TEMP/closed.txt" | tee "$RUNNER_TEMP/found.txt"
+          python3 scripts/discover.py --limit 50 --ignore "$RUNNER_TEMP/closed.txt" | tee "$RUNNER_TEMP/found.txt"
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - if: steps.open.outputs.count == '0'
@@ -43,11 +45,11 @@ jobs:
           git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qam "feat: add plugins found by community catalogs"
           git push -q origin "$branch"
           {
-            echo "Plugins found by [Decky Plugins Explorer](https://github.com/SafetZahirovic/decky-plugins-explorer) and [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) that pass \`validate.py\`'s checks and have a stable release. Opened by the discover workflow, which never merges."
+            echo "Plugins found by [Decky Plugins Explorer](https://github.com/SafetZahirovic/decky-plugins-explorer), [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) and our own GitHub search that pass \`validate.py\`'s checks and have a stable release. Opened by the discover workflow, which never merges."
             echo
             echo "**Review before merging:** each one's category (picked by keyword) and description (from its plugin.json), and anything that looks like a fork, a test build or not really a plugin. Delete an entry and its README row to drop it; plugins dropped that way, or by closing this PR, aren't proposed again."
             echo
             tail -n +2 "$RUNNER_TEMP/found.txt"
           } > "$RUNNER_TEMP/body.md"
-          gh pr create --base main --head "$branch" --title "feat: add plugins found by community catalogs ($(date -u +%Y-%m-%d))" --body-file "$RUNNER_TEMP/body.md"
+          gh pr create --base develop --head "$branch" --title "feat: add plugins found by community catalogs ($(date -u +%Y-%m-%d))" --body-file "$RUNNER_TEMP/body.md"
           gh workflow run ci.yml --ref "$branch"

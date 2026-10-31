@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from build_release_index import RECENT, build, plugin_stats  # noqa: E402
+from build_release_index import RECENT, audit_index, build, plugin_stats  # noqa: E402
 from validate import rest_shape  # noqa: E402
 
 
@@ -65,6 +65,21 @@ class BuildReleaseIndexTests(unittest.TestCase):
         self.assertIsNone(stats["stars"])
         self.assertEqual(plugin_stats(entry(), [], stars=lambda repo: 0, manifest=broken), {"downloads": 0, "stars": 0, "updated": None, "root": None})
 
+    def test_stats_warn_about_the_audit_of_the_shown_release_and_a_newer_prerelease(self):
+        history = [release("v1", 1, [("plugin.zip", 1)]), release("v2-beta", 2, [("plugin.zip", 1)], prerelease=True)]
+        history[0]["assets"][0]["digest"] = "sha256:aa"
+        audits = audit_index({"releases": [
+            {"repository": "https://github.com/O/A", "tag": "v1", "classification": "MANUAL_REVIEW", "audited_at": "2026-01-01", "current_artifact_sha256": "aa",
+             "rule_ids": ["PRIVILEGE_SUDO", "SENSITIVE_STEAM_AUTH", "TRIVY_CVE_2026_1", "TRIVY_GHSA_X"]},
+            # Same tag, older upload: the sha256 match still picks the v1 ZIP's own audit.
+            {"repository": "https://github.com/o/a", "tag": "v1", "classification": "PASS", "rule_ids": [], "audited_at": "2025-01-01", "current_artifact_sha256": "bb"},
+            {"repository": "https://github.com/o/a", "tag": "v2-beta", "classification": "BLOCK", "rule_ids": ["ZIP_ONLY_SCRIPT"], "audited_at": "", "current_artifact_sha256": None},
+        ]})
+        stats = plugin_stats(entry(), history, stars=lambda repo: 0, manifest=lambda asset: {}, audits=audits)
+        # Routine rules (sudo) aren't warnings.
+        self.assertEqual(stats["warnings"], ["private-data", "vulnerable"])
+        self.assertEqual(stats["prereleaseWarnings"], ["blocked", "not-in-source"])
+        self.assertNotIn("warnings", plugin_stats(entry(), [release("v9", 9, [("plugin.zip", 1)])], stars=lambda repo: 0, manifest=lambda asset: {}, audits=audits))
 
     def test_graphql_releases_take_the_rest_shape(self):
         node = {"tagName": "v1", "name": "One", "isDraft": False, "isPrerelease": True, "publishedAt": "2026-01-01T00:00:00Z", "url": "u", "description": "notes",
