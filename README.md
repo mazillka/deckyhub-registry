@@ -524,6 +524,41 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Reboot Menu | Utilities | [divanikus/decky-reboot-menu](https://github.com/divanikus/decky-reboot-menu) |
 | Audio Output Switcher | Utilities | [xenophobentx/decky-audio-switcher](https://github.com/xenophobentx/decky-audio-switcher) |
 | Backlog Picker | Game Libraries | [babi723/decky-backlog-picker](https://github.com/babi723/decky-backlog-picker) |
+| APDetail | Utilities | [miguellara999/Decky-APDetail](https://github.com/miguellara999/Decky-APDetail) |
+| Decky Guide | Utilities | [Logic-mle/decky-guide](https://github.com/Logic-mle/decky-guide) |
+| 枫语幕 | Utilities | [Herzzzz/fengyumu-decky](https://github.com/Herzzzz/fengyumu-decky) |
+| Decky Player | Utilities | [mdusmb/decky-player](https://github.com/mdusmb/decky-player) |
+| SaveLocker | Launch Options | [SkorcherX/SaveLocker-Decky](https://github.com/SkorcherX/SaveLocker-Decky) |
+| DSH Chat | Utilities | [gangoogle/decky-dsh-chat](https://github.com/gangoogle/decky-dsh-chat) |
+| Dolphin Remote | Controllers | [Ma-Rang/dolphin-remote-decky](https://github.com/Ma-Rang/dolphin-remote-decky) |
+| z13-decky | Performance | [timshen91/z13-decky](https://github.com/timshen91/z13-decky) |
+| SSH Toggle | Utilities | [NeonPimpZ/decky-ssh-toggle](https://github.com/NeonPimpZ/decky-ssh-toggle) |
+| Gyro DSU | Controllers | [christopherl/decky-gyro-dsu](https://github.com/christopherl/decky-gyro-dsu) |
+| CCD Control 395 | Performance | [fishersonic/Decky-CCD-Control-395](https://github.com/fishersonic/Decky-CCD-Control-395) |
+| Moonlight Sync | Game Libraries | [episode6/moonlight-steam-sync-decky](https://github.com/episode6/moonlight-steam-sync-decky) |
+| New Suspend Mode | Controllers | [hileydson/New-Suspend-Mode](https://github.com/hileydson/New-Suspend-Mode) |
+| DeckShock4 Toggle | Controllers | [lesnuages/deckshock4-toggle](https://github.com/lesnuages/deckshock4-toggle) |
+| MemoryEditor | Utilities | [EdinH86/memoryeditor](https://github.com/EdinH86/memoryeditor) |
+| OptiScaler | Frame Generation | [justradical/decky-optiscaler-arm64ec](https://github.com/justradical/decky-optiscaler-arm64ec) |
+| jimmys-big-load | Performance | [bellyokelly-ship-it/jbl](https://github.com/bellyokelly-ship-it/jbl) |
+| NewFreedeck | Utilities | [ddordie/NewFreedeck-arm64](https://github.com/ddordie/NewFreedeck-arm64) |
+| Custom Resolution | Utilities | [shaka456/custom-resolution](https://github.com/shaka456/custom-resolution) |
+| Showreel | Customization | [michpalm/showreel](https://github.com/michpalm/showreel) |
+| HandheldFanTweaker | Performance | [sleoier/HandheldFanTweaker](https://github.com/sleoier/HandheldFanTweaker) |
+| Dock Display | Performance | [Kernien/dock-display](https://github.com/Kernien/dock-display) |
+| Steam Games Info | Launch Options | [lonsdaleite/steam-games-info](https://github.com/lonsdaleite/steam-games-info) |
+| Profile Launcher | Launch Options | [JDLKMR/Decky-Profile-Launcher-Legacy-Legacy](https://github.com/JDLKMR/Decky-Profile-Launcher-Legacy-Legacy) |
+| MusicControl | Utilities | [JobDestroyer/MusicControlol](https://github.com/JobDestroyer/MusicControlol) |
+| Nimo RGB | Customization | [fewtarius/nimo-rgb](https://github.com/fewtarius/nimo-rgb) |
+| 16:10 Fixes | Utilities | [nucat176/decky-16x10-fixes](https://github.com/nucat176/decky-16x10-fixes) |
+| NTFS Mount Keeper | Utilities | [aaron-pengx/ntfs-mount-keeper](https://github.com/aaron-pengx/ntfs-mount-keeper) |
+| CachyOS Updater | Utilities | [bassobr/Decky-CachyOS-Updater](https://github.com/bassobr/Decky-CachyOS-Updater) |
+| Flight Mode Prep | Performance | [Sabissimo/decky-flight-mode-prep](https://github.com/Sabissimo/decky-flight-mode-prep) |
+| Handheld Daemon | Utilities | [honjow/hhd-decky](https://github.com/honjow/hhd-decky) |
+| RayNeo Control | Customization | [YifePlayte/RayNeo-Control](https://github.com/YifePlayte/RayNeo-Control) |
+| NTS Radio | Utilities | [dylwww/decky-nts](https://github.com/dylwww/decky-nts) |
+| Finally Screenshot Sound | Utilities | [otisabiburada/finally-screenshot-sound](https://github.com/otisabiburada/finally-screenshot-sound) |
+| SpeechToDeck | Utilities | [rusagent/SpeechToDeck](https://github.com/rusagent/SpeechToDeck) |
 
 ## Where the plugins come from
 
