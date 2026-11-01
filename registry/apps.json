@@ -3908,6 +3908,852 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["HyperHDR Toggle"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-ukr-badge",
+      "name": "decky-ukr-badge",
+      "description": "Displays a badge on game pages showing Ukrainian language support status (Official, Community, or None).",
+      "repo": "yataktyni/decky-ukr-badge",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["decky-ukr-badge"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ayaneo3companion",
+      "name": "AYANEO 3 Companion",
+      "description": "TDP, fan, smart-amp audio, battery, controller and OLED support for AYANEO 3.",
+      "repo": "Rayekkk/Ayaneo3Companion",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["AYANEO 3 Companion"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-speaker-boost",
+      "name": "Speaker Boost",
+      "description": "Boost speaker volume above 100% via a PipeWire gain filter; volume buttons keep working.",
+      "repo": "beaglemoo/decky-speaker-boost",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Speaker Boost"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "rainwavebuddy",
+      "name": "RainWave Buddy",
+      "description": "Play Rainwave stations on Steam Deck with quick station controls and now/upcoming metadata.",
+      "repo": "BrenticusMaximus/RainWaveBuddy",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["RainWave Buddy"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "lgwheel-switch",
+      "name": "LG Wheel Switch",
+      "description": "Switch between lgogwheelgamepad and lg4ff kernel drivers for Logitech racing wheels on Steam Deck.",
+      "repo": "gabegm/lgwheel-switch",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["LG Wheel Switch"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-opencode",
+      "name": "OpenCode Web",
+      "description": "Control the opencode-web.service systemd user unit from Game Mode.",
+      "repo": "impuls42/decky-opencode",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["OpenCode Web"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "retroarch-ai-translate",
+      "name": "RetroArch AI Translate",
+      "description": "Real-time translation overlay for RetroArch games. Uses AI vision + MT APIs to translate game text without modifying ROMs.",
+      "repo": "wolfg1969/retroarch-ai-translate",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["RetroArch AI Translate"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-nonsteam-sync",
+      "name": "NonSteam Sync",
+      "description": "Turns non-Steam games on a removable SD card into real Steam library entries — Proton, artwork and store metadata — and carries their...",
+      "repo": "JoseArkadio/decky-nonsteam-sync",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["NonSteam Sync"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "clearly-recent",
+      "name": "Clearly Recent",
+      "description": "Hides uninstalled games from Recent Games on the Steam Deck Home screen.",
+      "repo": "D1zg/clearly-recent",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Clearly Recent"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-claude",
+      "name": "decky-claude",
+      "description": "Claude in gaming mode - helps you debug games, Proton and Steam.",
+      "repo": "TuxLux40/decky-claude",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["decky-claude"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "pongbar",
+      "name": "PongBar",
+      "description": "A standalone 1D Pong game played on the official Steam Machine's 17 LED light bar.",
+      "repo": "Alyenax/PongBar",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["PongBar"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "gfxprofile",
+      "name": "eGPU Game Config Swap",
+      "description": "Swap per-game graphics settings between eGPU dock and internal GPU",
+      "repo": "kanonjeong-ops/gfxprofile",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["eGPU Game Config Swap"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyeq",
+      "name": "DeckyEQ",
+      "description": "Live 10-band equalizer for Decky Loader on SteamOS: curve editor, bass, treble, stereo width, volume boost with a limiter, presets and...",
+      "repo": "Rayekkk/DeckyEQ",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckyEQ"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "reboot-to-windows",
+      "name": "Reboot to Windows",
+      "description": "Decky Loader plugin: one-shot reboot from SteamOS into Windows 11 via UEFI BootNext; the next boot returns to SteamOS.",
+      "repo": "branchingjade/reboot-to-windows",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Reboot to Windows"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "azeroth-addons",
+      "name": "Azeroth Addons",
+      "description": "Controller-first World of Warcraft addon manager for SteamOS Gaming Mode.",
+      "repo": "mdeloughry/azeroth-addons",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Azeroth Addons"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "mihomo-decky",
+      "name": "Mihomo",
+      "description": "Manage an existing Mihomo or Clash core from Decky.",
+      "repo": "ccc007ccc/mihomo-decky",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Mihomo"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckbridge",
+      "name": "DeckBridge",
+      "description": "Transparent phone internet for PdaNet, NetShare, and Egern on x8664 and ARM64 Linux handhelds.",
+      "repo": "Janleyx/DeckBridge",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckBridge"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "autowhite",
+      "name": "AutoWhite",
+      "description": "Ambient-light adaptive white point for gamescope: warmer in the dark, neutral in bright light. Brightness is untouched.",
+      "repo": "GaricST/AutoWhite",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["AutoWhite"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-wowup",
+      "name": "WoW Addons",
+      "description": "Update World of Warcraft addons from Game Mode.",
+      "repo": "bassobr/decky-wowup",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["WoW Addons"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "boot-volume",
+      "name": "BootVolume",
+      "description": "Decky Loader plugin: lowers the system volume while the SteamOS boot animation plays, then restores it.",
+      "repo": "branchingjade/boot-volume",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["BootVolume"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyally",
+      "name": "DeckyAlly",
+      "description": "ROG Ally X 在 SteamOS 下的唤醒手柄恢复、摇杆灯光控制与诊断。",
+      "repo": "XiaoMinghui/DeckyAlly",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["DeckyAlly"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyhournotifications",
+      "name": "Hour Notifications",
+      "description": "Toast the hour at the top of every hour on your Steam Deck.",
+      "repo": "mpcallahan/DeckyHourNotifications",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Hour Notifications"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyloader-plugin-palia-npc-gift-tracker",
+      "name": "Palia NPC Weekly Gifts Tracker",
+      "description": "Palia NPC Weekly Gifts Tracker",
+      "repo": "Mujtaba-Alsaleh/DeckyLoader-Plugin-Palia-NPC-Gift-Tracker",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Palia NPC Weekly Gifts Tracker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-ai",
+      "name": "Decky AI",
+      "description": "Gemini game help, voice input, screen analysis, and YouTube walkthrough search.",
+      "repo": "wankyo83/Decky-AI",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Decky AI"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-stplugin",
+      "name": "STPlugin",
+      "description": "Lua script downloader for Steam games — port of LTSteamPlugin to Decky Loader.",
+      "repo": "username54321-dotcom/Decky-STPlugin",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["STPlugin"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "wf-decky",
+      "name": "WF-Decky",
+      "description": "Search warframe.market and copy trade whispers from the Steam Deck Quick Access Menu.",
+      "repo": "Raanh/WF-Decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["WF-Decky"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-hostsleep",
+      "name": "HostSleep",
+      "description": "Sleeps your host gaming PC when the Deck suspends and wakes it (WOL) when the Deck resumes — without killing the running game.",
+      "repo": "Vahn84/decky-hostsleep",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["HostSleep"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-notes",
+      "name": "Decky Notes",
+      "description": "Quick notes accessible from the QAM sidebar.",
+      "repo": "michaelravecabrera/Decky-Notes",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Notes"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "vkbasalt-decky",
+      "name": "vkBasalt Manager",
+      "description": "Install and configure vkBasalt (Vulkan post-processing effects / ReShade) directly from the Quick Access Menu.",
+      "repo": "Vaddum/vkbasalt-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["vkBasalt Manager"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "gined44-vpn-decky",
+      "name": "vpn-decky",
+      "description": "VPN-клиент для Steam Deck (Decky Loader) на sing-box: vless, hysteria2, trojan",
+      "repo": "Gined44/vpn-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["vpn-decky"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-gitupdater",
+      "name": "decky-gitupdater",
+      "description": "Met à jour des plugins Decky depuis des repos GitHub (releases ZIP).",
+      "repo": "quentingeorgel/decky-gitupdater",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["decky-gitupdater"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-wrapped",
+      "name": "Deck Wrapped",
+      "description": "Your Steam Deck year in review: total hours, top games, and playtime trends — tracked locally, Wrapped-style.",
+      "repo": "Sabissimo/decky-wrapped",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Deck Wrapped"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-rotate-screen",
+      "name": "DeckyRotateScreen",
+      "description": "Rotate your display orientation on Bazzite via rpm-ostree kernel arguments.",
+      "repo": "sanicki/decky-rotate-screen",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckyRotateScreen"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-egpu-helper",
+      "name": "eGPU Helper",
+      "description": "Monitor your eGPU and manually restart Gamescope.",
+      "repo": "M15t/decky-egpu-helper",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["eGPU Helper"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-gpu-picker",
+      "name": "GPU Picker",
+      "description": "Lists the Vulkan GPUs (exact device + PCI id) and copies the launch command MESAVKDEVICESELECT=\"<vendor:device!\" %command% to the...",
+      "repo": "revenpl/decky-gpu-picker",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["GPU Picker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-flow",
+      "name": "Decky Flow",
+      "description": "Control your Steam Deck in Gaming Mode from a PC using Deskflow (software KVM / mouse & keyboard sharing).",
+      "repo": "Congmeims/Decky-Flow",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Flow"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-pwm-control",
+      "name": "PWMControl",
+      "description": "Dim the Steam Deck OLED with a black overlay so you can leave hardware brightness at 100% and avoid lower-rate PWM flicker.",
+      "repo": "pymmog/decky-pwm-control",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["PWMControl"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-position-toasts",
+      "name": "Decky Position Toasts",
+      "description": "Move Steam Deck notification toasts to any corner, with adjustable margins.",
+      "repo": "K1tsune12/decky-position-toasts",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Decky Position Toasts"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-smart-launcher",
+      "name": "Smart Game Launcher",
+      "description": "Automatically choose the Steam, desktop or streamed version of a game based on availability and network state.",
+      "repo": "Marshy-Madness/decky-smart-launcher",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Smart Game Launcher"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "gamescheap-decky-plugin",
+      "name": "gamescheap",
+      "description": "Compare Steam and authorized PC store prices on game pages. Watchlist with target prices and deal alerts via gamescheap.win.",
+      "repo": "redbrake/gamescheap-decky-plugin",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["gamescheap"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-zerotier-manager",
+      "name": "ZeroTier Manager",
+      "description": "Manage ZeroTier on Steam Deck: persistent install, join/leave networks, per-network switches and node status.",
+      "repo": "WuKavin/decky-zerotier-manager",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["ZeroTier Manager"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-nothing-ear",
+      "name": "Nothing Ear",
+      "description": "Control your Nothing and CMF earbuds: battery, noise control, low latency, EQ, gestures and more.",
+      "repo": "Josemolivaresc/decky-nothing-ear",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Nothing Ear"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-tower-control",
+      "name": "Tower Control",
+      "description": "Toggle systemd services (start/stop) directly from Decky.",
+      "repo": "matteocrippa/decky-tower-control",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Tower Control"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-roku-remote",
+      "name": "Roku Remote",
+      "description": "Control a Roku TV directly from Steam Deck.",
+      "repo": "UnforgettableJuan/Decky-Roku-Remote",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Roku Remote"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-game-optimizer",
+      "name": "Game Optimizer",
+      "description": "Automatically fetches and applies community-sourced optimal settings for your installed Steam games.",
+      "repo": "jacobdonahoe/decky-game-optimizer",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Game Optimizer"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-cloud-saves",
+      "name": "Deck Cloud Saves",
+      "description": "Sync save files for non-Steam games to your Google Drive, with Steam Cloud style conflict resolution and a Windows companion app.",
+      "repo": "danielcamilo1/decky-cloud-saves",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Deck Cloud Saves"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-nas-mount",
+      "name": "NAS Mount",
+      "description": "Shows the NFS and SMB shares your device mounts (from fstab or systemd mount units): whether each is reachable and mounted, a connection...",
+      "repo": "joshmans/decky-nas-mount",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["NAS Mount"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-reboot-menu",
+      "name": "Reboot Menu",
+      "description": "Choose a one-time UEFI boot target or restart into firmware setup from Decky.",
+      "repo": "divanikus/decky-reboot-menu",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Reboot Menu"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "xenophobentx-decky-audio-switcher",
+      "name": "Audio Output Switcher",
+      "description": "Automatically switches between audio outputs based on a priority list, with manual override.",
+      "repo": "xenophobentx/decky-audio-switcher",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Audio Output Switcher"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-backlog-picker",
+      "name": "Backlog Picker",
+      "description": "A Decky Loader plugin for Steam Deck that randomly picks a game from your backlog with smart filters",
+      "repo": "babi723/decky-backlog-picker",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Backlog Picker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-apdetail",
+      "name": "APDetail",
+      "description": "Shows which WiFi access point (BSSID) you are connected to and lets you switch to another AP on the same SSID.",
+      "repo": "miguellara999/Decky-APDetail",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["APDetail"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-guide",
+      "name": "Decky Guide",
+      "description": "在 Decky 侧栏中自动查找并阅读当前游戏的游民星空攻略。",
+      "repo": "Logic-mle/decky-guide",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Guide"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "fengyumu-decky",
+      "name": "枫语幕",
+      "description": "Local MapleStory Classic OCR and dictionary overlay for SteamOS Game Mode",
+      "repo": "Herzzzz/fengyumu-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["枫语幕"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-player",
+      "name": "Decky Player",
+      "description": "A Steam Deck Gaming Mode launcher for YouTube Music.",
+      "repo": "mdusmb/decky-player",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Player"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "savelocker-decky",
+      "name": "SaveLocker",
+      "description": "Sets the Steam launch options SaveLocker needs, so a Deck syncs saves without pasting a command into every game.",
+      "repo": "SkorcherX/SaveLocker-Decky",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["SaveLocker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-dsh-chat",
+      "name": "DSH Chat",
+      "description": "Chat with the local DeepSeek Harness right from Gaming Mode.",
+      "repo": "gangoogle/decky-dsh-chat",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DSH Chat"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "dolphin-remote-decky",
+      "name": "Dolphin Remote",
+      "description": "Quick controls for Dolphin emulator — manage controllers, playback, and game launching from Steam Deck Game Mode.",
+      "repo": "Ma-Rang/dolphin-remote-decky",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Dolphin Remote"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "z13-decky",
+      "name": "z13-decky",
+      "description": "Native control panel for the 2025 ASUS ROG Flow Z13: performance modes (TDP, fans, EPP, undervolt), AC/battery auto-switch, RGB...",
+      "repo": "timshen91/z13-decky",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["z13-decky"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-ssh-toggle",
+      "name": "SSH Toggle",
+      "description": "Decky plugin to toggle SSH on the Steam Deck",
+      "repo": "NeonPimpZ/decky-ssh-toggle",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SSH Toggle"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-gyro-dsu",
+      "name": "Gyro DSU",
+      "description": "Check for a DSU motion server, manage DSU services and visualize the handheld's orientation live.",
+      "repo": "christopherl/decky-gyro-dsu",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Gyro DSU"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-ccd-control-395",
+      "name": "CCD Control 395",
+      "description": "SteamOS-only CCD control for Ryzen AI Max+ 395 systems.",
+      "repo": "fishersonic/Decky-CCD-Control-395",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["CCD Control 395"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "moonlight-steam-sync-decky",
+      "name": "Moonlight Sync",
+      "description": "Sync a Moonlight host's games into your Steam library from Game Mode: Stream buttons on the games you own, dressed shortcuts for the rest.",
+      "repo": "episode6/moonlight-steam-sync-decky",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Moonlight Sync"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "new-suspend-mode",
+      "name": "New Suspend Mode",
+      "description": "A full replacement for the SteamOS sleep.",
+      "repo": "hileydson/New-Suspend-Mode",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["New Suspend Mode"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckshock4-toggle",
+      "name": "DeckShock4 Toggle",
+      "description": "Start, stop, restart and toggle the DeckShock4 systemd service from Decky.",
+      "repo": "lesnuages/deckshock4-toggle",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["DeckShock4 Toggle"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "memoryeditor",
+      "name": "MemoryEditor",
+      "description": "Memory Editor as a Decky plugin - work in progress",
+      "repo": "EdinH86/memoryeditor",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["MemoryEditor"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-optiscaler-arm64ec",
+      "name": "OptiScaler",
+      "description": "Installs the ARM64EC OptiScaler/SGSR2 build into Steam games.",
+      "repo": "justradical/decky-optiscaler-arm64ec",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["OptiScaler"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "jbl",
+      "name": "jimmys-big-load",
+      "description": "Jimmy's Big Load - Ultimate Steam Deck Decky Loader Plugin",
+      "repo": "bellyokelly-ship-it/jbl",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["jimmys-big-load"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "newfreedeck-arm64",
+      "name": "NewFreedeck",
+      "description": "A minimal Decky plugin scaffold for NewFreedeck.",
+      "repo": "ddordie/NewFreedeck-arm64",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["NewFreedeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "custom-resolution",
+      "name": "Custom Resolution",
+      "description": "Per-game custom resolution overrides without leaving gaming mode.",
+      "repo": "shaka456/custom-resolution",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Custom Resolution"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "showreel",
+      "name": "Showreel",
+      "description": "Record the Steam UI on SteamOS handhelds (Quick Access included) for plugin showcases",
+      "repo": "michpalm/showreel",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Showreel"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "handheldfantweaker",
+      "name": "HandheldFanTweaker",
+      "description": "Edit the fan curves of SteamOS ARM Port handhelds (odin3d / konkrd).",
+      "repo": "sleoier/HandheldFanTweaker",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["HandheldFanTweaker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "dock-display",
+      "name": "Dock Display",
+      "description": "Keep the picture on the Steam Deck screen while docked, using the dock only for charging.",
+      "repo": "Kernien/dock-display",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Dock Display"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steam-games-info",
+      "name": "Steam Games Info",
+      "description": "Browse installed Steam games with offered/installed builds, runnable platforms, and default launch info.",
+      "repo": "lonsdaleite/steam-games-info",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["Steam Games Info"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-profile-launcher-legacy-legacy",
+      "name": "Profile Launcher",
+      "description": "Pick a numbered profile before launching any game whose launch options or target point at a .sh script.",
+      "repo": "JDLKMR/Decky-Profile-Launcher-Legacy-Legacy",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["Profile Launcher"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "musiccontrolol",
+      "name": "MusicControl",
+      "description": "Control MPRIS media players (Strawberry, Spotify, Firefox, etc.) from Game Mode.",
+      "repo": "JobDestroyer/MusicControlol",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["MusicControl"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "nimo-rgb",
+      "name": "Nimo RGB",
+      "description": "RGB keyboard and chassis lighting control for Nimo Axis N161. Uses the emdoor-wmi kernel driver.",
+      "repo": "fewtarius/nimo-rgb",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Nimo RGB"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-16x10-fixes",
+      "name": "16:10 Fixes",
+      "description": "Scan installed Steam games and install curated 16:10 fixes from Game Mode.",
+      "repo": "nucat176/decky-16x10-fixes",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["16:10 Fixes"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ntfs-mount-keeper",
+      "name": "NTFS Mount Keeper",
+      "description": "Keeps an NTFS volume (e.g. the Windows partition) mounted on boot by re-applying the /etc/fstab entry and the udisks2 polkit rule after...",
+      "repo": "aaron-pengx/ntfs-mount-keeper",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["NTFS Mount Keeper"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-cachyos-updater",
+      "name": "CachyOS Updater",
+      "description": "Check for and install CachyOS Handheld Edition system updates from Game Mode - no Desktop Mode needed.",
+      "repo": "bassobr/Decky-CachyOS-Updater",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["CachyOS Updater"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-flight-mode-prep",
+      "name": "Flight Mode Prep",
+      "description": "One-tap preflight check before you go offline: battery level, free storage, games with pending updates, and games that won't work...",
+      "repo": "Sabissimo/decky-flight-mode-prep",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Flight Mode Prep"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "hhd-decky",
+      "name": "Handheld Daemon",
+      "description": "Decky frontend for hhd (Handheld Daemon)",
+      "repo": "honjow/hhd-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Handheld Daemon"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "rayneo-control",
+      "name": "RayNeo Control",
+      "description": "Control a connected RayNeo (FFalcon) XR display: brightness, 2D/3D, screen size, scene mode, HDR, colour enhance, volume, audio mode,...",
+      "repo": "YifePlayte/RayNeo-Control",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["RayNeo Control"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-nts",
+      "name": "NTS Radio",
+      "description": "A Steam Deck plugin for Decky Loader that plays NTS Radio",
+      "repo": "dylwww/decky-nts",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["NTS Radio"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "finally-screenshot-sound",
+      "name": "Finally Screenshot Sound",
+      "description": "Plays a sound when you take a screenshot in Game Mode.",
+      "repo": "otisabiburada/finally-screenshot-sound",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Finally Screenshot Sound"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "speechtodeck",
+      "name": "SpeechToDeck",
+      "description": "Local voice dictation on Steam Deck: press the dictation button in the QuickAccess panel, speak, and your words are transcribed...",
+      "repo": "rusagent/SpeechToDeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SpeechToDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-easytier",
+      "name": "Decky Easytier",
+      "description": "EasyTier VPN mesh networking management plugin for Steam Deck",
+      "repo": "Weicoz/decky-easytier",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Easytier"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "browsec-decky",
+      "name": "Browsec Decky",
+      "description": "Browsec VPN controls for Steam Deck Game Mode.",
+      "repo": "soberdeer/browsec-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Browsec Decky"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-onexgpu",
+      "name": "decky-onexgpu",
+      "description": "Standalone ONEXGPU 2 switching, eject and auto-switch on wake.",
+      "repo": "anslwy/decky-onexgpu",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["decky-onexgpu"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-yomi-sync",
+      "name": "YomiDeck",
+      "description": "Wireless screenshot drop and synchronization Decky plugin for YomiLLM Japanese grammar analysis on Steam Deck",
+      "repo": "m1kuk1m/decky-yomi-sync",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["YomiDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-customcloud",
+      "name": "Decky CustomCloud",
+      "description": "Neatly back up config and save data from Steam Deck to cloud storage",
+      "repo": "DoomTay/Decky-CustomCloud",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky CustomCloud"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "pacificsilent-decky-launch-options",
+      "name": "Launch Options Injector",
+      "description": "Inject a custom command (like ~/lsfg %command%) into the launch options of any Steam or non-Steam app, preserving whatever the user...",
+      "repo": "PacificSilent/decky-launch-options",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["Launch Options Injector"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-xbox-wireless-helper",
+      "name": "Xbox Wireless Helper",
+      "description": "Fixes the Xbox Wireless Adapter after sleep on Bazzite/SteamOS (no more replugging), lets the controller wake the PC, and adds a...",
+      "repo": "m2aadhil/decky-xbox-wireless-helper",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Xbox Wireless Helper"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-claw-ex-control",
+      "name": "Claw EX Control",
+      "description": "CPU, dual-fan and PL1/PL2 power control for MSI Claw EX handhelds.",
+      "repo": "Hardwell-L/decky-claw-ex-control",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Claw EX Control"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "playtime-tracker",
+      "name": "PlayTime Tracker",
+      "description": "Plugin para Decky Loader que registra el tiempo de juego en SteamOS",
+      "repo": "alf1995/PlayTime-Tracker",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["PlayTime Tracker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
