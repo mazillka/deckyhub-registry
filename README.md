@@ -474,6 +474,56 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Claude | Utilities | [RyanWReid/claude-deck](https://github.com/RyanWReid/claude-deck) |
 | GCM-Launcher | Launch Options | [waynegeng/GCM-Launcher](https://github.com/waynegeng/GCM-Launcher) |
 | HyperHDR Toggle | Utilities | [DarkTiengo/decky-hyperhdr-toggle](https://github.com/DarkTiengo/decky-hyperhdr-toggle) |
+| decky-ukr-badge | Utilities | [yataktyni/decky-ukr-badge](https://github.com/yataktyni/decky-ukr-badge) |
+| AYANEO 3 Companion | Controllers | [Rayekkk/Ayaneo3Companion](https://github.com/Rayekkk/Ayaneo3Companion) |
+| Speaker Boost | Utilities | [beaglemoo/decky-speaker-boost](https://github.com/beaglemoo/decky-speaker-boost) |
+| RainWave Buddy | Utilities | [BrenticusMaximus/RainWaveBuddy](https://github.com/BrenticusMaximus/RainWaveBuddy) |
+| LG Wheel Switch | Controllers | [gabegm/lgwheel-switch](https://github.com/gabegm/lgwheel-switch) |
+| OpenCode Web | Utilities | [impuls42/decky-opencode](https://github.com/impuls42/decky-opencode) |
+| RetroArch AI Translate | Game Libraries | [wolfg1969/retroarch-ai-translate](https://github.com/wolfg1969/retroarch-ai-translate) |
+| NonSteam Sync | Launch Options | [JoseArkadio/decky-nonsteam-sync](https://github.com/JoseArkadio/decky-nonsteam-sync) |
+| Clearly Recent | Utilities | [D1zg/clearly-recent](https://github.com/D1zg/clearly-recent) |
+| decky-claude | Launch Options | [TuxLux40/decky-claude](https://github.com/TuxLux40/decky-claude) |
+| PongBar | Customization | [Alyenax/PongBar](https://github.com/Alyenax/PongBar) |
+| eGPU Game Config Swap | Performance | [kanonjeong-ops/gfxprofile](https://github.com/kanonjeong-ops/gfxprofile) |
+| DeckyEQ | Utilities | [Rayekkk/DeckyEQ](https://github.com/Rayekkk/DeckyEQ) |
+| Reboot to Windows | Utilities | [branchingjade/reboot-to-windows](https://github.com/branchingjade/reboot-to-windows) |
+| Azeroth Addons | Controllers | [mdeloughry/azeroth-addons](https://github.com/mdeloughry/azeroth-addons) |
+| Mihomo | Customization | [ccc007ccc/mihomo-decky](https://github.com/ccc007ccc/mihomo-decky) |
+| DeckBridge | Utilities | [Janleyx/DeckBridge](https://github.com/Janleyx/DeckBridge) |
+| AutoWhite | Utilities | [GaricST/AutoWhite](https://github.com/GaricST/AutoWhite) |
+| WoW Addons | Launch Options | [bassobr/decky-wowup](https://github.com/bassobr/decky-wowup) |
+| BootVolume | Customization | [branchingjade/boot-volume](https://github.com/branchingjade/boot-volume) |
+| DeckyAlly | Controllers | [XiaoMinghui/DeckyAlly](https://github.com/XiaoMinghui/DeckyAlly) |
+| Hour Notifications | Utilities | [mpcallahan/DeckyHourNotifications](https://github.com/mpcallahan/DeckyHourNotifications) |
+| Palia NPC Weekly Gifts Tracker | Utilities | [Mujtaba-Alsaleh/DeckyLoader-Plugin-Palia-NPC-Gift-Tracker](https://github.com/Mujtaba-Alsaleh/DeckyLoader-Plugin-Palia-NPC-Gift-Tracker) |
+| Decky AI | Performance | [wankyo83/Decky-AI](https://github.com/wankyo83/Decky-AI) |
+| STPlugin | Utilities | [username54321-dotcom/Decky-STPlugin](https://github.com/username54321-dotcom/Decky-STPlugin) |
+| WF-Decky | Utilities | [Raanh/WF-Decky](https://github.com/Raanh/WF-Decky) |
+| HostSleep | Performance | [Vahn84/decky-hostsleep](https://github.com/Vahn84/decky-hostsleep) |
+| Decky Notes | Utilities | [michaelravecabrera/Decky-Notes](https://github.com/michaelravecabrera/Decky-Notes) |
+| vkBasalt Manager | Utilities | [Vaddum/vkbasalt-decky](https://github.com/Vaddum/vkbasalt-decky) |
+| vpn-decky | Utilities | [Gined44/vpn-decky](https://github.com/Gined44/vpn-decky) |
+| decky-gitupdater | Utilities | [quentingeorgel/decky-gitupdater](https://github.com/quentingeorgel/decky-gitupdater) |
+| Deck Wrapped | Game Libraries | [Sabissimo/decky-wrapped](https://github.com/Sabissimo/decky-wrapped) |
+| DeckyRotateScreen | Utilities | [sanicki/decky-rotate-screen](https://github.com/sanicki/decky-rotate-screen) |
+| eGPU Helper | Utilities | [M15t/decky-egpu-helper](https://github.com/M15t/decky-egpu-helper) |
+| GPU Picker | Performance | [revenpl/decky-gpu-picker](https://github.com/revenpl/decky-gpu-picker) |
+| Decky Flow | Utilities | [Congmeims/Decky-Flow](https://github.com/Congmeims/Decky-Flow) |
+| PWMControl | Utilities | [pymmog/decky-pwm-control](https://github.com/pymmog/decky-pwm-control) |
+| Decky Position Toasts | Customization | [K1tsune12/decky-position-toasts](https://github.com/K1tsune12/decky-position-toasts) |
+| Smart Game Launcher | Utilities | [Marshy-Madness/decky-smart-launcher](https://github.com/Marshy-Madness/decky-smart-launcher) |
+| gamescheap | Utilities | [redbrake/gamescheap-decky-plugin](https://github.com/redbrake/gamescheap-decky-plugin) |
+| ZeroTier Manager | Utilities | [WuKavin/decky-zerotier-manager](https://github.com/WuKavin/decky-zerotier-manager) |
+| Nothing Ear | Performance | [Josemolivaresc/decky-nothing-ear](https://github.com/Josemolivaresc/decky-nothing-ear) |
+| Tower Control | Utilities | [matteocrippa/decky-tower-control](https://github.com/matteocrippa/decky-tower-control) |
+| Roku Remote | Utilities | [UnforgettableJuan/Decky-Roku-Remote](https://github.com/UnforgettableJuan/Decky-Roku-Remote) |
+| Game Optimizer | Performance | [jacobdonahoe/decky-game-optimizer](https://github.com/jacobdonahoe/decky-game-optimizer) |
+| Deck Cloud Saves | Game Libraries | [danielcamilo1/decky-cloud-saves](https://github.com/danielcamilo1/decky-cloud-saves) |
+| NAS Mount | Game Libraries | [joshmans/decky-nas-mount](https://github.com/joshmans/decky-nas-mount) |
+| Reboot Menu | Utilities | [divanikus/decky-reboot-menu](https://github.com/divanikus/decky-reboot-menu) |
+| Audio Output Switcher | Utilities | [xenophobentx/decky-audio-switcher](https://github.com/xenophobentx/decky-audio-switcher) |
+| Backlog Picker | Game Libraries | [babi723/decky-backlog-picker](https://github.com/babi723/decky-backlog-picker) |
 
 ## Where the plugins come from
 
