@@ -559,6 +559,15 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | NTS Radio | Utilities | [dylwww/decky-nts](https://github.com/dylwww/decky-nts) |
 | Finally Screenshot Sound | Utilities | [otisabiburada/finally-screenshot-sound](https://github.com/otisabiburada/finally-screenshot-sound) |
 | SpeechToDeck | Utilities | [rusagent/SpeechToDeck](https://github.com/rusagent/SpeechToDeck) |
+| Decky Easytier | Utilities | [Weicoz/decky-easytier](https://github.com/Weicoz/decky-easytier) |
+| Browsec Decky | Utilities | [soberdeer/browsec-decky](https://github.com/soberdeer/browsec-decky) |
+| decky-onexgpu | Utilities | [anslwy/decky-onexgpu](https://github.com/anslwy/decky-onexgpu) |
+| YomiDeck | Utilities | [m1kuk1m/decky-yomi-sync](https://github.com/m1kuk1m/decky-yomi-sync) |
+| Decky CustomCloud | Utilities | [DoomTay/Decky-CustomCloud](https://github.com/DoomTay/Decky-CustomCloud) |
+| Launch Options Injector | Frame Generation | [PacificSilent/decky-launch-options](https://github.com/PacificSilent/decky-launch-options) |
+| Xbox Wireless Helper | Controllers | [m2aadhil/decky-xbox-wireless-helper](https://github.com/m2aadhil/decky-xbox-wireless-helper) |
+| Claw EX Control | Performance | [Hardwell-L/decky-claw-ex-control](https://github.com/Hardwell-L/decky-claw-ex-control) |
+| PlayTime Tracker | Game Libraries | [alf1995/PlayTime-Tracker](https://github.com/alf1995/PlayTime-Tracker) |
 
 ## Where the plugins come from
 
