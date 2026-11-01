@@ -4673,6 +4673,87 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["SpeechToDeck"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-easytier",
+      "name": "Decky Easytier",
+      "description": "EasyTier VPN mesh networking management plugin for Steam Deck",
+      "repo": "Weicoz/decky-easytier",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Easytier"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "browsec-decky",
+      "name": "Browsec Decky",
+      "description": "Browsec VPN controls for Steam Deck Game Mode.",
+      "repo": "soberdeer/browsec-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Browsec Decky"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-onexgpu",
+      "name": "decky-onexgpu",
+      "description": "Standalone ONEXGPU 2 switching, eject and auto-switch on wake.",
+      "repo": "anslwy/decky-onexgpu",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["decky-onexgpu"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-yomi-sync",
+      "name": "YomiDeck",
+      "description": "Wireless screenshot drop and synchronization Decky plugin for YomiLLM Japanese grammar analysis on Steam Deck",
+      "repo": "m1kuk1m/decky-yomi-sync",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["YomiDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-customcloud",
+      "name": "Decky CustomCloud",
+      "description": "Neatly back up config and save data from Steam Deck to cloud storage",
+      "repo": "DoomTay/Decky-CustomCloud",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky CustomCloud"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "pacificsilent-decky-launch-options",
+      "name": "Launch Options Injector",
+      "description": "Inject a custom command (like ~/lsfg %command%) into the launch options of any Steam or non-Steam app, preserving whatever the user...",
+      "repo": "PacificSilent/decky-launch-options",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["Launch Options Injector"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-xbox-wireless-helper",
+      "name": "Xbox Wireless Helper",
+      "description": "Fixes the Xbox Wireless Adapter after sleep on Bazzite/SteamOS (no more replugging), lets the controller wake the PC, and adds a...",
+      "repo": "m2aadhil/decky-xbox-wireless-helper",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Xbox Wireless Helper"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-claw-ex-control",
+      "name": "Claw EX Control",
+      "description": "CPU, dual-fan and PL1/PL2 power control for MSI Claw EX handhelds.",
+      "repo": "Hardwell-L/decky-claw-ex-control",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Claw EX Control"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "playtime-tracker",
+      "name": "PlayTime Tracker",
+      "description": "Plugin para Decky Loader que registra el tiempo de juego en SteamOS",
+      "repo": "alf1995/PlayTime-Tracker",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["PlayTime Tracker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
