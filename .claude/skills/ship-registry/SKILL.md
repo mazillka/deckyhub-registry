@@ -68,7 +68,7 @@ Merge this one with **Create a merge commit**, the one PR that isn't squashed.
 - The release-index workflow runs on pushes to `main` that touch `apps.json` or `build_release_index.py`, otherwise within the hour: `gh run list --workflow release-index.yml --limit 3`.
 - A change to `apps.json` also publishes a new registry release, which DeckyHub reads first: `gh run list --workflow registry-release.yml --limit 3` and `gh release view -R mazillka/deckyhub-registry`.
 - `curl -s https://raw.githubusercontent.com/mazillka/deckyhub-registry/release-index/stats.json | head -c 300` shows the new `generatedAt`.
-- The catalog at https://mazillka.github.io/deckyhub-registry/ loads (Pages can take a few minutes).
+- The catalog at https://registry.deckyhub.com/ loads (Pages can take a few minutes).
 
 ## 5. Check the release notes
 
