@@ -15,6 +15,9 @@ It also writes stats.json for the catalog page, per plugin:
 - updated: when the release DeckyHub shows (newest stable, else newest pre-release) came out.
 - root: whether that release's plugin.json asks Decky to run it as root.
 - fork: the owner/name a repo was forked from, for repos that are forks (missing otherwise).
+- ai: the AI coding assistant files (CLAUDE.md, AGENTS.md, .cursorrules... see AI_FILES in
+  validate.py) on the repo's default branch, a sign it's developed with AI help. Missing
+  when there are none; no files isn't proof no AI was used.
 - warnings / prereleaseWarnings: what Decky Extended Plugins' audit found in that release
   (and in a newer pre-release, if any) that's worth warning about (see WARNINGS). Matched
   by the ZIP's sha256, else by tag. Missing when there's nothing to warn about.
@@ -102,7 +105,7 @@ def warnings_of(entry: dict, release: dict | None, audits: dict) -> list[str]:
     return audits.get((entry["repo"].casefold(), release.get("tag_name"))) or []
 
 
-def plugin_stats(entry: dict, releases: list[dict], stars, manifest=zip_plugin_manifest, audits: dict | None = None, fork: str | None = None) -> dict:
+def plugin_stats(entry: dict, releases: list[dict], stars, manifest=zip_plugin_manifest, audits: dict | None = None, fork: str | None = None, ai: list[str] | None = None) -> dict:
     channels = channel_releases(entry, releases)
     shown = channels["stable"] or channels["prerelease"]
     assets = matching_assets(entry, shown) if shown else []
@@ -115,6 +118,8 @@ def plugin_stats(entry: dict, releases: list[dict], stars, manifest=zip_plugin_m
     }
     if fork:
         stats["fork"] = fork
+    if ai:
+        stats["ai"] = ai
     if audits:
         if warnings := warnings_of(entry, shown, audits):
             stats["warnings"] = warnings
@@ -169,7 +174,7 @@ def main() -> int:
         return 1
     # The audit is someone else's site: without it the index just goes out without verdicts.
     audits = audit_index(best_effort(lambda url: json.loads(fetch(url, auth=False)), AUDIT_URL) or {})
-    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], audits=audits, fork=fork_of(github[entry["repo"].casefold()])))
+    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], audits=audits, fork=fork_of(github[entry["repo"].casefold()]), ai=github[entry["repo"].casefold()].get("ai")))
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     # DeckyHub reads releases; the catalog page reads the much smaller stats file.

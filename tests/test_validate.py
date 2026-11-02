@@ -50,6 +50,20 @@ class ValidateTests(unittest.TestCase):
         self.assertIsNone(channel_releases(app(), releases[1:])["prerelease"])
 
 
+class AiFilesTests(unittest.TestCase):
+    def test_finds_ai_assistant_files_at_the_root_and_in_dot_github(self):
+        result = {
+            "root": {"entries": [{"name": "README.md"}, {"name": "CLAUDE.md"}, {"name": ".cursorrules"}, {"name": "agents.MD"}, {"name": "src"}, {"name": "main.py"}]},
+            "dotGithub": {"entries": [{"name": "workflows"}, {"name": "copilot-instructions.md"}]},
+        }
+        self.assertEqual(validate.ai_files(result), [".cursorrules", ".github/copilot-instructions.md", "CLAUDE.md", "agents.MD"])
+
+    def test_a_repo_without_them_or_without_a_tree_has_none(self):
+        self.assertEqual(validate.ai_files({"root": {"entries": [{"name": "README.md"}]}, "dotGithub": None}), [])
+        self.assertEqual(validate.ai_files({"root": None, "dotGithub": None}), [])
+        self.assertEqual(validate.ai_files({}), [])
+
+
 class RangedFileTests(unittest.TestCase):
     def setUp(self):
         self.original = validate.fetch

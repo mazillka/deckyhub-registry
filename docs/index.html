@@ -52,10 +52,10 @@ input[type=search]:focus{outline:2px solid var(--accent2);outline-offset:1px}
 .badge{padding:1px 8px;border-radius:999px;border:1px solid currentColor;font-size:.72rem;white-space:nowrap}
 .root{color:#ffb35c}
 .stale{color:#ff8a8a}
-.warn{color:var(--warn)}.fork{color:var(--muted)}.clean{color:#6bcb6b}
+.warn{color:var(--warn)}.fork{color:var(--muted)}.clean{color:#6bcb6b}.ai{color:#c49bff}
 .legend{margin:0 0 18px;color:var(--muted);font-size:.85rem;line-height:1.7}
 .legend .badge{margin-right:4px}
-.legend .stale,.legend .warn,.legend .fork,.legend .clean{margin-left:8px}
+.legend .stale,.legend .warn,.legend .fork,.legend .clean,.legend .ai{margin-left:8px}
 .tools select{align-self:flex-start;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit;font-size:.9rem}
 .empty,.status{color:var(--muted);padding:24px 0}
 .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
@@ -93,7 +93,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
 <select id="sort" aria-label="Sort plugins"><option value="az">A to Z</option><option value="downloads">Most downloaded</option><option value="stars">Most stars</option><option value="updated">Recently updated</option><option value="added">Recently added</option></select>
 </div>
-<p class="legend"><span class="badge root">Runs as root</span> The plugin asks Decky Loader to run its backend as the <code>root</code> user, which can read and change anything on the Deck, including system files, other plugins and your data. Many plugins need it for real reasons (fan or power control, drivers, VPNs, system settings), so it isn't a warning sign on its own. It does mean a bug or a malicious update can do far more harm, so install these only from authors you trust. <span class="badge stale">No release in a year</span> The newest release is over a year old, so it may not work with current SteamOS or Decky Loader. <span class="badge fork">Fork</span> A fork that carries a plugin on after its original stopped (hover it for the original); listed only while it's the active one.</p>
+<p class="legend"><span class="badge root">Runs as root</span> The plugin asks Decky Loader to run its backend as the <code>root</code> user, which can read and change anything on the Deck, including system files, other plugins and your data. Many plugins need it for real reasons (fan or power control, drivers, VPNs, system settings), so it isn't a warning sign on its own. It does mean a bug or a malicious update can do far more harm, so install these only from authors you trust. <span class="badge stale">No release in a year</span> The newest release is over a year old, so it may not work with current SteamOS or Decky Loader. <span class="badge fork">Fork</span> A fork that carries a plugin on after its original stopped (hover it for the original); listed only while it's the active one. <span class="badge ai">AI</span> Its repository has instructions for AI coding assistants (such as <code>CLAUDE.md</code>, <code>AGENTS.md</code>, <code>.cursorrules</code> or <code>.github/copilot-instructions.md</code>), so it's likely developed with AI help (hover it for which). That says nothing about its quality or safety either way, and no badge doesn't mean no AI was used.</p>
 
 <p class="legend">Warnings come from <a href="https://decky-extended-plugins.beallio.com/audit">Decky Extended Plugins' automated audit</a> of the release DeckyHub installs (or a newer pre-release, marked as such). Routine findings like <code>sudo</code>, <code>mount</code> or <code>systemctl</code>, which many plugins need on SteamOS, aren't shown. A warning isn't proof of harm and no warning isn't proof of safety, so check the repository. <span class="badge stale">Blocked by audit</span> The audit found malware or a broken archive. Not recommended for installation. <span class="badge warn">Reads private data</span> Its code reads Steam login data, SSH keys or secrets from the environment. <span class="badge warn">Changes system startup</span> It edits shell profiles, preloads libraries, loads kernel modules or adds device rules, which keep working outside Decky. <span class="badge warn">Code not in its repo</span> The release ZIP has scripts or programs that aren't in its GitHub source, so you can't read what they do. <span class="badge warn">Hidden code</span> It contains encoded or packed code that's hard to read. <span class="badge warn">Skips HTTPS checks</span> It turns off certificate checks, so what it downloads could be tampered with. <span class="badge warn">Runs downloaded scripts</span> It downloads a script and runs it straight away. <span class="badge warn">Known vulnerabilities</span> It bundles libraries with published security flaws.</p>
 <p class="legend" id="scan-legend">Every plugin ZIP DeckyHub can install is <a href="https://github.com/mazillka/deckyhub-registry#how-it-works">virus-scanned</a> every few hours: with <a href="https://www.clamav.net/">ClamAV</a>, an open-source antivirus, and the files inside it with <a href="https://virustotal.github.io/yara/">YARA</a> and <a href="https://github.com/YARAHQ/yara-forge">YARA Forge</a>'s community rules, many of them written for Linux malware. The badge is for the release DeckyHub installs by default (the newest stable one), or a newer pre-release, marked as such. Hover it for each scanner's result, the file and when it was scanned; a plugin without one hasn't been scanned yet. In DeckyHub, a plugin's <strong>Manage</strong> window has the full report and can look the file up on VirusTotal. A clean scan isn't proof of safety, and a match can be a false positive. <span class="badge clean">No threats</span> Neither scanner found anything. <span class="badge stale">Threat found</span> ClamAV matched known malware, or a YARA rule written to catch it matched. Check the repository before installing. <span class="badge warn">Not fully scanned</span> A scanner couldn't look at all of it: the ZIP went past its size limits, some files couldn't be read, or the scan failed. Hover it for why; it's scanned again on the next run.</p>
@@ -116,7 +116,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 
 <script>
 const URL_ = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/refs/heads/main/registry/apps.json";
-// Per-plugin downloads, stars, last release, root flag and audit warnings, rebuilt every hour by the
+// Per-plugin downloads, stars, last release, root flag, AI-assistant files and audit warnings, rebuilt every hour by the
 // release-index workflow (scripts/build_release_index.py). The catalog works without it.
 const STATS_URL = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/release-index/stats.json";
 // Warnings from Decky Extended Plugins' audit (see the legend above the catalog): label, hint.
@@ -178,7 +178,7 @@ function scanBadges(app) {
   return badges;
 }
 function meta(app) {
-  const { downloads, stars, root, fork, warnings = [], prereleaseWarnings = [] } = statsOf(app), updated = updatedAt(app), items = [];
+  const { downloads, stars, root, fork, ai = [], warnings = [], prereleaseWarnings = [] } = statsOf(app), updated = updatedAt(app), items = [];
   if (downloads !== undefined) items.push(el("span", { title: `${downloads.toLocaleString("en")} downloads`, textContent: `↓ ${compact.format(downloads)}` }));
   if (stars != null) items.push(el("span", { title: `${stars.toLocaleString("en")} GitHub stars`, textContent: `★ ${compact.format(stars)}` }));
   if (updated) items.push(Date.now() - updated > YEAR
@@ -186,6 +186,7 @@ function meta(app) {
     : el("span", { title: new Date(updated).toLocaleDateString("en"), textContent: `Updated ${age(updated)}` }));
   if (root) items.push(el("span", { className: "badge root", title: "Its plugin.json asks Decky Loader to run it as root, with full access to the system", textContent: "Runs as root" }));
   if (fork) items.push(el("span", { className: "badge fork", title: `Fork of ${fork}`, textContent: "Fork" }));
+  if (ai.length) items.push(el("span", { className: "badge ai", title: `Likely developed with AI help: its repository has instructions for AI coding assistants (${ai.join(", ")})`, textContent: "AI" }));
   for (const [key, prefix] of [...warnings.map((key) => [key, ""]), ...prereleaseWarnings.filter((key) => !warnings.includes(key)).map((key) => [key, "Pre-release: "])]) if (WARNINGS[key])
     items.push(el("span", { className: `badge ${key === "blocked" ? "stale" : "warn"}`, title: WARNINGS[key][1], textContent: prefix + WARNINGS[key][0] }));
   items.push(...scanBadges(app));

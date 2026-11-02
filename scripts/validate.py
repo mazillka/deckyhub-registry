@@ -187,6 +187,12 @@ def github_problems(app: dict, repo: dict | None = None) -> tuple[list[str], lis
 RECENT = 20
 # Repos per GraphQL query. At 25, GitHub cut parts of the answer for resource limits.
 BATCH = 10
+# Files and folders that set a repo up for an AI coding assistant (Claude Code, Codex and
+# other AGENTS.md readers, Gemini, Cursor, Windsurf, Cline, Roo, Aider, Kiro, Copilot):
+# at the repo's root, or in .github. Lowercase; matched case-insensitively.
+AI_FILES = {"claude.md", "agents.md", "agent.md", "gemini.md", ".claude", ".codex", ".gemini", ".cursor", ".cursorrules", ".windsurf", ".windsurfrules", ".clinerules", ".roo", ".roomodes", ".aider.conf.yml", ".kiro"}
+AI_GITHUB_FILES = {"copilot-instructions.md"}
+TREE = "... on Tree { entries { name } }"
 RELEASE_FIELDS = "tagName name isDraft isPrerelease publishedAt url description releaseAssets(first: 50) { nodes { name downloadUrl size digest downloadCount } }"
 
 
@@ -240,8 +246,16 @@ def releases_query(repo: str, first: int, after: str | None = None) -> str:
     owner, name = repo.split("/")
     cursor = f", after: {json.dumps(after)}" if after else ""
     return (f"repository(owner: {json.dumps(owner)}, name: {json.dumps(name)}) {{ nameWithOwner name description isArchived isFork stargazerCount "
+            f"root: object(expression: \"HEAD:\") {{ {TREE} }} dotGithub: object(expression: \"HEAD:.github\") {{ {TREE} }} "
             f"parent {{ nameWithOwner isArchived isTemplate releases(first: 1, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ nodes {{ publishedAt }} }} }} "
             f"releases(first: {first}{cursor}, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ pageInfo {{ hasNextPage endCursor }} nodes {{ {RELEASE_FIELDS} }} }} }}")
+
+
+def ai_files(result: dict) -> list[str]:
+    """The AI-assistant files (AI_FILES) on the repo's default branch, as named there."""
+    entries = lambda tree: [entry["name"] for entry in ((tree or {}).get("entries") or [])]  # noqa: E731
+    return sorted([name for name in entries(result.get("root")) if name.casefold() in AI_FILES]
+                  + [f".github/{name}" for name in entries(result.get("dotGithub")) if name.casefold() in AI_GITHUB_FILES])
 
 
 def fetch_github(repos: list[str], every_release: bool = False) -> dict[str, dict]:
@@ -278,6 +292,8 @@ def fetch_github(repos: list[str], every_release: bool = False) -> dict[str, dic
             found[repo.casefold()] = {
                 "full_name": result["nameWithOwner"], "name": result["name"], "description": result["description"],
                 "archived": result["isArchived"], "stars": result["stargazerCount"],
+                # AI-assistant files on the default branch (see AI_FILES): [] when none.
+                "ai": ai_files(result),
                 # A fork of a template (Decky's plugin template) is a new plugin, not a copy of one.
                 "fork": result["isFork"] and not (result["parent"] or {}).get("isTemplate"),
                 # The repo it was forked from: its name, whether it's archived and its newest release date.

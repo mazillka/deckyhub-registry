@@ -62,7 +62,7 @@ class PluginContractTests(unittest.TestCase):
         read = set(re.findall(r"(\w+)\?:", fields))
         written = set(plugin_stats({"repo": "o/a", "asset": {"include": [".zip"], "exclude": []}}, [], stars=lambda repo: 0, manifest=lambda asset: {}))
         # Written only when there's something to say.
-        written |= {"warnings", "prereleaseWarnings", "fork"}
+        written |= {"warnings", "prereleaseWarnings", "fork", "ai"}
         self.assertLessEqual(read, written)
 
     def test_registry_still_sends_every_warning_deckyhub_knows(self):
