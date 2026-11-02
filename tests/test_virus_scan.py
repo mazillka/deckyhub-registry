@@ -5,7 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import virus_scan  # noqa: E402
-from virus_scan import budget, parse_clamscan, plan, report_of, scan, wanted_assets  # noqa: E402
+from virus_scan import budget, channel_assets, parse_clamscan, plan, report_of, scan, wanted_assets  # noqa: E402
 
 TODAY = datetime(2026, 11, 2, tzinfo=timezone.utc)
 
@@ -24,6 +24,20 @@ class WantedAssetsTests(unittest.TestCase):
         develop = {"releases": {"o/b": [{"assets": [asset("b2.zip", "https://x/b2"), asset("b3.zip", "http://x/b3")]}]}}
         self.assertEqual(list(wanted_assets([index, develop], entries)), ["https://x/a2", "https://x/b2", "https://x/a1"])
         self.assertEqual(wanted_assets([index], entries)["https://x/a2"], {"sha256": "aa", "size": 10})
+
+
+class ChannelOrderTests(unittest.TestCase):
+    def test_stable_and_pre_release_picks_of_every_plugin_come_before_older_releases(self):
+        # The index keeps the newest stable last when newer pre-releases came after it.
+        index = {"releases": {
+            "o/a": [{"prerelease": True, "assets": [asset("a3.zip", "https://x/a3")]}, {"prerelease": True, "assets": [asset("a2.zip", "https://x/a2")]}, {"assets": [asset("a1.zip", "https://x/a1")]}],
+            "o/b": [{"assets": [asset("b2.zip", "https://x/b2")]}, {"assets": [asset("b1.zip", "https://x/b1")]}],
+        }}
+        self.assertEqual(list(wanted_assets([index], [])), ["https://x/a3", "https://x/a1", "https://x/b2", "https://x/a2", "https://x/b1"])
+
+    def test_coverage_counts_both_channels(self):
+        index = {"releases": {"o/a": [{"prerelease": True, "assets": [asset("a2.zip", "https://x/a2")]}, {"assets": [asset("a1.zip", "https://x/a1")]}], "o/b": []}}
+        self.assertEqual(channel_assets([index]), {"o/a": [["https://x/a2"], ["https://x/a1"]]})
 
 
 class PlanTests(unittest.TestCase):
@@ -46,12 +60,12 @@ class PlanTests(unittest.TestCase):
     def test_budget_batches_and_stops_at_the_run_limit(self):
         gib = 1024**3
         wanted = {"a": {"size": gib // 2}, "b": {"size": gib // 2}, "c": {"size": gib // 2}, "d": {"size": gib}, "e": {"size": 1}}
-        limit = virus_scan.MAX_RUN_BYTES
-        virus_scan.MAX_RUN_BYTES = 2 * gib
+        limits = virus_scan.MAX_RUN_BYTES, virus_scan.MAX_BATCH_BYTES
+        virus_scan.MAX_RUN_BYTES, virus_scan.MAX_BATCH_BYTES = 2 * gib, gib
         try:
             self.assertEqual(budget(list(wanted), wanted), [["a", "b"], ["c"]])
         finally:
-            virus_scan.MAX_RUN_BYTES = limit
+            virus_scan.MAX_RUN_BYTES, virus_scan.MAX_BATCH_BYTES = limits
 
     def test_a_file_bigger_than_a_run_is_still_scanned_on_its_own(self):
         wanted = {"huge": {"size": virus_scan.MAX_RUN_BYTES + 1}, "next": {"size": 1}}
@@ -112,6 +126,19 @@ class ScanTests(unittest.TestCase):
 
         reports = scan([["https://x/a"]], scanner=crash, fetch=lambda url, path: path.write_bytes(b"zip") or "d", version=lambda: ("ClamAV 1.4.3", "27806"))
         self.assertEqual((reports["https://x/a"]["result"], reports["https://x/a"]["reason"]), ("error", "ClamAV couldn't run: killed"))
+
+    def test_no_batch_starts_after_the_deadline(self):
+        times = iter([0, 5, 11])
+        fetched = []
+
+        def fetch(url, path):
+            fetched.append(url)
+            path.write_bytes(b"zip")
+            return "d"
+
+        reports = scan([["https://x/a"], ["https://x/b"], ["https://x/c"]], scanner=lambda paths: "\n".join(f"{path}: OK" for path in paths), fetch=fetch, version=lambda: ("ClamAV 1.4.3", "27806"), deadline=10, clock=lambda: next(times))
+        self.assertEqual(fetched, ["https://x/a", "https://x/b"])
+        self.assertEqual(sorted(reports), ["https://x/a", "https://x/b"])
 
     def test_a_failed_rescan_keeps_the_last_good_report(self):
         reports = scan([["https://x/old", "https://x/new"]], fetch=lambda url, path: self.fail("downloaded"), version=lambda: ("ClamAV 1.4.3", ""), keep=frozenset({"https://x/old"}))

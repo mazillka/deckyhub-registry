@@ -19,7 +19,7 @@ scans.json, keyed by the ZIP's download URL:
 - scannedAt: when. A report older than RESCAN_DAYS is scanned again with newer signatures.
 
 Every plugin gets a report: each run downloads at most MAX_RUN_BYTES, every plugin's
-newest release first, then older ones, so the first runs work through the backlog over a
+Stable and Pre-release channel releases first (by_priority), then older ones, so the first runs work through the backlog over a
 few hours and later runs only see new releases. A ZIP not scanned yet has no report:
 DeckyHub says so rather than calling it clean. Each run logs how many plugins still have
 none.
@@ -39,7 +39,13 @@ from build_release_index import EXTRA_ENTRIES
 from validate import REGISTRY, matching_assets
 
 MAX_RUN_BYTES = 6 * 1024**3
-MAX_BATCH_BYTES = 1024**3
+MAX_BATCH_BYTES = 512 * 1024**2
+# The workflow's job stops at 120 minutes, and scans.json is only published at the end,
+# so a run that overran would lose everything it scanned. No new batch starts after
+# MAX_RUN_SECONDS, and one batch's clamscan gets at most BATCH_SECONDS; what's left waits
+# for the next run.
+MAX_RUN_SECONDS = 70 * 60
+BATCH_SECONDS = 25 * 60
 RESCAN_DAYS = 30
 # Generous limits (GitHub release files go up to 2 GB), so a big plugin is still looked
 # into rather than skipped; past them
@@ -61,32 +67,45 @@ def read_json(path: str | None) -> dict:
         return {}
 
 
-def newest_assets(indexes: list[dict]) -> dict[str, list[str]]:
-    """Per repo, the download URLs of its newest release in any index: what a plugin's
-    card offers first, and what "every plugin has a report" is checked against."""
-    newest: dict[str, list[str]] = {}
+def by_priority(releases: list[dict]) -> list[list[dict]]:
+    """A repo's releases (newest first) in scan rounds: first the ones a card offers, the
+    Pre-release channel's (the newest) and the Stable channel's (the newest stable, which
+    the index may keep last), then the rest one per round, newest first."""
+    stable = next((release for release in releases if not release.get("prerelease")), None)
+    picks = releases[:1]
+    if stable is not None and stable is not releases[0]:
+        picks.append(stable)
+    return [picks] + [[release] for release in releases if all(release is not pick for pick in picks)]
+
+
+def channel_assets(indexes: list[dict]) -> dict[str, list[list[str]]]:
+    """Per repo, the download URLs of each channel's release (newest, newest stable) in
+    every index: what "every plugin has a report" is checked against."""
+    picks: dict[str, list[list[str]]] = {}
     for index in indexes:
         for repo, releases in (index.get("releases") or {}).items():
-            if releases:
-                newest.setdefault(repo.casefold(), []).extend(asset.get("browser_download_url") or "" for asset in releases[0].get("assets") or [])
-    return newest
+            for release in (by_priority(releases)[0] if releases else []):
+                picks.setdefault(repo.casefold(), []).append([asset.get("browser_download_url") or "" for asset in release.get("assets") or []])
+    return picks
 
 
 def wanted_assets(indexes: list[dict], entries: list[dict]) -> dict[str, dict]:
-    """Every plugin ZIP in the indexes, keyed by download URL, in scan order: each repo's
-    newest release first, then the next newest, and so on. A repo the registry no longer
-    lists (only the other branch has it) is held to plain .zip."""
+    """Every plugin ZIP in the indexes, keyed by download URL, in scan order: every repo's
+    Pre-release and Stable channel releases first (by_priority), then each repo's next
+    newest, and so on. A repo the registry no longer lists (only the other branch has it)
+    is held to plain .zip."""
     filters = {entry["repo"].casefold(): entry for entry in entries}
     rounds: list[list[tuple[str, dict]]] = []
     for index in indexes:
         for repo, releases in (index.get("releases") or {}).items():
             entry = filters.get(repo.casefold(), {"asset": {"include": [], "exclude": []}})
-            for rank, release in enumerate(releases):
+            for rank, group in enumerate(by_priority(releases)):
                 while len(rounds) <= rank:
                     rounds.append([])
-                for asset in matching_assets(entry, release):
-                    if str(asset.get("browser_download_url") or "").startswith("https://"):
-                        rounds[rank].append((asset["browser_download_url"], {"sha256": (asset.get("digest") or "").removeprefix("sha256:") or None, "size": asset.get("size") or 0}))
+                for release in group:
+                    for asset in matching_assets(entry, release):
+                        if str(asset.get("browser_download_url") or "").startswith("https://"):
+                            rounds[rank].append((asset["browser_download_url"], {"sha256": (asset.get("digest") or "").removeprefix("sha256:") or None, "size": asset.get("size") or 0}))
     wanted: dict[str, dict] = {}
     for found in rounds:
         for url, asset in found:
@@ -171,7 +190,8 @@ def report_of(found: list[str] | str) -> dict:
 
 def clamscan(paths: list[str]) -> str:
     # Exit 1 means something was found and 2 an error; both still print per-file lines.
-    return subprocess.run([*CLAMSCAN, *paths], capture_output=True, text=True, check=False).stdout
+    # Running out of BATCH_SECONDS raises, so the batch's ZIPs get error reports.
+    return subprocess.run([*CLAMSCAN, *paths], capture_output=True, text=True, check=False, timeout=BATCH_SECONDS).stdout
 
 
 def clamav_version() -> tuple[str, str]:
@@ -181,11 +201,12 @@ def clamav_version() -> tuple[str, str]:
     return parts[0], parts[1] if len(parts) > 1 else ""
 
 
-def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=clamav_version, keep: frozenset[str] = frozenset()) -> dict[str, dict]:
-    """A report for every URL in batches. Nothing here fails the run: a ZIP that can't be
-    downloaded or scanned, or a ClamAV that can't run at all, gets an error report saying
-    why (scanned again next run). A URL in keep already has a good report, which a failed
-    rescan leaves alone."""
+def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=clamav_version, keep: frozenset[str] = frozenset(), deadline: float | None = None, clock=time.monotonic) -> dict[str, dict]:
+    """A report for every URL in the batches it gets to. Nothing here fails the run: a ZIP
+    that can't be downloaded or scanned, or a ClamAV that can't run at all, gets an error
+    report saying why (scanned again next run). A URL in keep already has a good report,
+    which a failed rescan leaves alone. Past deadline (a clock() time) no new batch starts,
+    so the run can still publish; the rest have no report yet and come first next run."""
     reports: dict[str, dict] = {}
     if not batches:
         return reports
@@ -202,7 +223,10 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
         reports[url] = {**({"sha256": sha256} if sha256 else {}), **report, **({"engine": engine} if engine else {}), **({"signatures": signatures} if signatures else {}), "scannedAt": now()}
         print(f"{report['result']}: {url}" + (f" ({report['reason']})" if "reason" in report else ""))
 
-    for batch in batches:
+    for number, batch in enumerate(batches):
+        if deadline is not None and clock() > deadline:
+            print(f"out of time: {sum(map(len, batches[number:]))} ZIPs left for the next run")
+            break
         if unavailable:
             for url in batch:
                 record(url, {"result": "error", "reason": unavailable})
@@ -218,6 +242,8 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
                     record(url, {"result": "error", "reason": f"Couldn't download it: {error}"})
             try:
                 found = parse_clamscan(scanner(list(paths.values())), list(paths.values())) if paths else {}
+            except subprocess.TimeoutExpired:
+                found = {path: f"ClamAV didn't finish within {BATCH_SECONDS // 60} minutes" for path in paths.values()}
             except Exception as error:  # noqa: BLE001
                 found = {path: f"ClamAV couldn't run: {error}" for path in paths.values()}
             for url, path in paths.items():
@@ -240,15 +266,15 @@ def main() -> int:
     wanted = wanted_assets(indexes, entries)
     kept, todo = plan(wanted, read_json(args.old).get("files") or {}, datetime.now(timezone.utc))
     batches = budget(todo, wanted)
-    files = {**kept, **scan(batches, keep=frozenset(kept))}
+    files = {**kept, **scan(batches, keep=frozenset(kept), deadline=time.monotonic() + MAX_RUN_SECONDS)}
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     # Compact: DeckyHub downloads the whole file for one Manage window.
     (out / "scans.json").write_text(json.dumps({"generatedAt": now(), "files": {url: files[url] for url in wanted if url in files}}, separators=(",", ":")), encoding="utf-8")
     results = [report["result"] for report in files.values()]
-    newest = newest_assets(indexes)
-    missing = sorted(repo for repo, urls in newest.items() if not any(url in files for url in urls))
-    print(f"{len(newest) - len(missing)} of {len(newest)} plugins have a report for their newest release" + (f"; still to do: {', '.join(missing[:20])}{' …' if len(missing) > 20 else ''}" if missing else ""))
+    picks = channel_assets(indexes)
+    missing = sorted(repo for repo, releases in picks.items() if not all(any(url in files for url in urls) for urls in releases))
+    print(f"{len(picks) - len(missing)} of {len(picks)} plugins have a report for both their Stable and Pre-release channel releases" + (f"; still to do: {', '.join(missing[:20])}{' …' if len(missing) > 20 else ''}" if missing else ""))
     print(f"{len(files)} of {len(wanted)} ZIPs have a report ({sum(map(len, batches))} scanned this run): " + ", ".join(f"{results.count(result)} {result}" for result in ("clean", "infected", "incomplete", "error")))
     return 0
 
