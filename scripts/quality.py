@@ -28,7 +28,8 @@ def unfinished(entry: dict, repo: dict, now: datetime) -> list[str]:
     """Why this registry entry (or candidate) looks unfinished; empty when it doesn't.
     repo is its fetch_github() answer."""
     releases = [release for release in repo["releases"] if not release.get("draft") and matching_assets(entry, release)]
-    stable = channel_releases(entry, repo["releases"])["stable"]
+    channels = channel_releases(entry, repo["releases"])
+    shown = channels["stable"] or channels["prerelease"]
     reasons = []
     first = min((release["published_at"] for release in releases if release.get("published_at")), default=None)
     if first and now - datetime.fromisoformat(first.replace("Z", "+00:00")) < MIN_AGE:
@@ -36,8 +37,8 @@ def unfinished(entry: dict, repo: dict, now: datetime) -> list[str]:
     downloads = sum(asset.get("download_count") or 0 for release in releases for asset in matching_assets(entry, release))
     if not repo.get("stars") and downloads < MIN_DOWNLOADS:
         reasons.append(f"no stars and {downloads} downloads")
-    if stable and PLACEHOLDER.search(stable["tag_name"]):
-        reasons.append(f"placeholder version {stable['tag_name']!r}")
+    if shown and PLACEHOLDER.search(shown["tag_name"]):
+        reasons.append(f"placeholder version {shown['tag_name']!r}")
     if not (repo.get("description") or "").strip() and entry.get("description", "").endswith(" for Decky Loader."):
         reasons.append("no description")
     return reasons

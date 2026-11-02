@@ -12,7 +12,8 @@ The candidates come from two community catalogs and our own search:
   repositories tagged or named like Decky plugins that have a plugin.json at their root.
 All three always run; one being down never stops the others.
 Each candidate is checked the way validate.py checks an entry (its own releases, one
-plugin ZIP, the ZIP's plugin.json name), and needs a stable release. A fork qualifies only
+plugin ZIP, the ZIP's plugin.json name), on its newest stable release, else its newest
+pre-release: a plugin with pre-releases only qualifies too. A fork qualifies only
 while it's the active one (active_fork(): its original is archived, gone or behind it),
 and its PR line says what it's a fork of. One that looks
 unfinished (quality.py: too new, no users, a placeholder version, no description) is
@@ -183,9 +184,11 @@ def check(item: dict, repo: dict | None) -> dict | None:
         return None
     plugin = item.get("plugin") or {}
     entry = {"repo": repo["full_name"], "asset": DEFAULT_ASSET}
-    stable = channel_releases(entry, repo["releases"])["stable"]
-    assets = matching_assets(entry, stable) if stable else []
-    if len(assets) != 1 or (repo["fork"] and not active_fork(repo, stable)):
+    # The stable channel's release, else the newest pre-release for a plugin without a stable one.
+    channels = channel_releases(entry, repo["releases"])
+    release = channels["stable"] or channels["prerelease"]
+    assets = matching_assets(entry, release) if release else []
+    if len(assets) != 1 or (repo["fork"] and not active_fork(repo, release)):
         return None
     # What Decky will report once it's installed, which can differ from the repo's copy.
     name = zip_plugin_name(assets[0])
