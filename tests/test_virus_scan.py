@@ -43,15 +43,19 @@ class PlanTests(unittest.TestCase):
         self.assertEqual(set(kept), {"same", "old", "older", "nodigest"})
         self.assertEqual(todo, ["new", "changed", "failed", "older", "old"])
 
-    def test_budget_batches_skips_huge_files_and_stops_at_the_run_limit(self):
+    def test_budget_batches_and_stops_at_the_run_limit(self):
         gib = 1024**3
-        wanted = {"a": {"size": gib // 2}, "b": {"size": gib // 2}, "c": {"size": gib // 2}, "huge": {"size": 2 * gib}, "d": {"size": gib}, "e": {"size": 1}}
+        wanted = {"a": {"size": gib // 2}, "b": {"size": gib // 2}, "c": {"size": gib // 2}, "d": {"size": gib}, "e": {"size": 1}}
         limit = virus_scan.MAX_RUN_BYTES
         virus_scan.MAX_RUN_BYTES = 2 * gib
         try:
             self.assertEqual(budget(list(wanted), wanted), [["a", "b"], ["c"]])
         finally:
             virus_scan.MAX_RUN_BYTES = limit
+
+    def test_a_file_bigger_than_a_run_is_still_scanned_on_its_own(self):
+        wanted = {"huge": {"size": virus_scan.MAX_RUN_BYTES + 1}, "next": {"size": 1}}
+        self.assertEqual(budget(list(wanted), wanted), [["huge"]])
 
 
 class ParseTests(unittest.TestCase):
@@ -70,8 +74,8 @@ class ParseTests(unittest.TestCase):
             {"result": "clean"},
             {"result": "infected", "found": ["Unix.Trojan.Agent-1", "Win.Test.EICAR_HDB-1"]},
             {"result": "incomplete", "found": ["Heuristics.Limits.Exceeded.MaxFileSize"]},
-            {"result": "error"},
-            {"result": "error"},
+            {"result": "error", "reason": "ClamAV: Can't open file or directory"},
+            {"result": "error", "reason": "ClamAV said nothing about this file"},
         ])
 
     def test_a_real_threat_beside_a_limit_is_infected(self):
@@ -79,7 +83,7 @@ class ParseTests(unittest.TestCase):
 
 
 class ScanTests(unittest.TestCase):
-    def test_reports_carry_digest_engine_and_skip_failed_downloads(self):
+    def test_every_zip_gets_a_report_even_when_its_download_fails(self):
         def fetch(url, path):
             if url == "https://x/missing":
                 raise OSError("HTTP Error 404")
@@ -87,8 +91,31 @@ class ScanTests(unittest.TestCase):
             return f"digest-of-{url[-1]}"
 
         reports = scan([["https://x/a", "https://x/missing"], ["https://x/b"]], scanner=lambda paths: "\n".join(f"{path}: OK" for path in paths), fetch=fetch, version=lambda: ("ClamAV 1.4.3", "27806"))
-        self.assertEqual(sorted(reports), ["https://x/a", "https://x/b"])
+        self.assertEqual(sorted(reports), ["https://x/a", "https://x/b", "https://x/missing"])
         self.assertEqual({key: value for key, value in reports["https://x/a"].items() if key != "scannedAt"}, {"sha256": "digest-of-a", "result": "clean", "engine": "ClamAV 1.4.3", "signatures": "27806"})
+        self.assertEqual(reports["https://x/missing"]["result"], "error")
+        self.assertEqual(reports["https://x/missing"]["reason"], "Couldn't download it: HTTP Error 404")
+
+    def test_without_signatures_nothing_is_downloaded_and_every_zip_says_why(self):
+        reports = scan([["https://x/a"], ["https://x/b"]], scanner=lambda paths: self.fail("scanned"), fetch=lambda url, path: self.fail("downloaded"), version=lambda: ("ClamAV 1.4.3", ""))
+        self.assertEqual({url: (report["result"], report["reason"]) for url, report in reports.items()}, {url: ("error", "ClamAV couldn't load its virus signatures") for url in ("https://x/a", "https://x/b")})
+
+    def test_a_missing_clamav_or_crashing_scanner_is_a_report_not_a_failure(self):
+        def missing():
+            raise FileNotFoundError("clamscan")
+
+        reports = scan([["https://x/a"]], fetch=lambda url, path: self.fail("downloaded"), version=missing)
+        self.assertEqual(reports["https://x/a"]["reason"], "ClamAV couldn't run: clamscan")
+
+        def crash(paths):
+            raise OSError("killed")
+
+        reports = scan([["https://x/a"]], scanner=crash, fetch=lambda url, path: path.write_bytes(b"zip") or "d", version=lambda: ("ClamAV 1.4.3", "27806"))
+        self.assertEqual((reports["https://x/a"]["result"], reports["https://x/a"]["reason"]), ("error", "ClamAV couldn't run: killed"))
+
+    def test_a_failed_rescan_keeps_the_last_good_report(self):
+        reports = scan([["https://x/old", "https://x/new"]], fetch=lambda url, path: self.fail("downloaded"), version=lambda: ("ClamAV 1.4.3", ""), keep=frozenset({"https://x/old"}))
+        self.assertEqual(sorted(reports), ["https://x/new"])
 
     def test_nothing_to_scan_needs_no_clamav(self):
         self.assertEqual(scan([], version=lambda: self.fail("asked ClamAV")), {})
