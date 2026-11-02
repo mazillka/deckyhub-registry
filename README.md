@@ -578,6 +578,10 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | SCopy | Utilities | [MWGIH/SCopy](https://github.com/MWGIH/SCopy) |
 | Power Timeline | Performance | [ZacharyQin/power-timeline](https://github.com/ZacharyQin/power-timeline) |
 | AI Deck | Utilities | [leoredrum/Ai-deck](https://github.com/leoredrum/Ai-deck) |
+| DSH Launcher | Utilities | [3570548848/dsh-decky](https://github.com/3570548848/dsh-decky) |
+| DiscordDeck | Game Libraries | [Lexodeus/DiscordDeck](https://github.com/Lexodeus/DiscordDeck) |
+| Opti2XMX | Frame Generation | [FlightDan/Opti2XMX](https://github.com/FlightDan/Opti2XMX) |
+| steam-hunter-for-deck | Game Libraries | [KimaCuda/decky-steamhunter](https://github.com/KimaCuda/decky-steamhunter) |
 
 ## Where the plugins come from
 
