@@ -644,6 +644,7 @@ CI runs on every pull request, on pushes to `main` and `develop`, and weekly bec
   ```bash
   GITHUB_TOKEN=$(gh auth token) python scripts/validate.py
   ```
+- **Catalog site:** [registry.deckyhub.com](https://registry.deckyhub.com/) is built by [`scripts/build_site.py`](scripts/build_site.py) and deployed by the [pages workflow](.github/workflows/pages.yml) from `main` (on changes, and daily for fresh stats). Besides the catalog (filled in as HTML, so it reads without JavaScript), it writes a page per plugin and per category with structured data, `sitemap.xml`, and `llms.txt`: every plugin as plain text for AI assistants. `docs/robots.txt` lets search engines and AI crawlers in.
 - **Tests:** `python -m unittest discover -s tests` covers the scripts, and also checks that `apps.json` stays under the 512 KB DeckyHub 3.0.0 and older accept, that the catalog page's script parses, and that `stats.json` keeps every field and warning the DeckyHub people run reads (against deckyhub-plugin's `main`, which CI checks out).
 
 ## Your own registry
