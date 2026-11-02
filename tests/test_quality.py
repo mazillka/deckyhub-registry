@@ -36,6 +36,9 @@ class QualityTests(unittest.TestCase):
         for tag in ("v0.0.3", "0.0", "Initial"):
             self.assertEqual(unfinished(ENTRY, repo(release(tag, "2026-06-01T00:00:00Z", downloads=50)), NOW), [f"placeholder version {tag!r}"], tag)
         self.assertEqual(unfinished(ENTRY, repo(release("v0.1.0", "2026-06-01T00:00:00Z", downloads=50)), NOW), [])
+        # Pre-releases only: the newest pre-release's version is the one judged.
+        self.assertEqual(unfinished(ENTRY, repo(release("v0.0.1-beta", "2026-06-01T00:00:00Z", downloads=50, prerelease=True)), NOW), ["placeholder version 'v0.0.1-beta'"])
+        self.assertEqual(unfinished(ENTRY, repo(release("v0.2.0-beta", "2026-06-01T00:00:00Z", downloads=50, prerelease=True)), NOW), [])
         nameless = {**ENTRY, "description": "Thing for Decky Loader."}
         self.assertEqual(unfinished(nameless, repo(release("v1.0.0", "2026-06-01T00:00:00Z", downloads=50), description=None), NOW), ["no description"])
 

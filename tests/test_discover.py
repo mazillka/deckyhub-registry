@@ -1,11 +1,13 @@
 import json
 import sys
 import unittest
+from unittest import mock
 from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from discover import active_fork, candidates, category, entry_json, extended_items, github_items, ignored_repos, pick, search_repos, short_description  # noqa: E402
+import discover  # noqa: E402
+from discover import active_fork, candidates, check, category, entry_json, extended_items, github_items, ignored_repos, pick, search_repos, short_description  # noqa: E402
 
 NOW = datetime(2026, 10, 28, tzinfo=timezone.utc)
 
@@ -122,6 +124,20 @@ class DiscoverTests(unittest.TestCase):
         self.assertTrue(active_fork(fork(None), mine))
         # The original released after this fork did: the fork is a copy that fell behind.
         self.assertFalse(active_fork(fork({"full_name": "o/a", "archived": False, "released": "2026-10-20T00:00:00Z"}), mine))
+
+    def test_a_plugin_with_pre_releases_only_qualifies(self):
+        def release(tag, prerelease):
+            return {"tag_name": tag, "published_at": "2026-10-01T00:00:00Z", "prerelease": prerelease, "draft": False,
+                    "assets": [{"name": "plugin.zip", "browser_download_url": "https://example.invalid/plugin.zip", "size": 1}]}
+        def repo(*releases):
+            return {"full_name": "o/a", "name": "a", "description": "Does A for the Deck.", "archived": False, "fork": False, "releases": list(releases)}
+        read = []
+        with mock.patch.object(discover, "zip_plugin_name", lambda asset: read.append(asset) or "A"), mock.patch.object(discover, "github_problems", lambda entry, repo: ([], [])):
+            entry = check(item("o/a", "A"), repo(release("v1.0.0-beta.1", True)))
+            self.assertEqual((entry["name"], entry["repo"]), ("A", "o/a"))
+            # Nothing installable at all still fails.
+            self.assertIsNone(check(item("o/a", "A"), repo({**release("v1.0.0", True), "assets": []})))
+        self.assertEqual(len(read), 1)
 
 if __name__ == "__main__":
     unittest.main()
