@@ -42,20 +42,21 @@ class ChannelOrderTests(unittest.TestCase):
 
 class PlanTests(unittest.TestCase):
     def test_keeps_fresh_reports_and_rescans_new_changed_failed_and_stale_ones(self):
-        wanted = {url: {"sha256": "aa", "size": 1} for url in ("new", "same", "changed", "failed", "old", "older")}
+        wanted = {url: {"sha256": "aa", "size": 1} for url in ("new", "same", "changed", "failed", "partial", "old", "older")}
         wanted["nodigest"] = {"sha256": None, "size": 1}
         old = {
             "same": {"sha256": "aa", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z"},
             "changed": {"sha256": "bb", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z"},
             "failed": {"sha256": "aa", "result": "error", "scannedAt": "2026-11-01T00:00:00Z"},
+            "partial": {"sha256": "aa", "result": "incomplete", "found": ["Heuristics.Limits.Exceeded.MaxScanTime"], "scannedAt": "2026-11-01T00:00:00Z"},
             "old": {"sha256": "aa", "result": "clean", "scannedAt": "2026-09-01T00:00:00Z"},
             "older": {"sha256": "aa", "result": "clean", "scannedAt": "2026-08-01T00:00:00Z"},
             "nodigest": {"sha256": "cc", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z"},
             "gone": {"sha256": "aa", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z"},
         }
         kept, todo = plan(wanted, old, TODAY)
-        self.assertEqual(set(kept), {"same", "old", "older", "nodigest"})
-        self.assertEqual(todo, ["new", "changed", "failed", "older", "old"])
+        self.assertEqual(set(kept), {"same", "partial", "old", "older", "nodigest"})
+        self.assertEqual(todo, ["new", "changed", "failed", "partial", "older", "old"])
 
     def test_budget_batches_and_stops_at_the_run_limit(self):
         gib = 1024**3

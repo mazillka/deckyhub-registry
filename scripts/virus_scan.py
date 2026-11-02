@@ -47,10 +47,11 @@ MAX_BATCH_BYTES = 512 * 1024**2
 MAX_RUN_SECONDS = 70 * 60
 BATCH_SECONDS = 25 * 60
 RESCAN_DAYS = 30
-# Generous limits (GitHub release files go up to 2 GB), so a big plugin is still looked
-# into rather than skipped; past them
+# Generous limits (GitHub release files go up to 2 GB, and a plugin bundling many small
+# files can take ClamAV minutes: its default of 2 minutes a file left 10 ZIPs half-scanned
+# on the first run), so a big plugin is still looked into rather than skipped; past them
 # ClamAV raises Heuristics.Limits.Exceeded, reported as incomplete.
-CLAMSCAN = ["clamscan", "--no-summary", "--stdout", "--max-filesize=2048M", "--max-scansize=4095M", "--max-files=200000", "--max-recursion=32", "--alert-exceeds-max=yes"]
+CLAMSCAN = ["clamscan", "--no-summary", "--stdout", "--max-filesize=2048M", "--max-scansize=4095M", "--max-files=200000", "--max-recursion=32", "--max-scantime=600000", "--alert-exceeds-max=yes"]
 LIMITS = "Heuristics.Limits.Exceeded"
 
 
@@ -114,8 +115,9 @@ def wanted_assets(indexes: list[dict], entries: list[dict]) -> dict[str, dict]:
 
 
 def plan(wanted: dict[str, dict], old: dict[str, dict], today: datetime) -> tuple[dict[str, dict], list[str]]:
-    """The old reports still good for a wanted ZIP, and the URLs to scan: never-scanned
-    ones (in wanted's order) before stale reports (oldest first)."""
+    """The old reports still good for a wanted ZIP, and the URLs to scan: never-scanned,
+    failed and incomplete ones (in wanted's order) before stale reports (oldest first). An
+    incomplete report is kept meanwhile, so a failed retry doesn't take it away."""
     kept, new, stale = {}, [], []
     for url, asset in wanted.items():
         report = old.get(url)
@@ -123,6 +125,9 @@ def plan(wanted: dict[str, dict], old: dict[str, dict], today: datetime) -> tupl
             new.append(url)
             continue
         kept[url] = report
+        if report.get("result") == "incomplete":
+            new.append(url)
+            continue
         if datetime.strptime(report.get("scannedAt") or "1970-01-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc) < today - timedelta(days=RESCAN_DAYS):
             stale.append(url)
     stale.sort(key=lambda url: kept[url].get("scannedAt") or "")
