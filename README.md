@@ -576,6 +576,8 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Claw EX Control | Performance | [Hardwell-L/decky-claw-ex-control](https://github.com/Hardwell-L/decky-claw-ex-control) |
 | PlayTime Tracker | Game Libraries | [alf1995/PlayTime-Tracker](https://github.com/alf1995/PlayTime-Tracker) |
 | SCopy | Utilities | [MWGIH/SCopy](https://github.com/MWGIH/SCopy) |
+| Power Timeline | Performance | [ZacharyQin/power-timeline](https://github.com/ZacharyQin/power-timeline) |
+| AI Deck | Utilities | [leoredrum/Ai-deck](https://github.com/leoredrum/Ai-deck) |
 
 ## Where the plugins come from
 
