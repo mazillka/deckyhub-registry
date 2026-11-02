@@ -63,6 +63,11 @@ class BuildReleaseIndexTests(unittest.TestCase):
         history = [release("v1", 1, [("plugin.zip", 1)])]
         self.assertEqual(plugin_stats(entry(), history, stars=lambda repo: 0, manifest=lambda asset: {}, fork="orig/a")["fork"], "orig/a")
         self.assertNotIn("fork", plugin_stats(entry(), history, stars=lambda repo: 0, manifest=lambda asset: {}))
+
+    def test_stats_list_the_ai_assistant_files_only_when_there_are_some(self):
+        history = [release("v1", 1, [("plugin.zip", 5)])]
+        self.assertEqual(plugin_stats(entry(), history, stars=lambda repo: 0, manifest=lambda asset: {}, ai=["AGENTS.md", "CLAUDE.md"])["ai"], ["AGENTS.md", "CLAUDE.md"])
+        self.assertNotIn("ai", plugin_stats(entry(), history, stars=lambda repo: 0, manifest=lambda asset: {}, ai=[]))
         self.assertEqual(fork_of({"fork": True, "parent": {"full_name": "orig/a"}}), "orig/a")
         self.assertIsNone(fork_of({"fork": False, "parent": None}))
         self.assertIsNone(fork_of({"fork": True, "parent": None}))

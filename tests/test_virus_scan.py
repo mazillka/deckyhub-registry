@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import virus_scan  # noqa: E402
-from virus_scan import Yara, budget, channel_assets, parse_clamscan, parse_yara, plan, report_of, rules_version, scan, unpack, wanted_assets  # noqa: E402
+from virus_scan import Yara, badges, budget, channel_assets, parse_clamscan, parse_yara, plan, plugin_summary, report_of, rules_version, scan, unpack, wanted_assets  # noqa: E402
 
 TODAY = datetime(2026, 11, 2, tzinfo=timezone.utc)
 YARA_OK = {"result": "clean", "scannedAt": "2026-11-01T00:00:00Z"}
@@ -214,6 +214,52 @@ class ScanTests(unittest.TestCase):
 
     def test_nothing_to_scan_needs_no_clamav(self):
         self.assertEqual(scan([], version=lambda: self.fail("asked ClamAV")), {})
+
+
+class PluginSummaryTests(unittest.TestCase):
+    def test_each_channel_gets_the_zip_it_installs_and_its_verdicts(self):
+        entries = [{"repo": "O/A", "asset": {"include": [], "exclude": ["source"]}}]
+        index = {"releases": {
+            # A newer pre-release than the stable one: both channels, each with its own ZIP.
+            "o/a": [
+                {"tag_name": "v2-rc", "prerelease": True, "assets": [asset("source.zip", "https://x/src"), asset("a2.zip", "https://x/a2", digest="sha256:bb")]},
+                {"tag_name": "v1", "assets": [asset("a1.zip", "https://x/a1")]},
+            ],
+            # Newest release is stable: one ZIP, so no separate pre-release line.
+            "o/b": [{"tag_name": "v3", "assets": [asset("b.zip", "https://x/b")]}],
+            "o/empty": [],
+        }}
+        develop = {"releases": {"o/b": [{"tag_name": "v9", "assets": [asset("other.zip", "https://x/other")]}]}}
+        files = {
+            "https://x/a1": {"sha256": "aa", "result": "clean", "engine": "ClamAV 1.4.3", "scannedAt": "2026-11-01T00:00:00Z", "yara": {"result": "infected", "found": ["Linux_Test"], "engine": "YARA 4.5.0", "scannedAt": "2026-11-01T00:00:00Z"}},
+            "https://x/b": {"sha256": "cc", "result": "incomplete", "found": ["Heuristics.Limits.Exceeded.MaxFileSize"], "scannedAt": "2026-11-01T00:00:00Z", "yara": {"result": "error", "reason": "YARA's rules couldn't be downloaded", "scannedAt": "2026-11-01T00:00:00Z"}},
+        }
+        self.assertEqual(plugin_summary([index, develop], entries, files), {
+            "o/a": {
+                "stable": {"tag": "v1", "file": "a1.zip", "sha256": "aa", "clamav": {"result": "clean", "scannedAt": "2026-11-01T00:00:00Z"}, "yara": {"result": "infected", "found": ["Linux_Test"], "scannedAt": "2026-11-01T00:00:00Z"}},
+                # Not scanned yet: no verdicts, the index's digest still names the file.
+                "prerelease": {"tag": "v2-rc", "file": "a2.zip", "sha256": "bb"},
+            },
+            "o/b": {"stable": {"tag": "v3", "file": "b.zip", "sha256": "cc", "clamav": {"result": "incomplete", "found": ["Heuristics.Limits.Exceeded.MaxFileSize"], "scannedAt": "2026-11-01T00:00:00Z"}, "yara": {"result": "error", "reason": "YARA's rules couldn't be downloaded", "scannedAt": "2026-11-01T00:00:00Z"}}},
+        })
+
+
+class BadgeTests(unittest.TestCase):
+    def test_a_badge_per_scanner_for_the_stable_zip_else_the_pre_release(self):
+        plugins = {
+            "o/a": {"stable": {"tag": "v1", "clamav": {"result": "clean"}, "yara": {"result": "infected"}}, "prerelease": {"tag": "v2-rc", "clamav": {"result": "error"}}},
+            "o/b": {"prerelease": {"tag": "v0.1", "clamav": {"result": "incomplete"}}},
+            "o/c": {"stable": {"tag": "v3"}},
+        }
+        self.assertEqual({path: (badge["label"], badge["message"], badge["color"]) for path, badge in badges(plugins).items()}, {
+            "o/a/clamav.json": ("ClamAV", "no threats (v1)", "brightgreen"),
+            "o/a/yara.json": ("YARA", "threat found (v1)", "red"),
+            "o/b/clamav.json": ("ClamAV", "partly scanned (v0.1)", "orange"),
+            "o/b/yara.json": ("YARA", "not scanned yet (v0.1)", "lightgrey"),
+            "o/c/clamav.json": ("ClamAV", "not scanned yet (v3)", "lightgrey"),
+            "o/c/yara.json": ("YARA", "not scanned yet (v3)", "lightgrey"),
+        })
+        self.assertTrue(all(badge["schemaVersion"] == 1 for badge in badges(plugins).values()))
 
 
 class YaraTests(unittest.TestCase):
