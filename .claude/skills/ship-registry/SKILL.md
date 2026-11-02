@@ -1,6 +1,6 @@
 ---
 name: ship-registry
-description: Ship what's on the registry's develop branch to main, where every DeckyHub install reads it, merge main back into develop, and check the registry releases' notes. Use when asked about registry release notes, or when asked to release, ship, publish or promote registry changes, open the develop → main PR, or fix a develop/main conflict.
+description: Ship what's on the registry's develop branch to main, where every DeckyHub install reads it (everything, or only the plugin list), merge main back into develop, and check the registry releases' notes. Use when asked about registry release notes, or when asked to release, ship, publish or promote registry changes or plugins, open the develop → main PR, or fix a develop/main conflict.
 ---
 
 # Shipping the registry
@@ -8,6 +8,24 @@ description: Ship what's on the registry's develop branch to main, where every D
 `main` is production: every DeckyHub fetches `registry/apps.json` from it at startup (`REMOTE_REGISTRY_URL` in deckyhub-plugin's `main.py`), the Pages catalog serves `docs/` from it, and the release-index workflow builds `releases.json` and `stats.json` from it every hour. `develop` is where changes land first. Both branches are protected by rulesets ("Protect main": squash only; "Protect develop": squash, or a merge commit for the back-merge), and both need the `validate` check.
 
 Never push to either branch, and never merge a PR here without the user's OK.
+
+## Only the plugin list
+
+When `develop` has new or changed plugins (discover PRs, plugin edits) but its scripts, workflows or docs aren't ready for `main`, ship just the list: `registry/apps.json` and the README's Repositories table, nothing else.
+
+- **Workflow:** run **Ship plugins** from the Actions tab (`gh workflow run ship-plugins.yml --ref main`). It opens a `release: plugins YYYY-MM-DD` PR into `main` with the release notes for the list and starts its CI, or says main already has develop's list. It only exists once it's on `main`.
+- **By hand**, from a checkout of this repo:
+
+  ```bash
+  git fetch origin main develop
+  git switch -c ship-plugins/$(date -u +%Y-%m-%d-%H%M) origin/main
+  python scripts/ship_plugins.py origin/develop
+  git commit -am "release: plugins $(date -u +%Y-%m-%d)"
+  ```
+
+  Then push it and open the PR against `main`.
+
+Then continue with step 2's merge (Squash, once the user approves), step 3's back-merge, and steps 4 and 5 as for a full ship: the back-merge keeps the next full ship from conflicting on `apps.json` and the README.
 
 ## 1. Check develop is ready
 
@@ -50,7 +68,7 @@ Merge this one with **Create a merge commit**, the one PR that isn't squashed.
 - The release-index workflow runs on pushes to `main` that touch `apps.json` or `build_release_index.py`, otherwise within the hour: `gh run list --workflow release-index.yml --limit 3`.
 - A change to `apps.json` also publishes a new registry release, which DeckyHub reads first: `gh run list --workflow registry-release.yml --limit 3` and `gh release view -R mazillka/deckyhub-registry`.
 - `curl -s https://raw.githubusercontent.com/mazillka/deckyhub-registry/release-index/stats.json | head -c 300` shows the new `generatedAt`.
-- The catalog at https://mazillka.github.io/deckyhub-registry/ loads (Pages can take a few minutes).
+- The catalog at https://registry.deckyhub.com/ loads (Pages can take a few minutes).
 
 ## 5. Check the release notes
 

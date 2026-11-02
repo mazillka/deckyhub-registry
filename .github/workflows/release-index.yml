@@ -51,15 +51,30 @@ jobs:
         run: python3 scripts/build_release_index.py "$RUNNER_TEMP/index"
         env:
           GITHUB_TOKEN: ${{ github.token }}
-      # New audit warnings since the last published stats.json become an issue to review.
-      # Only for main, what people get. Never blocks publishing: DeckyHub reads this index.
+      # One rolling "Audit warnings" issue (scripts/audit_alerts.py), edited in place: what
+      # changed since the last published stats.json first, then every plugin's current
+      # warnings. Created or reopened when needed, closed when nothing is flagged. Only for
+      # main, what people get. Never blocks publishing: DeckyHub reads this index.
       - if: matrix.branch == 'main'
         continue-on-error: true
         run: |
           git fetch -q --depth 1 origin release-index && git show FETCH_HEAD:stats.json > "$RUNNER_TEMP/old-stats.json" || echo '{}' > "$RUNNER_TEMP/old-stats.json"
-          python3 scripts/audit_alerts.py "$RUNNER_TEMP/old-stats.json" "$RUNNER_TEMP/index/stats.json" > "$RUNNER_TEMP/alerts.md"
-          grep -q . "$RUNNER_TEMP/alerts.md" || exit 0
-          gh issue create --title "New audit warnings ($(date -u +%Y-%m-%d))" --body-file "$RUNNER_TEMP/alerts.md"
+          action=$(python3 scripts/audit_alerts.py "$RUNNER_TEMP/old-stats.json" "$RUNNER_TEMP/index/stats.json" "$RUNNER_TEMP/alerts.md")
+          title=$(python3 -c 'import sys; sys.path.insert(0, "scripts"); from audit_alerts import ISSUE_TITLE; print(ISSUE_TITLE)')
+          read -r number state < <(gh issue list --state all --limit 200 --json number,title,state --jq "map(select(.title == \"$title\")) | sort_by(.number) | last | \"\(.number) \(.state)\"" || true)
+          [[ "$number" == null ]] && number=""
+          echo "action=$action issue=${number:-none} state=${state:-}"
+          if [[ "$action" == clear ]]; then
+            [[ -n "$number" && "$state" == OPEN ]] || exit 0
+            gh issue edit "$number" --body-file "$RUNNER_TEMP/alerts.md"
+            gh issue close "$number" --reason completed --comment "No listed plugin has an audit warning any more."
+          elif [[ -z "$number" ]]; then
+            gh issue create --title "$title" --body-file "$RUNNER_TEMP/alerts.md"
+          # Closed by hand with nothing new: leave it closed until the warnings change.
+          elif [[ "$action" == changed ]]; then
+            gh issue edit "$number" --body-file "$RUNNER_TEMP/alerts.md"
+            [[ "$state" == OPEN ]] || gh issue reopen "$number" --comment "Audit warnings are back; the body lists them."
+          fi
         env:
           GH_TOKEN: ${{ github.token }}
       # One orphan commit, force-pushed, so the branch never grows a history.

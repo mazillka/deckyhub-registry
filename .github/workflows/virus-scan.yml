@@ -1,0 +1,75 @@
+name: Virus scan
+
+# Scans every plugin ZIP in the release index (both branches' releases.json, DeckyHub's
+# own releases included) with ClamAV, and the files inside it with YARA and YARA Forge's
+# core rules (scripts/virus_scan.py), and publishes the reports (and plugins.json, the
+# same reports per plugin for the catalog page, and README badges under badges/) as
+# scans.json on the virus-scans branch, where DeckyHub's Manage window shows the report
+# for the ZIP you'd install, and the user decides whether to install it. Every plugin gets
+# a report: each run scans what's new (every plugin's Stable and Pre-release releases first), then reports
+# older than a month with newer signatures, so the first runs work through the backlog.
+# A ZIP that can't be downloaded or scanned gets an error report saying why.
+#
+# GitHub runs the schedule and a manual start only from main, the default branch, so a
+# push to develop or main that changes the scanner runs it too: develop gets scans before
+# its changes ship. Every run reads both indexes and publishes the same scans.json.
+on:
+  push:
+    branches: [main, develop]
+    paths: [scripts/virus_scan.py, .github/workflows/virus-scan.yml]
+  workflow_dispatch:
+  schedule:
+    - cron: "41 */3 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: virus-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # Never fails the run: without ClamAV or its signatures, virus_scan.py gives each ZIP
+      # it would have scanned an error report saying why, and tries again next run.
+      - name: Install ClamAV and today's signatures
+        continue-on-error: true
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -yq clamav
+          # The package starts its own updater; stop it so ours doesn't wait on its lock.
+          sudo systemctl stop clamav-freshclam || true
+          for wait in 0 30 120; do
+            sleep "$wait"
+            sudo freshclam --stdout && exit 0
+          done
+          exit 1
+      # Never fails the run either: without YARA or its rules, each scanned ZIP's YARA
+      # report says why, and YARA tries it again next run. YARA Forge publishes its rule
+      # packages weekly; core is the one tuned for few false positives.
+      - name: Install YARA and YARA Forge's core rules
+        continue-on-error: true
+        run: |
+          sudo apt-get install -yq yara || { sudo apt-get update -q && sudo apt-get install -yq yara; }
+          curl -fsSL --retry 3 -o "$RUNNER_TEMP/yara-forge.zip" https://github.com/YARAHQ/yara-forge/releases/latest/download/yara-forge-rules-core.zip
+          unzip -oq "$RUNNER_TEMP/yara-forge.zip" -d "$RUNNER_TEMP/yara-forge"
+      - name: Get the release index and the last reports
+        run: |
+          mkdir -p "$RUNNER_TEMP/in"
+          for branch in release-index release-index-develop; do
+            git fetch -q --depth 1 origin "$branch" && git show FETCH_HEAD:releases.json > "$RUNNER_TEMP/in/$branch.json" || true
+          done
+          git fetch -q --depth 1 origin virus-scans && git show FETCH_HEAD:scans.json > "$RUNNER_TEMP/in/scans.json" || true
+      - run: python3 scripts/virus_scan.py "$RUNNER_TEMP/out" --old "$RUNNER_TEMP/in/scans.json" --index "$RUNNER_TEMP/in/release-index.json" --index "$RUNNER_TEMP/in/release-index-develop.json" --yara-rules "$RUNNER_TEMP/yara-forge/packages/core/yara-rules-core.yar"
+      # One orphan commit, force-pushed, so the branch never grows a history.
+      - run: |
+          git checkout --orphan virus-scans
+          git rm -rfq .
+          cp -r "$RUNNER_TEMP/out/scans.json" "$RUNNER_TEMP/out/plugins.json" "$RUNNER_TEMP/out/badges" .
+          git add scans.json plugins.json badges
+          git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qm "Virus scan reports"
+          git push -fq origin virus-scans

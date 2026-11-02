@@ -1,0 +1,49 @@
+name: Ship plugins
+
+# Ships develop's plugin list to main on its own: registry/apps.json and the README's
+# Repositories table (scripts/ship_plugins.py), without the scripts, workflows and docs
+# still waiting on develop. Opens a "release: plugins" pull request against main for
+# review and starts its CI; never merges. After it's merged, merge main back into develop
+# as after any release (the ship-registry skill), or the next ship conflicts.
+#
+# Run it from the Actions tab (GitHub only offers that for main's workflows).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  # To start CI on the new branch: a PR opened with this token doesn't trigger it.
+  actions: write
+
+concurrency:
+  group: ship-plugins
+
+jobs:
+  ship:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+      - run: |
+          git fetch -q origin develop
+          git show origin/main:registry/apps.json > "$RUNNER_TEMP/main-apps.json"
+          python3 scripts/ship_plugins.py origin/develop | tee "$RUNNER_TEMP/summary.txt"
+          git diff --quiet && { echo "main already has develop's plugin list."; exit 0; }
+          # With the time, so a rerun the same day doesn't clash with a closed PR's branch.
+          branch="ship-plugins/$(date -u +%Y-%m-%d-%H%M)"
+          git switch -c "$branch"
+          git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qam "release: plugins $(date -u +%Y-%m-%d)"
+          git push -q origin "$branch"
+          {
+            echo "develop's plugin list (registry/apps.json and the README's Repositories table), without develop's other changes: $(cat "$RUNNER_TEMP/summary.txt")."
+            echo
+            python3 scripts/release_notes.py "$RUNNER_TEMP/main-apps.json" registry/apps.json || true
+            echo
+            echo "Opened by the ship-plugins workflow, which never merges. Squash-merge it, then merge main back into develop (ship-registry skill, step 3)."
+          } > "$RUNNER_TEMP/body.md"
+          gh pr create --base main --head "$branch" --title "release: plugins $(date -u +%Y-%m-%d)" --body-file "$RUNNER_TEMP/body.md"
+          gh workflow run ci.yml --ref "$branch"
