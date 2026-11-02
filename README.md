@@ -587,7 +587,7 @@ However a plugin was found, it's only added once `validate.py` passes for it (a 
 
 ## Branches
 
-`main` is what DeckyHub reads: every install fetches `registry/apps.json` from it, and the release index is built from it. Changes land on `develop` first: branch from `develop`, open the pull request against `develop`, and merge it with **Squash and merge**. A pull request from `develop` into `main` then ships them; after it's merged, merge `main` back into `develop` with **Create a merge commit**, so the next one doesn't conflict. The discover workflow opens its pull requests against `develop` too. `.githooks/pre-commit` blocks commits on `main` and `develop`; turn it on once per checkout with `git config core.hooksPath .githooks`.
+`main` is what DeckyHub reads: every install fetches `registry/apps.json` from it, and the release index is built from it. Changes land on `develop` first: branch from `develop`, open the pull request against `develop`, and merge it with **Squash and merge**. A pull request from `develop` into `main` then ships them; after it's merged, merge `main` back into `develop` with **Create a merge commit**, so the next one doesn't conflict. The discover workflow opens its pull requests against `develop` too. To ship only the plugin list, the [ship-plugins workflow](.github/workflows/ship-plugins.yml) (run from the Actions tab) opens a pull request into `main` with `develop`'s `registry/apps.json` and this README's Repositories table and nothing else, so new plugins don't have to wait for the scripts and workflows on `develop`; merge `main` back into `develop` after it too. `.githooks/pre-commit` blocks commits on `main` and `develop`; turn it on once per checkout with `git config core.hooksPath .githooks`.
 
 ## Adding a plugin
 
