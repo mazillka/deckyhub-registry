@@ -1,13 +1,27 @@
+import shutil
 import sys
+import tempfile
 import unittest
+import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import virus_scan  # noqa: E402
-from virus_scan import budget, channel_assets, parse_clamscan, plan, report_of, scan, wanted_assets  # noqa: E402
+from virus_scan import Yara, budget, channel_assets, parse_clamscan, parse_yara, plan, report_of, rules_version, scan, unpack, wanted_assets  # noqa: E402
 
 TODAY = datetime(2026, 11, 2, tzinfo=timezone.utc)
+YARA_OK = {"result": "clean", "scannedAt": "2026-11-01T00:00:00Z"}
+
+
+class FakeYara:
+    engine, signatures, unavailable = "YARA 4.5.0", "YARA Forge core 2026-11-01", None
+
+    def __init__(self, report=None):
+        self.report = report or {"result": "clean"}
+
+    def scan(self, path):
+        return self.report
 
 
 def asset(name, url, size=10, digest="sha256:aa"):
@@ -54,9 +68,24 @@ class PlanTests(unittest.TestCase):
             "nodigest": {"sha256": "cc", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z"},
             "gone": {"sha256": "aa", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z"},
         }
+        old = {url: {**report, "yara": YARA_OK} for url, report in old.items()}
         kept, todo = plan(wanted, old, TODAY)
         self.assertEqual(set(kept), {"same", "partial", "old", "older", "nodigest"})
         self.assertEqual(todo, ["new", "changed", "failed", "partial", "older", "old"])
+
+    def test_a_report_yara_hasnt_scanned_or_couldnt_is_scanned_again_and_kept_meanwhile(self):
+        wanted = {url: {"sha256": "aa", "size": 1} for url in ("clam-only", "yara-failed", "yara-partial", "both")}
+        clean = {"sha256": "aa", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z"}
+        old = {
+            "clam-only": clean,
+            "yara-failed": {**clean, "yara": {"result": "error", "reason": "x"}},
+            "yara-partial": {**clean, "yara": {"result": "incomplete", "reason": "x"}},
+            "both": {**clean, "yara": YARA_OK},
+        }
+        kept, todo = plan(wanted, old, TODAY)
+        self.assertEqual(set(kept), set(wanted))
+        # An incomplete YARA scan hit a size limit or an unreadable file: it would again.
+        self.assertEqual(todo, ["clam-only", "yara-failed"])
 
     def test_budget_batches_and_stops_at_the_run_limit(self):
         gib = 1024**3
@@ -105,11 +134,48 @@ class ScanTests(unittest.TestCase):
             path.write_bytes(b"zip")
             return f"digest-of-{url[-1]}"
 
-        reports = scan([["https://x/a", "https://x/missing"], ["https://x/b"]], scanner=lambda paths: "\n".join(f"{path}: OK" for path in paths), fetch=fetch, version=lambda: ("ClamAV 1.4.3", "27806"))
+        reports = scan([["https://x/a", "https://x/missing"], ["https://x/b"]], scanner=lambda paths: "\n".join(f"{path}: OK" for path in paths), fetch=fetch, version=lambda: ("ClamAV 1.4.3", "27806"), yara=FakeYara())
         self.assertEqual(sorted(reports), ["https://x/a", "https://x/b", "https://x/missing"])
-        self.assertEqual({key: value for key, value in reports["https://x/a"].items() if key != "scannedAt"}, {"sha256": "digest-of-a", "result": "clean", "engine": "ClamAV 1.4.3", "signatures": "27806"})
+        report = reports["https://x/a"]
+        self.assertEqual({key: value for key, value in report.items() if key not in ("scannedAt", "yara")}, {"sha256": "digest-of-a", "result": "clean", "engine": "ClamAV 1.4.3", "signatures": "27806"})
+        self.assertEqual({key: value for key, value in report["yara"].items() if key != "scannedAt"}, {"result": "clean", "engine": "YARA 4.5.0", "signatures": "YARA Forge core 2026-11-01"})
         self.assertEqual(reports["https://x/missing"]["result"], "error")
         self.assertEqual(reports["https://x/missing"]["reason"], "Couldn't download it: HTTP Error 404")
+        self.assertEqual(reports["https://x/missing"]["yara"]["reason"], "Couldn't download it: HTTP Error 404")
+
+    def test_each_scanner_reports_on_its_own(self):
+        def fetch(url, path):
+            path.write_bytes(b"zip")
+            return "d"
+
+        reports = scan([["https://x/a"]], scanner=lambda paths: "\n".join(f"{path}: OK" for path in paths), fetch=fetch, version=lambda: ("ClamAV 1.4.3", "27806"), yara=FakeYara({"result": "infected", "found": ["ELASTIC_Linux_Trojan_Test"]}))
+        self.assertEqual((reports["https://x/a"]["result"], reports["https://x/a"]["yara"]["result"], reports["https://x/a"]["yara"]["found"]), ("clean", "infected", ["ELASTIC_Linux_Trojan_Test"]))
+
+        # Without ClamAV's signatures, YARA still scans.
+        reports = scan([["https://x/a"]], scanner=lambda paths: self.fail("ClamAV ran"), fetch=fetch, version=lambda: ("ClamAV 1.4.3", ""), yara=FakeYara())
+        self.assertEqual((reports["https://x/a"]["result"], reports["https://x/a"]["reason"], reports["https://x/a"]["yara"]["result"]), ("error", "ClamAV couldn't load its virus signatures", "clean"))
+
+        # Without YARA, ClamAV still scans, and the ZIP's YARA report says why.
+        unavailable = FakeYara()
+        unavailable.unavailable = "YARA's rules couldn't be downloaded"
+        reports = scan([["https://x/a"]], scanner=lambda paths: "\n".join(f"{path}: OK" for path in paths), fetch=fetch, version=lambda: ("ClamAV 1.4.3", "27806"), yara=unavailable)
+        self.assertEqual((reports["https://x/a"]["result"], reports["https://x/a"]["yara"]["result"], reports["https://x/a"]["yara"]["reason"]), ("clean", "error", "YARA's rules couldn't be downloaded"))
+
+    def test_a_scanner_whose_rescan_fails_keeps_its_last_good_result(self):
+        def fetch(url, path):
+            path.write_bytes(b"zip")
+            return "aa"
+
+        old = {"sha256": "aa", "result": "clean", "engine": "ClamAV 1.4.2", "signatures": "1", "scannedAt": "2026-09-01T00:00:00Z", "yara": {"result": "clean", "engine": "YARA 4.5.0", "scannedAt": "2026-09-01T00:00:00Z"}}
+        unavailable = FakeYara()
+        unavailable.unavailable = "YARA's rules couldn't be downloaded"
+        reports = scan([["https://x/a"]], scanner=lambda paths: "\n".join(f"{path}: OK" for path in paths), fetch=fetch, version=lambda: ("ClamAV 1.4.3", "27806"), yara=unavailable, keep={"https://x/a": old})
+        self.assertEqual(reports["https://x/a"]["yara"], old["yara"])
+        self.assertEqual(reports["https://x/a"]["engine"], "ClamAV 1.4.3")
+
+        reports = scan([["https://x/a"]], scanner=lambda paths: self.fail("ClamAV ran"), fetch=fetch, version=lambda: ("ClamAV 1.4.3", ""), yara=FakeYara(), keep={"https://x/a": old})
+        self.assertEqual({key: value for key, value in reports["https://x/a"].items() if key != "yara"}, {key: value for key, value in old.items() if key != "yara"})
+        self.assertEqual(reports["https://x/a"]["yara"]["signatures"], "YARA Forge core 2026-11-01")
 
     def test_without_signatures_nothing_is_downloaded_and_every_zip_says_why(self):
         reports = scan([["https://x/a"], ["https://x/b"]], scanner=lambda paths: self.fail("scanned"), fetch=lambda url, path: self.fail("downloaded"), version=lambda: ("ClamAV 1.4.3", ""))
@@ -142,11 +208,72 @@ class ScanTests(unittest.TestCase):
         self.assertEqual(sorted(reports), ["https://x/a", "https://x/b"])
 
     def test_a_failed_rescan_keeps_the_last_good_report(self):
-        reports = scan([["https://x/old", "https://x/new"]], fetch=lambda url, path: self.fail("downloaded"), version=lambda: ("ClamAV 1.4.3", ""), keep=frozenset({"https://x/old"}))
+        old = {"result": "clean", "scannedAt": "2026-11-01T00:00:00Z", "yara": YARA_OK}
+        reports = scan([["https://x/old", "https://x/new"]], fetch=lambda url, path: self.fail("downloaded"), version=lambda: ("ClamAV 1.4.3", ""), keep={"https://x/old": old})
         self.assertEqual(sorted(reports), ["https://x/new"])
 
     def test_nothing_to_scan_needs_no_clamav(self):
         self.assertEqual(scan([], version=lambda: self.fail("asked ClamAV")), {})
+
+
+class YaraTests(unittest.TestCase):
+    def setUp(self):
+        self.folder = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.folder)
+
+    def zip(self, files: dict[str, bytes]) -> Path:
+        path = self.folder / "plugin.zip"
+        with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr("Plugin/", b"")
+            for name, data in files.items():
+                archive.writestr(name, data)
+        return path
+
+    def test_unpacks_under_numbered_names_and_leaves_out_what_is_past_the_limits(self):
+        path = self.zip({"Plugin/main.py": b"print()", "../../evil.sh": b"x" * 10, "Plugin/dist/index.js": b"y" * 10})
+        out = self.folder / "out"
+        out.mkdir()
+        limit = virus_scan.YARA_MAX_BYTES
+        virus_scan.YARA_MAX_BYTES = 17
+        try:
+            names, skipped = unpack(path, out)
+        finally:
+            virus_scan.YARA_MAX_BYTES = limit
+        self.assertEqual((names, skipped), (["Plugin/main.py", "../../evil.sh"], ["Plugin/dist/index.js"]))
+        self.assertEqual(sorted(file.name for file in out.iterdir()), ["0", "1"])
+        self.assertEqual((out / "1").read_bytes(), b"x" * 10)
+
+    def test_parses_matches_and_per_file_errors(self):
+        stdout = "Linux_Trojan_Test /t/x/0\nOther_Rule /t/x/1\nLinux_Trojan_Test /t/x/1\nStray /elsewhere/1\n"
+        stderr = "error scanning /t/x/2: timeout\n"
+        self.assertEqual(parse_yara(stdout, stderr, "/t/x", ["a.py", "b.js", "c.so"]), (["Linux_Trojan_Test", "Other_Rule"], ["c.so"], None))
+        self.assertEqual(parse_yara("", "could not open file\n", "/t/x", []), ([], [], "could not open file"))
+
+    def test_reads_the_rule_package_version_from_its_header(self):
+        rules = self.folder / "yara-rules-core.yar"
+        rules.write_text("/*\n * YARA-Forge YARA Rule Package\n * Name: core \n * Creation Date: 2026-11-01\n * Number of Rules: 5134\n */\nrule a { condition: false }\n")
+        self.assertEqual(rules_version(rules), "YARA Forge core 2026-11-01")
+        (self.folder / "other.yar").write_text("rule a { condition: false }\n")
+        self.assertEqual(rules_version(self.folder / "other.yar"), "other.yar")
+
+    def test_missing_rules_make_yara_unavailable(self):
+        self.assertEqual(Yara(None, self.folder).unavailable, "YARA's rules couldn't be downloaded")
+        self.assertEqual(Yara(str(self.folder / "missing.yar"), self.folder).unavailable, "YARA's rules couldn't be downloaded")
+
+    @unittest.skipUnless(shutil.which("yara") and shutil.which("yarac"), "needs yara and yarac")
+    def test_scans_the_files_inside_a_zip_with_real_yara(self):
+        rules = self.folder / "rules.yar"
+        rules.write_text("/*\n * Name: test\n * Creation Date: 2026-11-01\n */\nrule DeckyHub_Test_Marker { strings: $a = \"deckyhub-yara-test-marker\" condition: $a }\n")
+        yara = Yara(str(rules), self.folder)
+        self.assertIsNone(yara.unavailable)
+        self.assertTrue(yara.engine.startswith("YARA "))
+        self.assertEqual(yara.signatures, "YARA Forge test 2026-11-01")
+        self.assertEqual(yara.scan(str(self.zip({"Plugin/main.py": b"print('hello')"}))), {"result": "clean"})
+        self.assertEqual(yara.scan(str(self.zip({"Plugin/main.py": b"print()", "Plugin/bin/tool": b"..deckyhub-yara-test-marker.."}))), {"result": "infected", "found": ["DeckyHub_Test_Marker"]})
+        broken = self.folder / "broken.zip"
+        broken.write_bytes(b"not a zip")
+        self.assertEqual(yara.scan(str(broken))["result"], "incomplete")
+        self.assertIn("YARA couldn't compile its rules", Yara(str(self.folder / "plugin.zip"), self.folder).unavailable)
 
 
 class MainTests(unittest.TestCase):

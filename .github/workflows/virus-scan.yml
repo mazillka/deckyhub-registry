@@ -1,7 +1,8 @@
 name: Virus scan
 
 # Scans every plugin ZIP in the release index (both branches' releases.json, DeckyHub's
-# own releases included) with ClamAV (scripts/virus_scan.py) and publishes the reports as
+# own releases included) with ClamAV, and the files inside it with YARA and YARA Forge's
+# core rules (scripts/virus_scan.py), and publishes the reports as
 # scans.json on the virus-scans branch, where DeckyHub's Manage window shows the report
 # for the ZIP you'd install, and the user decides whether to install it. Every plugin gets
 # a report: each run scans what's new (every plugin's Stable and Pre-release releases first), then reports
@@ -46,6 +47,15 @@ jobs:
             sudo freshclam --stdout && exit 0
           done
           exit 1
+      # Never fails the run either: without YARA or its rules, each scanned ZIP's YARA
+      # report says why, and YARA tries it again next run. YARA Forge publishes its rule
+      # packages weekly; core is the one tuned for few false positives.
+      - name: Install YARA and YARA Forge's core rules
+        continue-on-error: true
+        run: |
+          sudo apt-get install -yq yara || { sudo apt-get update -q && sudo apt-get install -yq yara; }
+          curl -fsSL --retry 3 -o "$RUNNER_TEMP/yara-forge.zip" https://github.com/YARAHQ/yara-forge/releases/latest/download/yara-forge-rules-core.zip
+          unzip -oq "$RUNNER_TEMP/yara-forge.zip" -d "$RUNNER_TEMP/yara-forge"
       - name: Get the release index and the last reports
         run: |
           mkdir -p "$RUNNER_TEMP/in"
@@ -53,7 +63,7 @@ jobs:
             git fetch -q --depth 1 origin "$branch" && git show FETCH_HEAD:releases.json > "$RUNNER_TEMP/in/$branch.json" || true
           done
           git fetch -q --depth 1 origin virus-scans && git show FETCH_HEAD:scans.json > "$RUNNER_TEMP/in/scans.json" || true
-      - run: python3 scripts/virus_scan.py "$RUNNER_TEMP/out" --old "$RUNNER_TEMP/in/scans.json" --index "$RUNNER_TEMP/in/release-index.json" --index "$RUNNER_TEMP/in/release-index-develop.json"
+      - run: python3 scripts/virus_scan.py "$RUNNER_TEMP/out" --old "$RUNNER_TEMP/in/scans.json" --index "$RUNNER_TEMP/in/release-index.json" --index "$RUNNER_TEMP/in/release-index-develop.json" --yara-rules "$RUNNER_TEMP/yara-forge/packages/core/yara-rules-core.yar"
       # One orphan commit, force-pushed, so the branch never grows a history.
       - run: |
           git checkout --orphan virus-scans

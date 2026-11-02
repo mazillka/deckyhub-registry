@@ -1,6 +1,6 @@
-"""Scan every plugin ZIP DeckyHub can install with ClamAV, and publish one report per ZIP.
+"""Scan every plugin ZIP DeckyHub can install with ClamAV and YARA, and publish one report per ZIP.
 
-    python scripts/virus_scan.py OUT_DIR --index RELEASES_JSON [--index ...] [--old SCANS_JSON]
+    python scripts/virus_scan.py OUT_DIR --index RELEASES_JSON [--index ...] [--old SCANS_JSON] [--yara-rules RULES_YAR]
 
 The virus-scan workflow passes the releases.json of both release-index branches (what
 DeckyHub's version pickers offer, DeckyHub's own releases included) and the scans.json
@@ -17,6 +17,13 @@ scans.json, keyed by the ZIP's download URL:
   report keeps it.
 - engine / signatures: the ClamAV version and signature database version used.
 - scannedAt: when. A report older than RESCAN_DAYS is scanned again with newer signatures.
+- yara: the same fields (but sha256) for YARA's scan of the files inside the ZIP, with
+  YARA Forge's core rules (--yara-rules, which the workflow downloads each run). found
+  lists the rules that matched (infected); incomplete means YARA couldn't look at some
+  of the files (reason says which). The top-level fields stay ClamAV's alone, as every
+  DeckyHub release before this one reads them ("Scanned by ClamAV"); a report without
+  yara, or with a YARA error, is scanned again. Each scanner's last good result is kept
+  when only its rescan fails.
 
 Every plugin gets a report: each run downloads at most MAX_RUN_BYTES, every plugin's
 Stable and Pre-release channel releases first (by_priority), then older ones, so the first runs work through the backlog over a
@@ -32,6 +39,8 @@ import sys
 import tempfile
 import time
 import urllib.request
+import zipfile
+import zlib
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -53,6 +62,14 @@ RESCAN_DAYS = 30
 # ClamAV raises Heuristics.Limits.Exceeded, reported as incomplete.
 CLAMSCAN = ["clamscan", "--no-summary", "--stdout", "--max-filesize=2048M", "--max-scansize=4095M", "--max-files=200000", "--max-recursion=32", "--max-scantime=600000", "--alert-exceeds-max=yes"]
 LIMITS = "Heuristics.Limits.Exceeded"
+# YARA doesn't open archives, so each ZIP's files are unpacked (one at a time, under
+# numbered names, never the ZIP's own paths) and scanned. Past these limits the rest of a
+# ZIP is left out and its report is incomplete. YARA_FILE_SECONDS is yara's own timeout
+# per file; YARA_ZIP_SECONDS stops a whole ZIP's scan.
+YARA_MAX_FILES = 200000
+YARA_MAX_BYTES = 4 * 1024**3
+YARA_FILE_SECONDS = 60
+YARA_ZIP_SECONDS = 10 * 60
 
 
 def now() -> str:
@@ -116,8 +133,9 @@ def wanted_assets(indexes: list[dict], entries: list[dict]) -> dict[str, dict]:
 
 def plan(wanted: dict[str, dict], old: dict[str, dict], today: datetime) -> tuple[dict[str, dict], list[str]]:
     """The old reports still good for a wanted ZIP, and the URLs to scan: never-scanned,
-    failed and incomplete ones (in wanted's order) before stale reports (oldest first). An
-    incomplete report is kept meanwhile, so a failed retry doesn't take it away."""
+    failed and incomplete ones, and ones YARA hasn't scanned or couldn't (in wanted's
+    order), before stale reports (oldest first). Those reports are kept meanwhile, so a
+    failed retry doesn't take them away."""
     kept, new, stale = {}, [], []
     for url, asset in wanted.items():
         report = old.get(url)
@@ -125,7 +143,7 @@ def plan(wanted: dict[str, dict], old: dict[str, dict], today: datetime) -> tupl
             new.append(url)
             continue
         kept[url] = report
-        if report.get("result") == "incomplete":
+        if report.get("result") == "incomplete" or (report.get("yara") or {}).get("result") in (None, "error"):
             new.append(url)
             continue
         if datetime.strptime(report.get("scannedAt") or "1970-01-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc) < today - timedelta(days=RESCAN_DAYS):
@@ -206,12 +224,110 @@ def clamav_version() -> tuple[str, str]:
     return parts[0], parts[1] if len(parts) > 1 else ""
 
 
-def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=clamav_version, keep: frozenset[str] = frozenset(), deadline: float | None = None, clock=time.monotonic) -> dict[str, dict]:
-    """A report for every URL in the batches it gets to. Nothing here fails the run: a ZIP
-    that can't be downloaded or scanned, or a ClamAV that can't run at all, gets an error
-    report saying why (scanned again next run). A URL in keep already has a good report,
-    which a failed rescan leaves alone. Past deadline (a clock() time) no new batch starts,
-    so the run can still publish; the rest have no report yet and come first next run."""
+def rules_version(rules: Path) -> str:
+    """'YARA Forge core 2026-11-01' from the header YARA Forge writes atop its rule file."""
+    header = {}
+    with rules.open(encoding="utf-8", errors="replace") as file:
+        for line, _ in zip(file, range(40)):
+            key, _, value = line.strip(" */\n").partition(": ")
+            header[key] = value.strip()
+    return " ".join(part for part in ("YARA Forge", header.get("Name"), header.get("Creation Date")) if part) if header.get("Name") else rules.name
+
+
+def unpack(zip_path: Path, folder: Path) -> tuple[list[str], list[str]]:
+    """Writes the ZIP's files into folder as 0, 1, 2…: their names in the ZIP, in that
+    order, and the ones left out (unreadable, encrypted, or past the limits)."""
+    names, skipped, total = [], [], 0
+    with zipfile.ZipFile(zip_path) as archive:
+        members = [info for info in archive.infolist() if not info.is_dir()]
+        for info in members:
+            if len(names) >= YARA_MAX_FILES or total + info.file_size > YARA_MAX_BYTES:
+                skipped.append(info.filename)
+                continue
+            target = folder / str(len(names))
+            try:
+                # ZipExtFile stops at the size the ZIP states, so a bomb can't fill the disk.
+                with archive.open(info) as source, target.open("wb") as out:
+                    while chunk := source.read(1 << 20):
+                        out.write(chunk)
+            except (RuntimeError, NotImplementedError, zipfile.BadZipFile, zlib.error, EOFError, OSError):
+                target.unlink(missing_ok=True)
+                skipped.append(info.filename)
+                continue
+            names.append(info.filename)
+            total += info.file_size
+    return names, skipped
+
+
+def parse_yara(stdout: str, stderr: str, folder: str, names: list[str]) -> tuple[list[str], list[str], str | None]:
+    """The rules that matched, the files (by their name in the ZIP) YARA couldn't scan,
+    and anything else it complained about. A match is 'RuleName /folder/7'."""
+    def name_of(path: str) -> str | None:
+        number = path.removeprefix(folder.rstrip("/") + "/")
+        return names[int(number)] if number.isdigit() and int(number) < len(names) else None
+
+    found, failed, other = set(), [], []
+    for line in stdout.splitlines():
+        rule, _, path = line.partition(" ")
+        if rule and name_of(path.strip()) is not None:
+            found.add(rule)
+    for line in stderr.splitlines():
+        if line.startswith("error scanning "):
+            path, _, _ = line.removeprefix("error scanning ").rpartition(": ")
+            failed.append(name_of(path) or path)
+        elif line.strip():
+            other.append(line.strip())
+    return sorted(found), failed, "; ".join(other) or None
+
+
+class Yara:
+    """YARA with one compiled rule file. unavailable says why it can't scan this run."""
+
+    def __init__(self, rules: str | None, folder: Path):
+        self.engine, self.signatures, self.unavailable, self.compiled = "", "", None, str(folder / "rules.yarc")
+        if not rules or not Path(rules).is_file():
+            self.unavailable = "YARA's rules couldn't be downloaded"
+            return
+        try:
+            self.engine = "YARA " + subprocess.run(["yara", "--version"], capture_output=True, text=True, check=True).stdout.strip()
+            compiled = subprocess.run(["yarac", "-w", rules, self.compiled], capture_output=True, text=True, check=False)
+            if compiled.returncode:
+                self.unavailable = f"YARA couldn't compile its rules: {(compiled.stderr or compiled.stdout).strip()[:300]}"
+            self.signatures = rules_version(Path(rules))
+        except Exception as error:  # noqa: BLE001
+            self.unavailable = f"YARA couldn't run: {error}"
+
+    def scan(self, zip_path: str) -> dict:
+        """One ZIP's YARA report: clean, infected (found: the rules that matched),
+        incomplete (reason: the files it couldn't look at) or error (reason)."""
+        with tempfile.TemporaryDirectory() as folder:
+            try:
+                names, skipped = unpack(Path(zip_path), Path(folder))
+            except (zipfile.BadZipFile, OSError) as error:
+                return {"result": "incomplete", "reason": f"YARA couldn't open the ZIP: {error}"}
+            try:
+                done = subprocess.run(["yara", "-C", "-w", "-r", "-p", "4", "-a", str(YARA_FILE_SECONDS), self.compiled, folder], capture_output=True, text=True, check=False, timeout=YARA_ZIP_SECONDS) if names else None
+            except subprocess.TimeoutExpired:
+                return {"result": "error", "reason": f"YARA didn't finish within {YARA_ZIP_SECONDS // 60} minutes"}
+            found, failed, other = parse_yara(done.stdout, done.stderr, folder, names) if done else ([], [], None)
+            if done and done.returncode and other and not found:
+                return {"result": "error", "reason": f"YARA: {other[:300]}"}
+            if found:
+                return {"result": "infected", "found": found}
+            if skipped or failed:
+                left = skipped + failed
+                return {"result": "incomplete", "reason": f"YARA couldn't look at {len(left)} file{'s' if len(left) != 1 else ''} in it: {', '.join(left[:5])}{' …' if len(left) > 5 else ''}"}
+            return {"result": "clean"}
+
+
+def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=clamav_version, yara=None, keep: dict[str, dict] | None = None, deadline: float | None = None, clock=time.monotonic) -> dict[str, dict]:
+    """A report for every URL in the batches it gets to, from ClamAV and from yara (a
+    Yara; None: not set up). Nothing here fails the run: a ZIP that can't be downloaded
+    or scanned, or a scanner that can't run at all, gets an error saying why (scanned
+    again next run). keep has the URLs' last reports: a scanner's good result there stays
+    when its rescan fails. Past deadline (a clock() time) no new batch starts, so the run
+    can still publish; the rest have no report yet and come first next run."""
+    keep = keep or {}
     reports: dict[str, dict] = {}
     if not batches:
         return reports
@@ -220,21 +336,32 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
         unavailable = None if signatures else "ClamAV couldn't load its virus signatures"
     except Exception as error:  # noqa: BLE001
         engine, signatures, unavailable = "", "", f"ClamAV couldn't run: {error}"
+    yara_unavailable = yara.unavailable if yara is not None else "YARA wasn't set up for this run"
 
-    def record(url: str, report: dict, sha256: str | None = None):
-        if report["result"] == "error" and url in keep:
-            print(f"kept the last report ({report['reason']}): {url}")
+    def stamped(report: dict, engine: str, signatures: str) -> dict:
+        return {**report, **({"engine": engine} if engine else {}), **({"signatures": signatures} if signatures else {}), "scannedAt": now()}
+
+    def record(url: str, clam: dict, found_by_yara: dict, sha256: str | None = None):
+        old = keep.get(url) or {}
+        old_yara = old.get("yara") or {}
+        kept_clam = clam["result"] == "error" and old and old.get("result") != "error"
+        kept_yara = found_by_yara["result"] == "error" and old_yara and old_yara.get("result") != "error"
+        if kept_clam and kept_yara:
+            print(f"kept the last report ({clam['reason']}; {found_by_yara['reason']}): {url}")
             return
-        reports[url] = {**({"sha256": sha256} if sha256 else {}), **report, **({"engine": engine} if engine else {}), **({"signatures": signatures} if signatures else {}), "scannedAt": now()}
-        print(f"{report['result']}: {url}" + (f" ({report['reason']})" if "reason" in report else ""))
+        clam = {key: value for key, value in old.items() if key not in ("sha256", "yara")} if kept_clam else stamped(clam, engine, signatures)
+        found_by_yara = old_yara if kept_yara else stamped(found_by_yara, yara.engine if yara else "", yara.signatures if yara else "")
+        sha256 = sha256 or old.get("sha256")
+        reports[url] = {**({"sha256": sha256} if sha256 else {}), **clam, "yara": found_by_yara}
+        print(f"ClamAV {clam['result']}, YARA {found_by_yara['result']}: {url}" + "".join(f" ({part['reason']})" for part in (clam, found_by_yara) if "reason" in part))
 
     for number, batch in enumerate(batches):
         if deadline is not None and clock() > deadline:
             print(f"out of time: {sum(map(len, batches[number:]))} ZIPs left for the next run")
             break
-        if unavailable:
+        if unavailable and yara_unavailable:
             for url in batch:
-                record(url, {"result": "error", "reason": unavailable})
+                record(url, {"result": "error", "reason": unavailable}, {"result": "error", "reason": yara_unavailable})
             continue
         with tempfile.TemporaryDirectory() as folder:
             paths, digests = {}, {}
@@ -244,15 +371,26 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
                     digests[url] = fetch(url, Path(path))
                     paths[url] = path
                 except Exception as error:  # noqa: BLE001 - one missing ZIP mustn't sink the run
-                    record(url, {"result": "error", "reason": f"Couldn't download it: {error}"})
+                    failed = {"result": "error", "reason": f"Couldn't download it: {error}"}
+                    record(url, failed, failed)
             try:
-                found = parse_clamscan(scanner(list(paths.values())), list(paths.values())) if paths else {}
+                if unavailable:
+                    found = {path: unavailable for path in paths.values()}
+                else:
+                    found = parse_clamscan(scanner(list(paths.values())), list(paths.values())) if paths else {}
             except subprocess.TimeoutExpired:
                 found = {path: f"ClamAV didn't finish within {BATCH_SECONDS // 60} minutes" for path in paths.values()}
             except Exception as error:  # noqa: BLE001
                 found = {path: f"ClamAV couldn't run: {error}" for path in paths.values()}
             for url, path in paths.items():
-                record(url, report_of(found[path]), digests[url])
+                if yara_unavailable:
+                    found_by_yara = {"result": "error", "reason": yara_unavailable}
+                else:
+                    try:
+                        found_by_yara = yara.scan(path)
+                    except Exception as error:  # noqa: BLE001
+                        found_by_yara = {"result": "error", "reason": f"YARA couldn't run: {error}"}
+                record(url, report_of(found[path]), found_by_yara, digests[url])
     return reports
 
 
@@ -261,6 +399,7 @@ def main() -> int:
     parser.add_argument("out")
     parser.add_argument("--index", action="append", default=[])
     parser.add_argument("--old")
+    parser.add_argument("--yara-rules", help="YARA Forge's rule file (.yar); without it every scanned ZIP gets a YARA error")
     args = parser.parse_args()
     indexes = [index for index in map(read_json, args.index) if index.get("releases")]
     if not indexes:
@@ -271,7 +410,11 @@ def main() -> int:
     wanted = wanted_assets(indexes, entries)
     kept, todo = plan(wanted, read_json(args.old).get("files") or {}, datetime.now(timezone.utc))
     batches = budget(todo, wanted)
-    files = {**kept, **scan(batches, keep=frozenset(kept), deadline=time.monotonic() + MAX_RUN_SECONDS)}
+    with tempfile.TemporaryDirectory() as folder:
+        yara = Yara(args.yara_rules, Path(folder)) if batches else None
+        if yara and yara.unavailable:
+            print(f"warning: {yara.unavailable}", file=sys.stderr)
+        files = {**kept, **scan(batches, yara=yara, keep=kept, deadline=time.monotonic() + MAX_RUN_SECONDS)}
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     # Compact: DeckyHub downloads the whole file for one Manage window.
@@ -280,7 +423,8 @@ def main() -> int:
     picks = channel_assets(indexes)
     missing = sorted(repo for repo, releases in picks.items() if not all(any(url in files for url in urls) for urls in releases))
     print(f"{len(picks) - len(missing)} of {len(picks)} plugins have a report for both their Stable and Pre-release channel releases" + (f"; still to do: {', '.join(missing[:20])}{' …' if len(missing) > 20 else ''}" if missing else ""))
-    print(f"{len(files)} of {len(wanted)} ZIPs have a report ({sum(map(len, batches))} scanned this run): " + ", ".join(f"{results.count(result)} {result}" for result in ("clean", "infected", "incomplete", "error")))
+    yara_results = [(report.get("yara") or {}).get("result") for report in files.values()]
+    print(f"{len(files)} of {len(wanted)} ZIPs have a report ({sum(map(len, batches))} scanned this run): ClamAV " + ", ".join(f"{results.count(result)} {result}" for result in ("clean", "infected", "incomplete", "error")) + "; YARA " + ", ".join(f"{yara_results.count(result)} {result}" for result in ("clean", "infected", "incomplete", "error")) + f", {yara_results.count(None)} not yet")
     return 0
 
 
