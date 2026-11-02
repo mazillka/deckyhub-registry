@@ -4754,6 +4754,15 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["PlayTime Tracker"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "scopy",
+      "name": "SCopy",
+      "description": "Shares recordings, screenshots and Steam Game Recording clips as MP4s with any browser on your network.",
+      "repo": "MWGIH/SCopy",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SCopy"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
