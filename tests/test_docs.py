@@ -35,6 +35,14 @@ class CatalogTests(unittest.TestCase):
         shown = set(re.findall(r'^  "([\w-]+)": \[', page.split("const WARNINGS = {", 1)[1].split("};", 1)[0], re.M))
         self.assertEqual(shown, WARNING_IDS)
 
+    def test_catalog_explains_every_virus_scan_badge(self):
+        page = (ROOT / "docs" / "index.html").read_text(encoding="utf-8")
+        badges = re.findall(r'^  "[\w-]+": \["([^"]+)", "(\w+)"', page.split("const SCAN_BADGES = {", 1)[1].split("};", 1)[0], re.M)
+        legend = page.split('id="scan-legend"', 1)[1].split("</p>", 1)[0]
+        self.assertEqual(len(badges), 3)
+        for label, kind in badges:
+            self.assertIn(f'<span class="badge {kind}">{label}</span>', legend)
+
 
 class RegistryFileTests(unittest.TestCase):
     def test_apps_json_fits_every_released_deckyhub(self):

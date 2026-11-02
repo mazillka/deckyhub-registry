@@ -25,6 +25,12 @@ scans.json, keyed by the ZIP's download URL:
   yara, or with a YARA error, is scanned again. Each scanner's last good result is kept
   when only its rescan fails.
 
+OUT_DIR/plugins.json is the same reports per plugin, for the registry's catalog page
+(docs/index.html): keyed by lowercase owner/name, the ZIP each channel installs (stable:
+the newest stable release; prerelease: the newest release, only when it's another ZIP),
+with its tag, file name, sha256, and ClamAV's and YARA's verdicts (result, found,
+reason, scannedAt). A ZIP not scanned yet has no verdicts.
+
 Every plugin gets a report: each run downloads at most MAX_RUN_BYTES, every plugin's
 Stable and Pre-release channel releases first (by_priority), then older ones, so the first runs work through the backlog over a
 few hours and later runs only see new releases. A ZIP not scanned yet has no report:
@@ -129,6 +135,39 @@ def wanted_assets(indexes: list[dict], entries: list[dict]) -> dict[str, dict]:
         for url, asset in found:
             wanted.setdefault(url, asset)
     return wanted
+
+
+def verdict(report: dict) -> dict:
+    return {key: report[key] for key in ("result", "found", "reason", "scannedAt") if report.get(key)}
+
+
+def plugin_summary(indexes: list[dict], entries: list[dict], files: dict[str, dict]) -> dict[str, dict]:
+    """Per repo, the ZIP each channel installs and what the scanners made of it (see the
+    docstring above). The first index that lists a repo wins, as in DeckyHub."""
+    filters = {entry["repo"].casefold(): entry for entry in entries}
+    plugins: dict[str, dict] = {}
+    for index in indexes:
+        for repo, releases in (index.get("releases") or {}).items():
+            if repo.casefold() in plugins or not releases:
+                continue
+            entry = filters.get(repo.casefold(), {"asset": {"include": [], "exclude": []}})
+            stable = next((release for release in releases if not release.get("prerelease")), None)
+            channels, urls = {}, {}
+            for channel, release in (("stable", stable), ("prerelease", releases[0])):
+                assets = [asset for asset in matching_assets(entry, release) if str(asset.get("browser_download_url") or "").startswith("https://")] if release else []
+                if not assets or assets[0]["browser_download_url"] in urls.values():
+                    continue
+                url = urls[channel] = assets[0]["browser_download_url"]
+                report = files.get(url) or {}
+                sha256 = report.get("sha256") or (assets[0].get("digest") or "").removeprefix("sha256:")
+                channels[channel] = {"tag": release.get("tag_name") or "", "file": assets[0].get("name") or "", **({"sha256": sha256} if sha256 else {})}
+                if report:
+                    channels[channel]["clamav"] = verdict(report)
+                    if report.get("yara"):
+                        channels[channel]["yara"] = verdict(report["yara"])
+            if channels:
+                plugins[repo.casefold()] = channels
+    return plugins
 
 
 def plan(wanted: dict[str, dict], old: dict[str, dict], today: datetime) -> tuple[dict[str, dict], list[str]]:
@@ -419,6 +458,7 @@ def main() -> int:
     out.mkdir(parents=True, exist_ok=True)
     # Compact: DeckyHub downloads the whole file for one Manage window.
     (out / "scans.json").write_text(json.dumps({"generatedAt": now(), "files": {url: files[url] for url in wanted if url in files}}, separators=(",", ":")), encoding="utf-8")
+    (out / "plugins.json").write_text(json.dumps({"generatedAt": now(), "plugins": plugin_summary(indexes, entries, files)}, separators=(",", ":")), encoding="utf-8")
     results = [report["result"] for report in files.values()]
     picks = channel_assets(indexes)
     missing = sorted(repo for repo, releases in picks.items() if not all(any(url in files for url in urls) for urls in releases))
