@@ -1,0 +1,48 @@
+name: Deploy catalog site
+
+# Builds registry.deckyhub.com with scripts/build_site.py (the catalog filled in as HTML,
+# a page per plugin and per category, sitemap.xml, llms.txt) and deploys it to GitHub
+# Pages. The repository's Pages source must be "GitHub Actions" (Settings → Pages) for
+# the deploy to take effect, with registry.deckyhub.com as its custom domain.
+#
+# Runs from main only: on pushes that change the site or the plugin list, daily so the
+# pages pick up new downloads, stars, releases, warnings and virus scans, and by hand.
+on:
+  push:
+    branches: [main]
+    paths: [docs/**, registry/apps.json, scripts/build_site.py, .github/workflows/pages.yml]
+  schedule:
+    - cron: "17 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.x"
+      - run: python3 scripts/build_site.py _site
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

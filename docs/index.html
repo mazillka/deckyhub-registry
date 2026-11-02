@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DeckyHub Registry</title>
-<meta name="description" content="The list of Steam Deck plugins that DeckyHub shows on Discover. Search it, browse by category, or suggest a plugin.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="canonical" href="https://mazillka.github.io/deckyhub-registry/">
+<title>Steam Deck plugin catalog: 500+ Decky Loader plugins | DeckyHub Registry</title>
+<meta name="description" content="Browse 500+ Decky Loader plugins for Steam Deck, including plugins not on the official Decky store, by category, with downloads, stars and safety badges. Install them from Gaming Mode with DeckyHub.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://registry.deckyhub.com/">
 <meta name="theme-color" content="#10151f">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://mazillka.github.io/deckyhub-registry/">
-<meta property="og:title" content="DeckyHub Registry">
-<meta property="og:description" content="The list of Steam Deck plugins that DeckyHub shows on Discover.">
+<meta property="og:site_name" content="DeckyHub Registry">
+<meta property="og:url" content="https://registry.deckyhub.com/">
+<meta property="og:title" content="Steam Deck plugin catalog: 500+ Decky Loader plugins">
+<meta property="og:description" content="Every Decky Loader plugin DeckyHub lists, by category, with downloads, stars and safety badges.">
+<!-- structured-data -->
 <style>
 :root{color-scheme:dark;--bg:#10151f;--panel:#182131;--panel2:#1d2839;--line:#2e405a;--text:#eef4ff;--muted:#b6c3d4;--dim:#8a9bb2;--accent:#1d75cc;--accent2:#4b9cf0;--warn:#e8b54a}
 *{box-sizing:border-box}
@@ -57,6 +59,7 @@ input[type=search]:focus{outline:2px solid var(--accent2);outline-offset:1px}
 .legend .badge{margin-right:4px}
 .legend .stale,.legend .warn,.legend .fork,.legend .clean,.legend .ai{margin-left:8px}
 .tools select{align-self:flex-start;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit;font-size:.9rem}
+.categories{margin:28px 0 0}.categories h3{margin:0 0 10px;font-size:1rem;color:var(--muted)}.categories ul{display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:0;list-style:none}.categories a{display:inline-block;padding:6px 14px;border:1px solid var(--line);border-radius:999px;color:var(--muted);text-decoration:none;font-size:.9rem}.categories a:hover{border-color:var(--accent2);color:var(--text)}.categories span{opacity:.7;margin-left:4px;color:var(--dim)}
 .empty,.status{color:var(--muted);padding:24px 0}
 .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px}
@@ -75,6 +78,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 <a href="https://github.com/mazillka/deckyhub-registry">GitHub</a>
 </div></nav>
 
+<main>
 <header><div class="wrap">
 <h1>Plugins for your Steam Deck,<br>in one list.</h1>
 <p>The list behind <a href="https://github.com/mazillka/deckyhub-plugin">DeckyHub</a>'s Discover tab. Every app here installs straight from its author's GitHub releases.</p>
@@ -97,7 +101,8 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 
 <p class="legend">Warnings come from <a href="https://decky-extended-plugins.beallio.com/audit">Decky Extended Plugins' automated audit</a> of the release DeckyHub installs (or a newer pre-release, marked as such). Routine findings like <code>sudo</code>, <code>mount</code> or <code>systemctl</code>, which many plugins need on SteamOS, aren't shown. A warning isn't proof of harm and no warning isn't proof of safety, so check the repository. <span class="badge stale">Blocked by audit</span> The audit found malware or a broken archive. Not recommended for installation. <span class="badge warn">Reads private data</span> Its code reads Steam login data, SSH keys or secrets from the environment. <span class="badge warn">Changes system startup</span> It edits shell profiles, preloads libraries, loads kernel modules or adds device rules, which keep working outside Decky. <span class="badge warn">Code not in its repo</span> The release ZIP has scripts or programs that aren't in its GitHub source, so you can't read what they do. <span class="badge warn">Hidden code</span> It contains encoded or packed code that's hard to read. <span class="badge warn">Skips HTTPS checks</span> It turns off certificate checks, so what it downloads could be tampered with. <span class="badge warn">Runs downloaded scripts</span> It downloads a script and runs it straight away. <span class="badge warn">Known vulnerabilities</span> It bundles libraries with published security flaws.</p>
 <p class="legend" id="scan-legend">Every plugin ZIP DeckyHub can install is <a href="https://github.com/mazillka/deckyhub-registry#how-it-works">virus-scanned</a> every few hours: with <a href="https://www.clamav.net/">ClamAV</a>, an open-source antivirus, and the files inside it with <a href="https://virustotal.github.io/yara/">YARA</a> and <a href="https://github.com/YARAHQ/yara-forge">YARA Forge</a>'s community rules, many of them written for Linux malware. The badge is for the release DeckyHub installs by default (the newest stable one), or a newer pre-release, marked as such. Hover it for each scanner's result, the file and when it was scanned; a plugin without one hasn't been scanned yet. In DeckyHub, a plugin's <strong>Manage</strong> window has the full report and can look the file up on VirusTotal. A clean scan isn't proof of safety, and a match can be a false positive. <span class="badge clean">No threats</span> Neither scanner found anything. <span class="badge stale">Threat found</span> ClamAV matched known malware, or a YARA rule written to catch it matched. Check the repository before installing. <span class="badge warn">Not fully scanned</span> A scanner couldn't look at all of it: the ZIP went past its size limits, some files couldn't be read, or the scan failed. Hover it for why; it's scanned again on the next run.</p>
-<div class="catalog" id="list"><p class="status">Loading…</p></div>
+<div class="catalog" id="list"><!-- catalog --></div>
+<nav class="categories" aria-label="Browse by category"><h3>Browse by category</h3><ul><!-- categories --></ul></nav>
 </div></section>
 
 <section id="contribute"><div class="wrap">
@@ -112,10 +117,15 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 <p class="caution" style="margin-top:28px"><strong>Install at your own risk.</strong> DeckyHub only fetches releases from their authors' GitHub repositories. It doesn't make, review or vouch for these plugins and isn't responsible for anything they do to your device or data.</p>
 </div></section>
 
-<footer><div class="wrap"><strong>Disclaimer:</strong> Not affiliated with Valve or the Decky Loader project. This list is collected from public GitHub repositories and isn't reviewed for safety; plugins are installed at your own risk, so look at a plugin's repository first. Plugins belong to their respective authors. Many were found through <a href="https://decky-extended-plugins.beallio.com/">Decky Extended Plugins</a> by beallio (see its <a href="https://decky-extended-plugins.beallio.com/audit">security audit</a>) and <a href="https://safetzahirovic.github.io/decky-plugins-explorer/">Decky Plugins Explorer</a> by SafetZahirovic. Registry licensed <a href="https://github.com/mazillka/deckyhub-registry/blob/main/LICENSE.md">GPL-3.0</a>. Part of <a href="https://mazillka.github.io/deckyhub-plugin/">DeckyHub</a>.</div></footer>
+</main>
+
+<footer><div class="wrap"><strong>Disclaimer:</strong> Not affiliated with Valve or the Decky Loader project. This list is collected from public GitHub repositories and isn't reviewed for safety; plugins are installed at your own risk, so look at a plugin's repository first. Plugins belong to their respective authors. Many were found through <a href="https://decky-extended-plugins.beallio.com/">Decky Extended Plugins</a> by beallio (see its <a href="https://decky-extended-plugins.beallio.com/audit">security audit</a>) and <a href="https://safetzahirovic.github.io/decky-plugins-explorer/">Decky Plugins Explorer</a> by SafetZahirovic. Registry licensed <a href="https://github.com/mazillka/deckyhub-registry/blob/main/LICENSE.md">GPL-3.0</a>. Part of <a href="https://deckyhub.com/">DeckyHub</a>.</div></footer>
 
 <script>
 const URL_ = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/refs/heads/main/registry/apps.json";
+// The plugins that have their own page on this site (scripts/build_site.py fills it in);
+// a plugin added since the last build links to its repository instead.
+const PAGES = new Set(/* plugin-pages */);
 // Per-plugin downloads, stars, last release, root flag, AI-assistant files and audit warnings, rebuilt every hour by the
 // release-index workflow (scripts/build_release_index.py). The catalog works without it.
 const STATS_URL = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/release-index/stats.json";
@@ -210,7 +220,7 @@ function render() {
   else if (sort.value === "updated") shown.sort((a, b) => updatedAt(b) - updatedAt(a));
   else if (sort.value === "added") shown.reverse();
   else shown.sort((a, b) => a.name.localeCompare(b.name));
-  list.replaceChildren(...(shown.length ? shown.map((app) => el("a", { className: "app", href: `https://github.com/${app.repo}` },
+  list.replaceChildren(...(shown.length ? shown.map((app) => el("a", { className: "app", href: PAGES.has(app.id) ? `/plugins/${app.id}.html` : `https://github.com/${app.repo}` },
     el("small", { textContent: app.category }), el("strong", { textContent: app.name }),
     el("p", { textContent: app.description || "" }), ...meta(app),
     el("code", { textContent: app.repo }))) : [el("p", { className: "empty", textContent: "No plugins match." })]));
