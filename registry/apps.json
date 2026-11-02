@@ -4763,6 +4763,15 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["SCopy"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "nonsteamlaunchersdecky",
+      "name": "NonSteamLaunchers",
+      "description": "Installs third-party game launchers under Proton and adds them and their games to Steam.",
+      "repo": "moraroy/NonSteamLaunchersDecky",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["NonSteamLaunchers"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }

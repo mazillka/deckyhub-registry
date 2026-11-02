@@ -571,6 +571,7 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Claw EX Control | Performance | [Hardwell-L/decky-claw-ex-control](https://github.com/Hardwell-L/decky-claw-ex-control) |
 | PlayTime Tracker | Game Libraries | [alf1995/PlayTime-Tracker](https://github.com/alf1995/PlayTime-Tracker) |
 | SCopy | Utilities | [MWGIH/SCopy](https://github.com/MWGIH/SCopy) |
+| NonSteamLaunchers | Game Libraries | [moraroy/NonSteamLaunchersDecky](https://github.com/moraroy/NonSteamLaunchersDecky) |
 
 ## Where the plugins come from
 
