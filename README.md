@@ -570,6 +570,8 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Xbox Wireless Helper | Controllers | [m2aadhil/decky-xbox-wireless-helper](https://github.com/m2aadhil/decky-xbox-wireless-helper) |
 | Claw EX Control | Performance | [Hardwell-L/decky-claw-ex-control](https://github.com/Hardwell-L/decky-claw-ex-control) |
 | PlayTime Tracker | Game Libraries | [alf1995/PlayTime-Tracker](https://github.com/alf1995/PlayTime-Tracker) |
+| SCopy | Utilities | [MWGIH/SCopy](https://github.com/MWGIH/SCopy) |
+| NonSteamLaunchers | Game Libraries | [moraroy/NonSteamLaunchersDecky](https://github.com/moraroy/NonSteamLaunchersDecky) |
 
 ## Where the plugins come from
 
