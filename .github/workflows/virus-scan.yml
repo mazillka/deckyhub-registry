@@ -4,7 +4,7 @@ name: Virus scan
 # own releases included) with ClamAV (scripts/virus_scan.py) and publishes the reports as
 # scans.json on the virus-scans branch, where DeckyHub's Manage window shows the report
 # for the ZIP you'd install, and the user decides whether to install it. Every plugin gets
-# a report: each run scans what's new (every plugin's newest release first), then reports
+# a report: each run scans what's new (every plugin's Stable and Pre-release releases first), then reports
 # older than a month with newer signatures, so the first runs work through the backlog.
 # A ZIP that can't be downloaded or scanned gets an error report saying why.
 #
