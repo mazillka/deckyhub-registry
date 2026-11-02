@@ -13,7 +13,7 @@ description: The registry's branch strategy - which branch changes start from an
 | `discover/YYYY-MM-DD-HHMM` | Plugins the daily discover workflow found, as a PR into `develop`. | `discover.yml` |
 | `ship-plugins/YYYY-MM-DD-HHMM` | develop's plugin list alone, as a PR into `main` (`ship-registry` skill, "Only the plugin list"). | `ship-plugins.yml`, or you by hand |
 | `release-index`, `release-index-develop` | `releases.json` and `stats.json` that DeckyHub reads, one orphan commit each, force-pushed by `release-index.yml` from `main` and `develop`. | The workflow only: never commit to, rebase or delete these |
-| `virus-scans` | `scans.json`, the ClamAV report for every plugin ZIP in both release indexes, one orphan commit force-pushed by `virus-scan.yml`. DeckyHub's Manage window reads it. | The workflow only: never commit to, rebase or delete it |
+| `virus-scans` | `scans.json`, the ClamAV and YARA report for every plugin ZIP in both release indexes, one orphan commit force-pushed by `virus-scan.yml`. DeckyHub's Manage window reads it. | The workflow only: never commit to, rebase or delete it |
 
 Rulesets: "Protect main" allows only **Squash and merge**; "Protect develop" allows squash, or a merge commit for the back-merge. Both block direct pushes and deletion and need the `validate` check. `.githooks/pre-commit` blocks local commits on `main` and `develop`; turn it on once per checkout with `git config core.hooksPath .githooks`.
 
