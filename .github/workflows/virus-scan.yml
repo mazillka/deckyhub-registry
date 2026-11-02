@@ -3,7 +3,7 @@ name: Virus scan
 # Scans every plugin ZIP in the release index (both branches' releases.json, DeckyHub's
 # own releases included) with ClamAV, and the files inside it with YARA and YARA Forge's
 # core rules (scripts/virus_scan.py), and publishes the reports (and plugins.json, the
-# same reports per plugin for the catalog page) as
+# same reports per plugin for the catalog page, and README badges under badges/) as
 # scans.json on the virus-scans branch, where DeckyHub's Manage window shows the report
 # for the ZIP you'd install, and the user decides whether to install it. Every plugin gets
 # a report: each run scans what's new (every plugin's Stable and Pre-release releases first), then reports
@@ -69,7 +69,7 @@ jobs:
       - run: |
           git checkout --orphan virus-scans
           git rm -rfq .
-          cp "$RUNNER_TEMP/out/scans.json" "$RUNNER_TEMP/out/plugins.json" .
-          git add scans.json plugins.json
+          cp -r "$RUNNER_TEMP/out/scans.json" "$RUNNER_TEMP/out/plugins.json" "$RUNNER_TEMP/out/badges" .
+          git add scans.json plugins.json badges
           git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qm "Virus scan reports"
           git push -fq origin virus-scans

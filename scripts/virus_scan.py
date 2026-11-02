@@ -31,6 +31,11 @@ the newest stable release; prerelease: the newest release, only when it's anothe
 with its tag, file name, sha256, and ClamAV's and YARA's verdicts (result, found,
 reason, scannedAt). A ZIP not scanned yet has no verdicts.
 
+OUT_DIR/badges/<owner>/<name>/clamav.json and yara.json are shields.io endpoint badges
+(https://shields.io/badges/endpoint-badge) for the ZIP the plugin's Stable channel installs
+(else its Pre-release one), for READMEs, DeckyHub's own included:
+https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/mazillka/deckyhub-registry/virus-scans/badges/<owner>/<name>/clamav.json
+
 Every plugin gets a report: each run downloads at most MAX_RUN_BYTES, every plugin's
 Stable and Pre-release channel releases first (by_priority), then older ones, so the first runs work through the backlog over a
 few hours and later runs only see new releases. A ZIP not scanned yet has no report:
@@ -168,6 +173,20 @@ def plugin_summary(indexes: list[dict], entries: list[dict], files: dict[str, di
             if channels:
                 plugins[repo.casefold()] = channels
     return plugins
+
+
+BADGE_MESSAGES = {"clean": ("no threats", "brightgreen"), "infected": ("threat found", "red"), "incomplete": ("partly scanned", "orange"), "error": ("not scanned", "orange")}
+
+
+def badges(plugins: dict[str, dict]) -> dict[str, dict]:
+    """A shields.io endpoint badge per plugin and scanner, keyed by its path under badges/."""
+    out = {}
+    for repo, channels in plugins.items():
+        channel = channels.get("stable") or channels.get("prerelease") or {}
+        for scanner, label in (("clamav", "ClamAV"), ("yara", "YARA")):
+            message, color = BADGE_MESSAGES.get((channel.get(scanner) or {}).get("result"), ("not scanned yet", "lightgrey"))
+            out[f"{repo}/{scanner}.json"] = {"schemaVersion": 1, "label": label, "message": f"{message} ({channel['tag']})" if channel.get("tag") else message, "color": color}
+    return out
 
 
 def plan(wanted: dict[str, dict], old: dict[str, dict], today: datetime) -> tuple[dict[str, dict], list[str]]:
@@ -458,7 +477,12 @@ def main() -> int:
     out.mkdir(parents=True, exist_ok=True)
     # Compact: DeckyHub downloads the whole file for one Manage window.
     (out / "scans.json").write_text(json.dumps({"generatedAt": now(), "files": {url: files[url] for url in wanted if url in files}}, separators=(",", ":")), encoding="utf-8")
-    (out / "plugins.json").write_text(json.dumps({"generatedAt": now(), "plugins": plugin_summary(indexes, entries, files)}, separators=(",", ":")), encoding="utf-8")
+    plugins = plugin_summary(indexes, entries, files)
+    (out / "plugins.json").write_text(json.dumps({"generatedAt": now(), "plugins": plugins}, separators=(",", ":")), encoding="utf-8")
+    for path, badge in badges(plugins).items():
+        target = out / "badges" / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(badge, separators=(",", ":")), encoding="utf-8")
     results = [report["result"] for report in files.values()]
     picks = channel_assets(indexes)
     missing = sorted(repo for repo, releases in picks.items() if not all(any(url in files for url in urls) for urls in releases))
