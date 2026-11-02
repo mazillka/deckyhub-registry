@@ -7,7 +7,14 @@ name: Virus scan
 # a report: each run scans what's new (every plugin's newest release first), then reports
 # older than a month with newer signatures, so the first runs work through the backlog.
 # A ZIP that can't be downloaded or scanned gets an error report saying why.
+#
+# GitHub runs the schedule and a manual start only from main, the default branch, so a
+# push to develop or main that changes the scanner runs it too: develop gets scans before
+# its changes ship. Every run reads both indexes and publishes the same scans.json.
 on:
+  push:
+    branches: [main, develop]
+    paths: [scripts/virus_scan.py, .github/workflows/virus-scan.yml]
   workflow_dispatch:
   schedule:
     - cron: "41 */3 * * *"
