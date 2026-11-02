@@ -11,6 +11,7 @@ description: The registry's branch strategy - which branch changes start from an
 | `develop` | Where changes land first. DeckyHub's Pre-release registry channel reads it, and each change to `apps.json` publishes a `registry-...-develop` pre-release. | Squashed topic PRs, `discover/` PRs, and the back-merge from `main` |
 | `<topic>` | One change each, short kebab-case (`add-<plugin>`, `index-graphql-403`). | You |
 | `discover/YYYY-MM-DD-HHMM` | Plugins the daily discover workflow found, as a PR into `develop`. | `discover.yml` |
+| `ship-plugins/YYYY-MM-DD-HHMM` | develop's plugin list alone, as a PR into `main` (`ship-registry` skill, "Only the plugin list"). | `ship-plugins.yml`, or you by hand |
 | `release-index`, `release-index-develop` | `releases.json` and `stats.json` that DeckyHub reads, one orphan commit each, force-pushed by `release-index.yml` from `main` and `develop`. | The workflow only: never commit to, rebase or delete these |
 | `virus-scans` | `scans.json`, the ClamAV report for every plugin ZIP in both release indexes, one orphan commit force-pushed by `virus-scan.yml`. DeckyHub's Manage window reads it. | The workflow only: never commit to, rebase or delete it |
 
