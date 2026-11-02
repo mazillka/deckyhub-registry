@@ -19,7 +19,7 @@ scans.json, keyed by the ZIP's download URL:
 - scannedAt: when. A report older than RESCAN_DAYS is scanned again with newer signatures.
 
 Every plugin gets a report: each run downloads at most MAX_RUN_BYTES, every plugin's
-newest release first, then older ones, so the first runs work through the backlog over a
+Stable and Pre-release channel releases first (by_priority), then older ones, so the first runs work through the backlog over a
 few hours and later runs only see new releases. A ZIP not scanned yet has no report:
 DeckyHub says so rather than calling it clean. Each run logs how many plugins still have
 none.
@@ -61,32 +61,45 @@ def read_json(path: str | None) -> dict:
         return {}
 
 
-def newest_assets(indexes: list[dict]) -> dict[str, list[str]]:
-    """Per repo, the download URLs of its newest release in any index: what a plugin's
-    card offers first, and what "every plugin has a report" is checked against."""
-    newest: dict[str, list[str]] = {}
+def by_priority(releases: list[dict]) -> list[list[dict]]:
+    """A repo's releases (newest first) in scan rounds: first the ones a card offers, the
+    Pre-release channel's (the newest) and the Stable channel's (the newest stable, which
+    the index may keep last), then the rest one per round, newest first."""
+    stable = next((release for release in releases if not release.get("prerelease")), None)
+    picks = releases[:1]
+    if stable is not None and stable is not releases[0]:
+        picks.append(stable)
+    return [picks] + [[release] for release in releases if all(release is not pick for pick in picks)]
+
+
+def channel_assets(indexes: list[dict]) -> dict[str, list[list[str]]]:
+    """Per repo, the download URLs of each channel's release (newest, newest stable) in
+    every index: what "every plugin has a report" is checked against."""
+    picks: dict[str, list[list[str]]] = {}
     for index in indexes:
         for repo, releases in (index.get("releases") or {}).items():
-            if releases:
-                newest.setdefault(repo.casefold(), []).extend(asset.get("browser_download_url") or "" for asset in releases[0].get("assets") or [])
-    return newest
+            for release in (by_priority(releases)[0] if releases else []):
+                picks.setdefault(repo.casefold(), []).append([asset.get("browser_download_url") or "" for asset in release.get("assets") or []])
+    return picks
 
 
 def wanted_assets(indexes: list[dict], entries: list[dict]) -> dict[str, dict]:
-    """Every plugin ZIP in the indexes, keyed by download URL, in scan order: each repo's
-    newest release first, then the next newest, and so on. A repo the registry no longer
-    lists (only the other branch has it) is held to plain .zip."""
+    """Every plugin ZIP in the indexes, keyed by download URL, in scan order: every repo's
+    Pre-release and Stable channel releases first (by_priority), then each repo's next
+    newest, and so on. A repo the registry no longer lists (only the other branch has it)
+    is held to plain .zip."""
     filters = {entry["repo"].casefold(): entry for entry in entries}
     rounds: list[list[tuple[str, dict]]] = []
     for index in indexes:
         for repo, releases in (index.get("releases") or {}).items():
             entry = filters.get(repo.casefold(), {"asset": {"include": [], "exclude": []}})
-            for rank, release in enumerate(releases):
+            for rank, group in enumerate(by_priority(releases)):
                 while len(rounds) <= rank:
                     rounds.append([])
-                for asset in matching_assets(entry, release):
-                    if str(asset.get("browser_download_url") or "").startswith("https://"):
-                        rounds[rank].append((asset["browser_download_url"], {"sha256": (asset.get("digest") or "").removeprefix("sha256:") or None, "size": asset.get("size") or 0}))
+                for release in group:
+                    for asset in matching_assets(entry, release):
+                        if str(asset.get("browser_download_url") or "").startswith("https://"):
+                            rounds[rank].append((asset["browser_download_url"], {"sha256": (asset.get("digest") or "").removeprefix("sha256:") or None, "size": asset.get("size") or 0}))
     wanted: dict[str, dict] = {}
     for found in rounds:
         for url, asset in found:
@@ -246,9 +259,9 @@ def main() -> int:
     # Compact: DeckyHub downloads the whole file for one Manage window.
     (out / "scans.json").write_text(json.dumps({"generatedAt": now(), "files": {url: files[url] for url in wanted if url in files}}, separators=(",", ":")), encoding="utf-8")
     results = [report["result"] for report in files.values()]
-    newest = newest_assets(indexes)
-    missing = sorted(repo for repo, urls in newest.items() if not any(url in files for url in urls))
-    print(f"{len(newest) - len(missing)} of {len(newest)} plugins have a report for their newest release" + (f"; still to do: {', '.join(missing[:20])}{' …' if len(missing) > 20 else ''}" if missing else ""))
+    picks = channel_assets(indexes)
+    missing = sorted(repo for repo, releases in picks.items() if not all(any(url in files for url in urls) for urls in releases))
+    print(f"{len(picks) - len(missing)} of {len(picks)} plugins have a report for both their Stable and Pre-release channel releases" + (f"; still to do: {', '.join(missing[:20])}{' …' if len(missing) > 20 else ''}" if missing else ""))
     print(f"{len(files)} of {len(wanted)} ZIPs have a report ({sum(map(len, batches))} scanned this run): " + ", ".join(f"{results.count(result)} {result}" for result in ("clean", "infected", "incomplete", "error")))
     return 0
 
