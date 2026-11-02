@@ -115,7 +115,21 @@ class RangedFile(io.RawIOBase):
         end = self.size if size is None or size < 0 else min(self.size, self.position + size)
         if end <= self.position:
             return b""
-        data = fetch(self.url, {"Range": f"bytes={self.position}-{end - 1}"})
+        # A download that fails or comes back with other bytes than asked for (an error page,
+        # or the whole file when a server ignores Range) is tried once more before the ZIP is
+        # judged broken: one bad answer from GitHub's CDN once failed a CI run on a good ZIP.
+        wanted = end - self.position
+        for attempt in range(2):
+            try:
+                data = fetch(self.url, {"Range": f"bytes={self.position}-{end - 1}"})
+            except OSError:
+                if attempt:
+                    raise
+                continue
+            if len(data) == wanted:
+                break
+        else:
+            raise OSError(f"asked {self.url} for {wanted} bytes at {self.position} and got {len(data)}")
         self.position += len(data)
         return data
 

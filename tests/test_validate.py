@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+import validate  # noqa: E402
 from validate import TABLE_HEADER, channel_releases, matching_assets, readme_errors, static_errors  # noqa: E402
 
 
@@ -47,6 +48,40 @@ class ValidateTests(unittest.TestCase):
         releases = [release("v1", "2026-01-01"), release("windows-v2", "2026-02-01", assets=("Setup.exe", "windows.zip.sha256"))]
         self.assertEqual(channel_releases(app(), releases)["stable"]["tag_name"], "v1")
         self.assertIsNone(channel_releases(app(), releases[1:])["prerelease"])
+
+
+class RangedFileTests(unittest.TestCase):
+    def setUp(self):
+        self.original = validate.fetch
+        self.addCleanup(setattr, validate, "fetch", self.original)
+
+    def serve(self, answers):
+        calls = []
+
+        def fetch(url, headers=None, auth=True):
+            calls.append(headers["Range"])
+            answer = answers.pop(0)
+            if isinstance(answer, Exception):
+                raise answer
+            return answer
+
+        validate.fetch = fetch
+        return calls
+
+    def test_a_wrong_or_failed_answer_is_tried_once_more(self):
+        calls = self.serve([b"<html>error</html>", b"abcd"])
+        self.assertEqual(validate.RangedFile("https://x/a.zip", 10).read(4), b"abcd")
+        self.assertEqual(calls, ["bytes=0-3", "bytes=0-3"])
+        self.serve([OSError("HTTP Error 502"), b"abcd"])
+        self.assertEqual(validate.RangedFile("https://x/a.zip", 10).read(4), b"abcd")
+
+    def test_a_second_bad_answer_fails(self):
+        self.serve([b"x", b"y"])
+        with self.assertRaises(OSError):
+            validate.RangedFile("https://x/a.zip", 10).read(4)
+        self.serve([OSError("HTTP Error 502"), OSError("HTTP Error 503")])
+        with self.assertRaisesRegex(OSError, "503"):
+            validate.RangedFile("https://x/a.zip", 10).read(4)
 
 
 if __name__ == "__main__":
