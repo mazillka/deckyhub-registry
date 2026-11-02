@@ -39,7 +39,13 @@ from build_release_index import EXTRA_ENTRIES
 from validate import REGISTRY, matching_assets
 
 MAX_RUN_BYTES = 6 * 1024**3
-MAX_BATCH_BYTES = 1024**3
+MAX_BATCH_BYTES = 512 * 1024**2
+# The workflow's job stops at 120 minutes, and scans.json is only published at the end,
+# so a run that overran would lose everything it scanned. No new batch starts after
+# MAX_RUN_SECONDS, and one batch's clamscan gets at most BATCH_SECONDS; what's left waits
+# for the next run.
+MAX_RUN_SECONDS = 70 * 60
+BATCH_SECONDS = 25 * 60
 RESCAN_DAYS = 30
 # Generous limits (GitHub release files go up to 2 GB), so a big plugin is still looked
 # into rather than skipped; past them
@@ -184,7 +190,8 @@ def report_of(found: list[str] | str) -> dict:
 
 def clamscan(paths: list[str]) -> str:
     # Exit 1 means something was found and 2 an error; both still print per-file lines.
-    return subprocess.run([*CLAMSCAN, *paths], capture_output=True, text=True, check=False).stdout
+    # Running out of BATCH_SECONDS raises, so the batch's ZIPs get error reports.
+    return subprocess.run([*CLAMSCAN, *paths], capture_output=True, text=True, check=False, timeout=BATCH_SECONDS).stdout
 
 
 def clamav_version() -> tuple[str, str]:
@@ -194,11 +201,12 @@ def clamav_version() -> tuple[str, str]:
     return parts[0], parts[1] if len(parts) > 1 else ""
 
 
-def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=clamav_version, keep: frozenset[str] = frozenset()) -> dict[str, dict]:
-    """A report for every URL in batches. Nothing here fails the run: a ZIP that can't be
-    downloaded or scanned, or a ClamAV that can't run at all, gets an error report saying
-    why (scanned again next run). A URL in keep already has a good report, which a failed
-    rescan leaves alone."""
+def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=clamav_version, keep: frozenset[str] = frozenset(), deadline: float | None = None, clock=time.monotonic) -> dict[str, dict]:
+    """A report for every URL in the batches it gets to. Nothing here fails the run: a ZIP
+    that can't be downloaded or scanned, or a ClamAV that can't run at all, gets an error
+    report saying why (scanned again next run). A URL in keep already has a good report,
+    which a failed rescan leaves alone. Past deadline (a clock() time) no new batch starts,
+    so the run can still publish; the rest have no report yet and come first next run."""
     reports: dict[str, dict] = {}
     if not batches:
         return reports
@@ -215,7 +223,10 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
         reports[url] = {**({"sha256": sha256} if sha256 else {}), **report, **({"engine": engine} if engine else {}), **({"signatures": signatures} if signatures else {}), "scannedAt": now()}
         print(f"{report['result']}: {url}" + (f" ({report['reason']})" if "reason" in report else ""))
 
-    for batch in batches:
+    for number, batch in enumerate(batches):
+        if deadline is not None and clock() > deadline:
+            print(f"out of time: {sum(map(len, batches[number:]))} ZIPs left for the next run")
+            break
         if unavailable:
             for url in batch:
                 record(url, {"result": "error", "reason": unavailable})
@@ -231,6 +242,8 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
                     record(url, {"result": "error", "reason": f"Couldn't download it: {error}"})
             try:
                 found = parse_clamscan(scanner(list(paths.values())), list(paths.values())) if paths else {}
+            except subprocess.TimeoutExpired:
+                found = {path: f"ClamAV didn't finish within {BATCH_SECONDS // 60} minutes" for path in paths.values()}
             except Exception as error:  # noqa: BLE001
                 found = {path: f"ClamAV couldn't run: {error}" for path in paths.values()}
             for url, path in paths.items():
@@ -253,7 +266,7 @@ def main() -> int:
     wanted = wanted_assets(indexes, entries)
     kept, todo = plan(wanted, read_json(args.old).get("files") or {}, datetime.now(timezone.utc))
     batches = budget(todo, wanted)
-    files = {**kept, **scan(batches, keep=frozenset(kept))}
+    files = {**kept, **scan(batches, keep=frozenset(kept), deadline=time.monotonic() + MAX_RUN_SECONDS)}
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     # Compact: DeckyHub downloads the whole file for one Manage window.

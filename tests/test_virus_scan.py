@@ -60,12 +60,12 @@ class PlanTests(unittest.TestCase):
     def test_budget_batches_and_stops_at_the_run_limit(self):
         gib = 1024**3
         wanted = {"a": {"size": gib // 2}, "b": {"size": gib // 2}, "c": {"size": gib // 2}, "d": {"size": gib}, "e": {"size": 1}}
-        limit = virus_scan.MAX_RUN_BYTES
-        virus_scan.MAX_RUN_BYTES = 2 * gib
+        limits = virus_scan.MAX_RUN_BYTES, virus_scan.MAX_BATCH_BYTES
+        virus_scan.MAX_RUN_BYTES, virus_scan.MAX_BATCH_BYTES = 2 * gib, gib
         try:
             self.assertEqual(budget(list(wanted), wanted), [["a", "b"], ["c"]])
         finally:
-            virus_scan.MAX_RUN_BYTES = limit
+            virus_scan.MAX_RUN_BYTES, virus_scan.MAX_BATCH_BYTES = limits
 
     def test_a_file_bigger_than_a_run_is_still_scanned_on_its_own(self):
         wanted = {"huge": {"size": virus_scan.MAX_RUN_BYTES + 1}, "next": {"size": 1}}
@@ -126,6 +126,19 @@ class ScanTests(unittest.TestCase):
 
         reports = scan([["https://x/a"]], scanner=crash, fetch=lambda url, path: path.write_bytes(b"zip") or "d", version=lambda: ("ClamAV 1.4.3", "27806"))
         self.assertEqual((reports["https://x/a"]["result"], reports["https://x/a"]["reason"]), ("error", "ClamAV couldn't run: killed"))
+
+    def test_no_batch_starts_after_the_deadline(self):
+        times = iter([0, 5, 11])
+        fetched = []
+
+        def fetch(url, path):
+            fetched.append(url)
+            path.write_bytes(b"zip")
+            return "d"
+
+        reports = scan([["https://x/a"], ["https://x/b"], ["https://x/c"]], scanner=lambda paths: "\n".join(f"{path}: OK" for path in paths), fetch=fetch, version=lambda: ("ClamAV 1.4.3", "27806"), deadline=10, clock=lambda: next(times))
+        self.assertEqual(fetched, ["https://x/a", "https://x/b"])
+        self.assertEqual(sorted(reports), ["https://x/a", "https://x/b"])
 
     def test_a_failed_rescan_keeps_the_last_good_report(self):
         reports = scan([["https://x/old", "https://x/new"]], fetch=lambda url, path: self.fail("downloaded"), version=lambda: ("ClamAV 1.4.3", ""), keep=frozenset({"https://x/old"}))
