@@ -12,6 +12,7 @@ description: The registry's branch strategy - which branch changes start from an
 | `<topic>` | One change each, short kebab-case (`add-<plugin>`, `index-graphql-403`). | You |
 | `discover/YYYY-MM-DD-HHMM` | Plugins the daily discover workflow found, as a PR into `develop`. | `discover.yml` |
 | `release-index`, `release-index-develop` | `releases.json` and `stats.json` that DeckyHub reads, one orphan commit each, force-pushed by `release-index.yml` from `main` and `develop`. | The workflow only: never commit to, rebase or delete these |
+| `virus-scans` | `scans.json`, the ClamAV report for every plugin ZIP in both release indexes, one orphan commit force-pushed by `virus-scan.yml`. DeckyHub's Manage window reads it. | The workflow only: never commit to, rebase or delete it |
 
 Rulesets: "Protect main" allows only **Squash and merge**; "Protect develop" allows squash, or a merge commit for the back-merge. Both block direct pushes and deletion and need the `validate` check. `.githooks/pre-commit` blocks local commits on `main` and `develop`; turn it on once per checkout with `git config core.hooksPath .githooks`.
 
@@ -42,6 +43,6 @@ git cherry origin/develop origin/<branch> | grep -c '^+'           # commits who
 
 - **Safe:** its PR is merged, or it has no commits `develop` lacks. Delete with `git push origin --delete <branch>`, and `git branch -D <branch>` locally.
 - **Ask first:** commits `develop` lacks and no merged PR (a closed PR, or none). Show the user what they are (`git log --oneline origin/develop..origin/<branch>`) and whether later work replaced them.
-- **Keep:** `main`, `develop`, `release-index`, `release-index-develop`, anything with an open PR, and the newest `discover/` branch while its PR is open (the workflow skips plugins listed in closed `discover/` PRs by reading their bodies, not their branches, so closed ones can go).
+- **Keep:** `main`, `develop`, `release-index`, `release-index-develop`, `virus-scans`, anything with an open PR, and the newest `discover/` branch while its PR is open (the workflow skips plugins listed in closed `discover/` PRs by reading their bodies, not their branches, so closed ones can go).
 
 Deleting a branch can't be undone once its commits are pruned: list what you'll delete and get the user's OK first.
