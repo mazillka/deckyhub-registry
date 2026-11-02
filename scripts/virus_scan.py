@@ -11,13 +11,18 @@ scans.json, keyed by the ZIP's download URL:
 - sha256: of the file that was scanned. A ZIP replaced under the same URL (a rolling
   "nightly" tag) has a new digest in the index and is scanned again.
 - result: clean, infected (found lists what ClamAV matched), incomplete (the ZIP went
-  past ClamAV's size limits, so part of it wasn't looked at) or error.
+  past ClamAV's size limits, so part of it wasn't looked at) or error (reason says why:
+  the download failed, ClamAV couldn't read it, or ClamAV couldn't run at all). An error
+  never fails the run; the ZIP is tried again next run, and a ZIP that already had a good
+  report keeps it.
 - engine / signatures: the ClamAV version and signature database version used.
 - scannedAt: when. A report older than RESCAN_DAYS is scanned again with newer signatures.
 
-Each run downloads at most MAX_RUN_BYTES, newest releases first, so the first runs work
-through the backlog over a few hours and later runs only see new releases. A ZIP not
-scanned yet has no report: DeckyHub says so rather than calling it clean.
+Every plugin gets a report: each run downloads at most MAX_RUN_BYTES, every plugin's
+newest release first, then older ones, so the first runs work through the backlog over a
+few hours and later runs only see new releases. A ZIP not scanned yet has no report:
+DeckyHub says so rather than calling it clean. Each run logs how many plugins still have
+none.
 """
 import argparse
 import hashlib
@@ -35,11 +40,11 @@ from validate import REGISTRY, matching_assets
 
 MAX_RUN_BYTES = 6 * 1024**3
 MAX_BATCH_BYTES = 1024**3
-MAX_FILE_BYTES = 1024**3
 RESCAN_DAYS = 30
-# Generous limits, so a big plugin is still looked into rather than skipped; past them
+# Generous limits (GitHub release files go up to 2 GB), so a big plugin is still looked
+# into rather than skipped; past them
 # ClamAV raises Heuristics.Limits.Exceeded, reported as incomplete.
-CLAMSCAN = ["clamscan", "--no-summary", "--stdout", "--max-filesize=1024M", "--max-scansize=4095M", "--max-files=200000", "--max-recursion=32", "--alert-exceeds-max=yes"]
+CLAMSCAN = ["clamscan", "--no-summary", "--stdout", "--max-filesize=2048M", "--max-scansize=4095M", "--max-files=200000", "--max-recursion=32", "--alert-exceeds-max=yes"]
 LIMITS = "Heuristics.Limits.Exceeded"
 
 
@@ -54,6 +59,17 @@ def read_json(path: str | None) -> dict:
         return json.loads(Path(path).read_text(encoding="utf-8")) if path else {}
     except (OSError, ValueError):
         return {}
+
+
+def newest_assets(indexes: list[dict]) -> dict[str, list[str]]:
+    """Per repo, the download URLs of its newest release in any index: what a plugin's
+    card offers first, and what "every plugin has a report" is checked against."""
+    newest: dict[str, list[str]] = {}
+    for index in indexes:
+        for repo, releases in (index.get("releases") or {}).items():
+            if releases:
+                newest.setdefault(repo.casefold(), []).extend(asset.get("browser_download_url") or "" for asset in releases[0].get("assets") or [])
+    return newest
 
 
 def wanted_assets(indexes: list[dict], entries: list[dict]) -> dict[str, dict]:
@@ -99,9 +115,8 @@ def budget(urls: list[str], wanted: dict[str, dict]) -> list[list[str]]:
     batches, size, total = [[]], 0, 0
     for url in urls:
         bytes_ = wanted[url]["size"]
-        if bytes_ > MAX_FILE_BYTES:
-            continue
-        if total + bytes_ > MAX_RUN_BYTES:
+        # The first file always fits, however big, so a large plugin can't stall the queue.
+        if total and total + bytes_ > MAX_RUN_BYTES:
             break
         if batches[-1] and size + bytes_ > MAX_BATCH_BYTES:
             batches.append([])
@@ -125,28 +140,29 @@ def download(url: str, path: Path) -> str:
     return digest.hexdigest()
 
 
-def parse_clamscan(output: str, paths: list[str]) -> dict[str, list[str] | None]:
-    """Per scanned path: what ClamAV found ([] when clean), or None when it reported an
-    error or nothing at all for that file. A ZIP's inner files are reported as
-    'path: Name FOUND' too, so matches are collected per scanned path."""
-    found: dict[str, list[str] | None] = {path: None for path in paths}
+def parse_clamscan(output: str, paths: list[str]) -> dict[str, list[str] | str]:
+    """Per scanned path: what ClamAV found ([] when clean), or why it couldn't scan the
+    file (a str). A ZIP's inner files are reported as 'path: Name FOUND' too, so matches
+    are collected per scanned path."""
+    found: dict[str, list[str] | str] = {path: "ClamAV said nothing about this file" for path in paths}
     for line in output.splitlines():
         path, _, verdict = line.rpartition(": ")
         path = next((candidate for candidate in paths if path == candidate or path.startswith(candidate + "/") or path.startswith(candidate + "!")), None)
         if path is None:
             continue
+        previous = found[path] if isinstance(found[path], list) else []
         if verdict == "OK":
-            found[path] = found[path] or []
+            found[path] = previous
         elif verdict.endswith(" FOUND"):
-            found[path] = sorted({*(found[path] or []), verdict.removesuffix(" FOUND")})
+            found[path] = sorted({*previous, verdict.removesuffix(" FOUND")})
         elif verdict.endswith("ERROR"):
-            found[path] = None
+            found[path] = f"ClamAV: {verdict.removesuffix('ERROR').strip() or 'error'}"
     return found
 
 
-def report_of(found: list[str] | None) -> dict:
-    if found is None:
-        return {"result": "error"}
+def report_of(found: list[str] | str) -> dict:
+    if isinstance(found, str):
+        return {"result": "error", "reason": found}
     if not found:
         return {"result": "clean"}
     threats = [name for name in found if not name.startswith(LIMITS)]
@@ -159,15 +175,38 @@ def clamscan(paths: list[str]) -> str:
 
 
 def clamav_version() -> tuple[str, str]:
-    """('ClamAV 1.4.3', '27806') from 'ClamAV 1.4.3/27806/Sun Nov  1 08:23:01 2026'."""
+    """('ClamAV 1.4.3', '27806') from 'ClamAV 1.4.3/27806/Sun Nov  1 08:23:01 2026'.
+    No signature version means ClamAV has no database to scan with."""
     parts = subprocess.run(["clamscan", "--version"], capture_output=True, text=True, check=True).stdout.strip().split("/")
     return parts[0], parts[1] if len(parts) > 1 else ""
 
 
-def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=clamav_version) -> dict[str, dict]:
-    engine, signatures = version() if batches else ("", "")
-    reports = {}
+def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=clamav_version, keep: frozenset[str] = frozenset()) -> dict[str, dict]:
+    """A report for every URL in batches. Nothing here fails the run: a ZIP that can't be
+    downloaded or scanned, or a ClamAV that can't run at all, gets an error report saying
+    why (scanned again next run). A URL in keep already has a good report, which a failed
+    rescan leaves alone."""
+    reports: dict[str, dict] = {}
+    if not batches:
+        return reports
+    try:
+        engine, signatures = version()
+        unavailable = None if signatures else "ClamAV couldn't load its virus signatures"
+    except Exception as error:  # noqa: BLE001
+        engine, signatures, unavailable = "", "", f"ClamAV couldn't run: {error}"
+
+    def record(url: str, report: dict, sha256: str | None = None):
+        if report["result"] == "error" and url in keep:
+            print(f"kept the last report ({report['reason']}): {url}")
+            return
+        reports[url] = {**({"sha256": sha256} if sha256 else {}), **report, **({"engine": engine} if engine else {}), **({"signatures": signatures} if signatures else {}), "scannedAt": now()}
+        print(f"{report['result']}: {url}" + (f" ({report['reason']})" if "reason" in report else ""))
+
     for batch in batches:
+        if unavailable:
+            for url in batch:
+                record(url, {"result": "error", "reason": unavailable})
+            continue
         with tempfile.TemporaryDirectory() as folder:
             paths, digests = {}, {}
             for number, url in enumerate(batch):
@@ -176,11 +215,13 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
                     digests[url] = fetch(url, Path(path))
                     paths[url] = path
                 except Exception as error:  # noqa: BLE001 - one missing ZIP mustn't sink the run
-                    print(f"warning: {url}: {error}", file=sys.stderr)
-            found = parse_clamscan(scanner(list(paths.values())), list(paths.values())) if paths else {}
+                    record(url, {"result": "error", "reason": f"Couldn't download it: {error}"})
+            try:
+                found = parse_clamscan(scanner(list(paths.values())), list(paths.values())) if paths else {}
+            except Exception as error:  # noqa: BLE001
+                found = {path: f"ClamAV couldn't run: {error}" for path in paths.values()}
             for url, path in paths.items():
-                reports[url] = {"sha256": digests[url], **report_of(found[path]), "engine": engine, "signatures": signatures, "scannedAt": now()}
-                print(f"{reports[url]['result']}: {url}")
+                record(url, report_of(found[path]), digests[url])
     return reports
 
 
@@ -199,12 +240,15 @@ def main() -> int:
     wanted = wanted_assets(indexes, entries)
     kept, todo = plan(wanted, read_json(args.old).get("files") or {}, datetime.now(timezone.utc))
     batches = budget(todo, wanted)
-    files = {**kept, **scan(batches)}
+    files = {**kept, **scan(batches, keep=frozenset(kept))}
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     # Compact: DeckyHub downloads the whole file for one Manage window.
     (out / "scans.json").write_text(json.dumps({"generatedAt": now(), "files": {url: files[url] for url in wanted if url in files}}, separators=(",", ":")), encoding="utf-8")
     results = [report["result"] for report in files.values()]
+    newest = newest_assets(indexes)
+    missing = sorted(repo for repo, urls in newest.items() if not any(url in files for url in urls))
+    print(f"{len(newest) - len(missing)} of {len(newest)} plugins have a report for their newest release" + (f"; still to do: {', '.join(missing[:20])}{' …' if len(missing) > 20 else ''}" if missing else ""))
     print(f"{len(files)} of {len(wanted)} ZIPs have a report ({sum(map(len, batches))} scanned this run): " + ", ".join(f"{results.count(result)} {result}" for result in ("clean", "infected", "incomplete", "error")))
     return 0
 
