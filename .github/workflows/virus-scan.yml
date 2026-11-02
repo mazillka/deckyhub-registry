@@ -1,0 +1,52 @@
+name: Virus scan
+
+# Scans every plugin ZIP in the release index (both branches' releases.json, DeckyHub's
+# own releases included) with ClamAV (scripts/virus_scan.py) and publishes the reports as
+# scans.json on the virus-scans branch, where DeckyHub's Manage window shows the report
+# for the ZIP you'd install. Each run scans what's new, then reports older than a month
+# with newer signatures, so the first runs work through the backlog.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 */3 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: virus-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install ClamAV and today's signatures
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -yq clamav
+          # The package starts its own updater; stop it so ours doesn't wait on its lock.
+          sudo systemctl stop clamav-freshclam || true
+          for wait in 0 30 120; do
+            sleep "$wait"
+            sudo freshclam --stdout && exit 0
+          done
+          exit 1
+      - name: Get the release index and the last reports
+        run: |
+          mkdir -p "$RUNNER_TEMP/in"
+          for branch in release-index release-index-develop; do
+            git fetch -q --depth 1 origin "$branch" && git show FETCH_HEAD:releases.json > "$RUNNER_TEMP/in/$branch.json" || true
+          done
+          git fetch -q --depth 1 origin virus-scans && git show FETCH_HEAD:scans.json > "$RUNNER_TEMP/in/scans.json" || true
+      - run: python3 scripts/virus_scan.py "$RUNNER_TEMP/out" --old "$RUNNER_TEMP/in/scans.json" --index "$RUNNER_TEMP/in/release-index.json" --index "$RUNNER_TEMP/in/release-index-develop.json"
+      # One orphan commit, force-pushed, so the branch never grows a history.
+      - run: |
+          git checkout --orphan virus-scans
+          git rm -rfq .
+          cp "$RUNNER_TEMP/out/scans.json" .
+          git add scans.json
+          git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qm "Virus scan reports"
+          git push -fq origin virus-scans
