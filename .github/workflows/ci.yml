@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: mazillka/deckyhub-plugin
@@ -32,6 +34,13 @@ jobs:
         env:
           DECKYHUB_PLUGIN: ${{ github.workspace }}/deckyhub-plugin
       # Each entry against its repository: releases, asset filter, plugin.json name.
-      - run: python3 scripts/validate.py
+      - if: github.event_name == 'pull_request'
+        run: |
+          git show HEAD^1:registry/apps.json > "$RUNNER_TEMP/base-registry.json"
+          python3 scripts/validate.py --base-registry "$RUNNER_TEMP/base-registry.json"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - if: github.event_name != 'pull_request'
+        run: python3 scripts/validate.py
         env:
           GITHUB_TOKEN: ${{ github.token }}
