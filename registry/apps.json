@@ -4781,6 +4781,42 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["AI Deck"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "dsh-decky",
+      "name": "DSH Launcher",
+      "description": "Run and open the DeepSeek Harness (dsh) web agent inside Steam Gaming Mode, without switching to Desktop Mode.",
+      "repo": "3570548848/dsh-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DSH Launcher"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "discorddeck",
+      "name": "DiscordDeck",
+      "description": "Adds Discord to the Steam menu. Opens Discord or Vesktop (Vencord) installed from Discover without adding it as a non-Steam game.",
+      "repo": "Lexodeus/DiscordDeck",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["DiscordDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "opti2xmx",
+      "name": "Opti2XMX",
+      "description": "Per-game XeSS XMX and OptiScaler setup for supported Intel systems.",
+      "repo": "FlightDan/Opti2XMX",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["Opti2XMX"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-steamhunter",
+      "name": "steam-hunter-for-deck",
+      "description": "Shows SteamHunter game summary stats on your Steam library game pages.",
+      "repo": "KimaCuda/decky-steamhunter",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["steam-hunter-for-deck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
