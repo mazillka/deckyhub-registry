@@ -72,7 +72,7 @@ class RangedFileTests(unittest.TestCase):
     def serve(self, answers):
         calls = []
 
-        def fetch(url, headers=None, auth=True):
+        def fetch(url, headers=None, auth=True, *, byte_range=None):
             calls.append(headers["Range"])
             answer = answers.pop(0)
             if isinstance(answer, Exception):
