@@ -2,265 +2,59 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Steam Deck plugin catalog: 500+ Decky Loader plugins | DeckyHub Registry</title>
-<meta name="description" content="Browse 500+ Decky Loader plugins for Steam Deck, including plugins not on the official Decky store, by category, with downloads, stars and safety badges. Install them from Gaming Mode with DeckyHub.">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<title>Add a Steam Deck plugin to DeckyHub | DeckyHub Registry</title>
+<meta name="description" content="How to add a Decky Loader plugin to DeckyHub's list, fix an entry, or run your own registry. To browse the plugins, see deckyhub.com.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://registry.deckyhub.com/">
 <meta name="theme-color" content="#10151f">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="DeckyHub Registry">
-<meta property="og:url" content="https://registry.deckyhub.com/">
-<meta property="og:title" content="Steam Deck plugin catalog: 500+ Decky Loader plugins">
-<meta property="og:description" content="Every Decky Loader plugin DeckyHub lists, by category, with downloads, stars and safety badges.">
-<!-- structured-data -->
+<meta property="og:type" content="website"><meta property="og:site_name" content="DeckyHub">
+<meta property="og:url" content="https://registry.deckyhub.com/"><meta property="og:title" content="Add a Steam Deck plugin to DeckyHub">
+<meta property="og:description" content="How to add a Decky Loader plugin to DeckyHub's list, or run your own registry.">
+<meta property="og:image" content="https://deckyhub.com/img/og.jpg"><meta name="twitter:card" content="summary_large_image">
 <style>
-:root{color-scheme:dark;--bg:#10151f;--panel:#182131;--panel2:#1d2839;--line:#2e405a;--text:#eef4ff;--muted:#b6c3d4;--dim:#8a9bb2;--accent:#1d75cc;--accent2:#4b9cf0;--warn:#e8b54a}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+:root{color-scheme:dark;--bg:#10151f;--panel:#182131;--line:#2e405a;--text:#eef4ff;--muted:#b6c3d4;--dim:#8a9bb2;--accent:#1d75cc;--accent2:#4b9cf0;--warn:#e8b54a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--accent2)}
-.wrap{max-width:1100px;margin:auto;padding:0 20px}
-nav{position:sticky;top:0;z-index:5;background:rgba(16,21,31,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;align-items:center;gap:20px;height:56px}
-nav .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--text);text-decoration:none;margin-right:auto}
-nav .brand img{width:26px;height:26px}
-nav a{color:var(--muted);text-decoration:none;font-size:.95rem}nav a:hover{color:var(--text)}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;border:1px solid transparent}
-.btn:hover{background:var(--accent2)}.btn.ghost{background:transparent;border-color:var(--line);color:var(--text)}.btn.ghost:hover{border-color:var(--accent2)}
-header{padding:64px 0 36px;text-align:center;background:radial-gradient(ellipse at top,#1b3254 0%,var(--bg) 65%)}
-header h1{font-size:clamp(2rem,6vw,3.2rem);line-height:1.1;margin:0 0 14px;letter-spacing:-.02em}
-header p{font-size:1.15rem;color:var(--muted);max-width:620px;margin:0 auto 26px}
-.cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
-.stats{display:flex;justify-content:center;gap:36px;margin-top:34px;color:var(--dim);font-size:.9rem}
-.stats strong{display:block;color:var(--text);font-size:1.6rem;line-height:1.2}
-section{padding:56px 0;border-top:1px solid #1c2738}
-h2{font-size:clamp(1.5rem,4vw,2rem);margin:0 0 8px;letter-spacing:-.01em}
-.sub{color:var(--muted);max-width:680px;margin:0 0 28px}
-.tools{display:flex;flex-direction:column;gap:14px;margin-bottom:22px}
-input[type=search]{width:100%;padding:13px 16px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit}
-input[type=search]:focus{outline:2px solid var(--accent2);outline-offset:1px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font:inherit;font-size:.9rem;cursor:pointer}
-.chip:hover{border-color:var(--accent2);color:var(--text)}
-.chip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
-.chip span{opacity:.7;margin-left:4px}
-.catalog{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
-.app{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:border-color .15s,background .15s}
-.app:hover,.app:focus-visible{border-color:var(--accent2);background:var(--panel2)}
-.app small{color:var(--accent2);font-size:.75rem;text-transform:uppercase;letter-spacing:.06em}
-.app strong{font-size:1.05rem;margin-top:2px}
-.app p{margin:6px 0 12px;color:var(--muted);font-size:.92rem;flex:1}
-.app code{font-size:.78rem;color:var(--dim);overflow-wrap:anywhere}
-.app .meta{display:flex;flex-wrap:wrap;gap:6px 12px;margin:0 0 10px;font-size:.78rem;color:var(--muted)}
-.badge{padding:1px 8px;border-radius:999px;border:1px solid currentColor;font-size:.72rem;white-space:nowrap}
-.root{color:#ffb35c}
-.stale{color:#ff8a8a}
-.warn{color:var(--warn)}.fork{color:var(--muted)}.clean{color:#6bcb6b}.ai{color:#c49bff}
-.legend{margin:0 0 18px;color:var(--muted);font-size:.85rem;line-height:1.7}
-.legend .badge{margin-right:4px}
-.legend .stale,.legend .warn,.legend .fork,.legend .clean,.legend .ai{margin-left:8px}
-.tools select{align-self:flex-start;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit;font-size:.9rem}
-.categories{margin:28px 0 0}.categories h3{margin:0 0 10px;font-size:1rem;color:var(--muted)}.categories ul{display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:0;list-style:none}.categories a{display:inline-block;padding:6px 14px;border:1px solid var(--line);border-radius:999px;color:var(--muted);text-decoration:none;font-size:.9rem}.categories a:hover{border-color:var(--accent2);color:var(--text)}.categories span{opacity:.7;margin-left:4px;color:var(--dim)}
-.empty,.status{color:var(--muted);padding:24px 0}
-.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px}
-.card h3{margin:0 0 8px;font-size:1.05rem}.card p{margin:0;color:var(--muted)}
-code{background:#0f1724;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:.88em}
-.app code{background:none;border:0;padding:0}
-.caution{border:1px solid #5a4a22;background:#231e12;border-radius:10px;padding:14px 18px;color:#f1dcaa;font-size:.92rem}
-footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-size:.88rem}
-@media(max-width:640px){.wrap{padding:0 16px}header{padding:40px 0 24px}header h1 br{display:none}nav .hide{display:none}section{padding:40px 0}.cta .btn{flex:1;justify-content:center}.stats{gap:22px}}
-
-/* Shared navigation across deckyhub.com and registry.deckyhub.com. */
-nav.site-nav{position:sticky;top:0;z-index:5;background:rgba(16,21,31,.94);backdrop-filter:blur(8px);border-bottom:1px solid #2e405a}
-nav.site-nav .site-nav-inner{max-width:1100px;margin:auto;padding:0 20px;display:flex;align-items:center;gap:24px;min-height:56px}
-nav.site-nav .site-brand{flex:none;color:#eef4ff;font-weight:700;text-decoration:none}
-nav.site-nav .site-links{display:flex;gap:20px;align-items:center;overflow-x:auto;white-space:nowrap;margin-left:auto;scrollbar-width:thin}
-nav.site-nav .site-links a{color:#b6c3d4;text-decoration:none;font-size:.95rem;padding:16px 0}
-nav.site-nav .site-links a:hover,nav.site-nav .site-links a[aria-current=page]{color:#fff}
-nav.site-nav a:focus-visible{outline:2px solid #4b9cf0;outline-offset:3px}
-@media(max-width:640px){nav.site-nav .site-nav-inner{padding:0 16px;gap:16px}nav.site-nav .site-links{gap:16px}}
+.wrap{max-width:900px;margin:auto;padding:0 20px}
+header{padding:56px 0 24px}
+h1{font-size:clamp(2rem,5vw,2.8rem);line-height:1.15;margin:0 0 12px;letter-spacing:-.02em}
+h2{font-size:1.4rem;margin:36px 0 10px}
+.lead{font-size:1.15rem;color:var(--muted);margin:0 0 20px;max-width:680px}
+.cta{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-block;padding:12px 20px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin:18px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:1.05rem}.card p{margin:0;color:var(--muted);font-size:.95rem}
+code{background:#0f1724;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:.88em;overflow-wrap:anywhere}
+.caution{color:var(--dim);font-size:.9rem}
+footer{margin-top:48px;padding:28px 0;border-top:1px solid var(--line);color:var(--dim);font-size:.88rem}footer .wrap>div+div{margin-top:8px}
+/* site-nav-style */
 </style>
 </head>
 <body>
-<nav class="site-nav" aria-label="Main navigation"><div class="site-nav-inner"><a class="site-brand" href="https://deckyhub.com/">DeckyHub</a><div class="site-links"><a href="https://deckyhub.com/">Home</a><a href="https://registry.deckyhub.com/" aria-current="page">Catalog</a><a href="https://registry.deckyhub.com/editor.html">Registry editor</a><a href="https://deckyhub.com/#install">Install</a><a href="https://deckyhub.com/releases.html">Release notes</a></div></div></nav>
-
-<main>
+<a class="skip" href="#main">Skip to content</a>
+<!-- site-nav: contribute -->
+<main id="main">
 <header><div class="wrap">
-<h1>Plugins for your Steam Deck,<br>in one list.</h1>
-<p>The list behind <a href="https://github.com/mazillka/deckyhub-plugin">DeckyHub</a>'s Discover tab. Every app here installs straight from its author's GitHub releases.</p>
-<div class="cta">
-<a class="btn" href="#catalog">Browse the catalog</a>
-<a class="btn ghost" href="https://github.com/mazillka/deckyhub-plugin#installing-deckyhub">Get DeckyHub</a>
-</div>
-<div class="stats" aria-live="polite"><div><strong id="count">–</strong>plugins</div><div><strong id="cats">–</strong>categories</div><div><strong id="total">–</strong>downloads</div></div>
+<h1>Add a plugin to DeckyHub</h1>
+<p class="lead">The list behind DeckyHub's Discover tab lives here, in <a href="https://github.com/mazillka/deckyhub-registry">mazillka/deckyhub-registry</a>. To browse the <!-- plugin-count --> plugins, each with its own page, go to deckyhub.com. This site is for adding and fixing entries.</p>
+<div class="cta"><a class="btn" href="https://deckyhub.com/plugins/">Browse all plugins</a><a class="btn ghost" href="editor.html">Open the registry editor</a></div>
 </div></header>
-
-<section id="catalog"><div class="wrap">
-<h2>Catalog</h2>
-<p class="sub">Exactly what DeckyHub shows on Discover, loaded live from <a href="https://github.com/mazillka/deckyhub-registry/blob/main/registry/apps.json"><code>registry/apps.json</code></a>. Plugins are suggested by users or found through <a href="https://decky-extended-plugins.beallio.com/">Decky Extended Plugins</a> and <a href="https://safetzahirovic.github.io/decky-plugins-explorer/">Decky Plugins Explorer</a>, and each is checked for a working release before it's added.</p>
-<div class="tools">
-<input type="search" id="q" placeholder="Search by name, description or repository" aria-label="Search plugins">
-<div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
-<select id="sort" aria-label="Sort plugins"><option value="az">A to Z</option><option value="downloads">Most downloaded</option><option value="stars">Most stars</option><option value="updated">Recently updated</option><option value="added">Recently added</option></select>
-</div>
-<p class="legend"><span class="badge root">Runs as root</span> The plugin asks Decky Loader to run its backend as the <code>root</code> user, which can read and change anything on the Deck, including system files, other plugins and your data. Many plugins need it for real reasons (fan or power control, drivers, VPNs, system settings), so it isn't a warning sign on its own. It does mean a bug or a malicious update can do far more harm, so install these only from authors you trust. <span class="badge stale">No release in a year</span> The newest release is over a year old, so it may not work with current SteamOS or Decky Loader. <span class="badge fork">Fork</span> A fork that carries a plugin on after its original stopped (hover it for the original); listed only while it's the active one. <span class="badge ai">AI</span> Its repository has instructions for AI coding assistants (such as <code>CLAUDE.md</code>, <code>AGENTS.md</code>, <code>.cursorrules</code> or <code>.github/copilot-instructions.md</code>), so it's likely developed with AI help (hover it for which). That says nothing about its quality or safety either way, and no badge doesn't mean no AI was used.</p>
-
-<p class="legend">Warnings come from <a href="https://decky-extended-plugins.beallio.com/audit">Decky Extended Plugins' automated audit</a> of the release DeckyHub installs (or a newer pre-release, marked as such). Routine findings like <code>sudo</code>, <code>mount</code> or <code>systemctl</code>, which many plugins need on SteamOS, aren't shown. A warning isn't proof of harm and no warning isn't proof of safety, so check the repository. <span class="badge stale">Blocked by audit</span> The audit found malware or a broken archive. Not recommended for installation. <span class="badge warn">Reads private data</span> Its code reads Steam login data, SSH keys or secrets from the environment. <span class="badge warn">Changes system startup</span> It edits shell profiles, preloads libraries, loads kernel modules or adds device rules, which keep working outside Decky. <span class="badge warn">Code not in its repo</span> The release ZIP has scripts or programs that aren't in its GitHub source, so you can't read what they do. <span class="badge warn">Hidden code</span> It contains encoded or packed code that's hard to read. <span class="badge warn">Skips HTTPS checks</span> It turns off certificate checks, so what it downloads could be tampered with. <span class="badge warn">Runs downloaded scripts</span> It downloads a script and runs it straight away. <span class="badge warn">Known vulnerabilities</span> It bundles libraries with published security flaws.</p>
-<p class="legend" id="scan-legend">Every plugin ZIP DeckyHub can install is <a href="https://github.com/mazillka/deckyhub-registry#how-it-works">virus-scanned</a> every few hours: with <a href="https://www.clamav.net/">ClamAV</a>, an open-source antivirus, and the files inside it with <a href="https://virustotal.github.io/yara/">YARA</a> and <a href="https://github.com/YARAHQ/yara-forge">YARA Forge</a>'s community rules, many of them written for Linux malware. The badge is for the release DeckyHub installs by default (the newest stable one), or a newer pre-release, marked as such. Hover it for each scanner's result, the file and when it was scanned; a plugin without one hasn't been scanned yet. In DeckyHub, a plugin's <strong>Manage</strong> window has the full report and can look the file up on VirusTotal. A clean scan isn't proof of safety, and a match can be a false positive. <span class="badge clean">No threats</span> Neither scanner found anything. <span class="badge stale">Threat found</span> ClamAV matched known malware, or a YARA rule written to catch it matched. Check the repository before installing. <span class="badge warn">Not fully scanned</span> A scanner couldn't look at all of it: the ZIP went past its size limits, some files couldn't be read, or the scan failed. Hover it for why; it's scanned again on the next run.</p>
-<div class="catalog" id="list"><!-- catalog --></div>
-<nav class="categories" aria-label="Browse by category"><h3>Browse by category</h3><ul><!-- categories --></ul></nav>
-</div></section>
 
 <section id="contribute"><div class="wrap">
 <h2>Contribute</h2>
-<p class="sub">Changes land on <code>develop</code> first, then ship to <code>main</code>, which reaches every DeckyHub on its next restart. No app update needed.</p>
+<p class="lead" style="font-size:1rem">Changes land on <code>develop</code> first, then ship to <code>main</code>, which reaches every DeckyHub on its next restart. No app update needed.</p>
 <div class="grid">
 <div class="card"><h3>Suggest a plugin</h3><p>Know a Decky plugin that belongs here? <a href="https://github.com/mazillka/deckyhub-registry/issues/new">Open an issue</a> with its repository.</p></div>
-<div class="card"><h3>Add it yourself</h3><p>Add an entry to <code>registry/apps.json</code> and its row in the README, then open a pull request. CI checks it against the plugin's real releases. <a href="https://github.com/mazillka/deckyhub-registry#adding-a-plugin">How-to</a></p></div>
+<div class="card"><h3>Add it yourself</h3><p>Add an entry to <code>registry/apps.json</code> and its row in the README, then open a pull request. CI checks it against the plugin's real releases. <a href="https://github.com/mazillka/deckyhub-registry#adding-a-plugin">How to add one</a></p></div>
 <div class="card"><h3>Run your own list</h3><p>Fork this repository and add it in DeckyHub under <strong>Settings → Repositories → Custom Registries</strong> as <code>owner/repo</code>.</p></div>
-<div class="card"><h3>Registry editor</h3><p>Prefer a bigger screen? Build or edit a plugin list in your browser and export it as a registry file. Host it anywhere over HTTPS (a GitHub repo works) and add it in DeckyHub under <strong>Settings → Repositories → Custom Registries</strong>. Nothing is uploaded. <a href="editor.html">Open the editor</a></p></div>
+<div class="card"><h3>Registry editor</h3><p>Prefer a bigger screen? Build or edit a plugin list in your browser and export it as a registry file. Host it anywhere over HTTPS and add it as a custom registry. Nothing is uploaded. <a href="editor.html">Open the editor</a></p></div>
 </div>
-<p class="caution" style="margin-top:28px"><strong>Install at your own risk.</strong> DeckyHub only fetches releases from their authors' GitHub repositories. It doesn't make, review or vouch for these plugins and isn't responsible for anything they do to your device or data.</p>
+<p class="caution"><strong>Install at your own risk.</strong> DeckyHub only fetches releases from their authors' GitHub repositories. It doesn't make, review or vouch for these plugins and isn't responsible for anything they do to your device or data.</p>
 </div></section>
-
 </main>
-
-<footer><div class="wrap"><strong>Disclaimer:</strong> Not affiliated with Valve or the Decky Loader project. This list is collected from public GitHub repositories and isn't reviewed for safety; plugins are installed at your own risk, so look at a plugin's repository first. Plugins belong to their respective authors. Many were found through <a href="https://decky-extended-plugins.beallio.com/">Decky Extended Plugins</a> by beallio (see its <a href="https://decky-extended-plugins.beallio.com/audit">security audit</a>) and <a href="https://safetzahirovic.github.io/decky-plugins-explorer/">Decky Plugins Explorer</a> by SafetZahirovic. Registry licensed <a href="https://github.com/mazillka/deckyhub-registry/blob/main/LICENSE.md">GPL-3.0</a>. Part of <a href="https://deckyhub.com/">DeckyHub</a>.</div></footer>
-
-<script>
-const URL_ = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/refs/heads/main/registry/apps.json";
-// The plugins that have their own page on this site (scripts/build_site.py fills it in);
-// a plugin added since the last build links to its repository instead.
-const PAGES = new Set(/* plugin-pages */);
-// Per-plugin downloads, stars, last release, root flag, AI-assistant files and audit warnings, rebuilt every hour by the
-// release-index workflow (scripts/build_release_index.py). The catalog works without it.
-const STATS_URL = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/release-index/stats.json";
-// Warnings from Decky Extended Plugins' audit (see the legend above the catalog): label, hint.
-const WARNINGS = {
-  "blocked": ["Blocked by audit", "The audit found malware or a broken archive. Not recommended for installation."],
-  "private-data": ["Reads private data", "Its code reads Steam login data, SSH keys or secrets from the environment."],
-  "persistence": ["Changes system startup", "It edits shell profiles, preloads libraries, loads kernel modules or adds device rules, which keep working outside Decky."],
-  "not-in-source": ["Code not in its repo", "The release ZIP has scripts or programs that aren't in its GitHub source, so you can't read what they do."],
-  "obfuscated": ["Hidden code", "It contains encoded or packed code that's hard to read."],
-  "no-tls-check": ["Skips HTTPS checks", "It turns off certificate checks, so what it downloads could be tampered with."],
-  "runs-downloads": ["Runs downloaded scripts", "It downloads a script and runs it straight away."],
-  "vulnerable": ["Known vulnerabilities", "It bundles libraries with published security flaws."],
-};
-// ClamAV's and YARA's verdicts on the ZIP each plugin's channels install, per plugin, rebuilt
-// every few hours by the virus-scan workflow (scripts/virus_scan.py). The catalog works without it.
-const SCANS_URL = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/virus-scans/plugins.json";
-// The worse of the two scanners' verdicts (see the scan legend above the catalog): label, class, hint.
-const SCAN_BADGES = {
-  "clean": ["No threats", "clean", "Neither scanner found anything. A clean scan isn't proof of safety."],
-  "infected": ["Threat found", "stale", "A scanner matched known malware. It may be a false positive: check the repository before installing."],
-  "partial": ["Not fully scanned", "warn", "A scanner couldn't look at all of it. It's scanned again on the next run."],
-};
-const SCAN_RESULTS = { clean: "No threats found", infected: "Threat found", incomplete: "Only partly scanned", error: "Couldn't be scanned" };
-const YEAR = 365 * 24 * 60 * 60 * 1000;
-const list = document.getElementById("list"), chips = document.getElementById("chips"), q = document.getElementById("q"), sort = document.getElementById("sort");
-const compact = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
-let apps = [], category = "", stats = {}, scans = {};
-const statsOf = (app) => stats[app.repo.toLowerCase()] || {};
-const downloadsOf = (app) => statsOf(app).downloads;
-const updatedAt = (app) => Date.parse(statsOf(app).updated || "") || 0;
-const relative = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
-function age(time) {
-  const days = Math.round((time - Date.now()) / 86400000);
-  return Math.abs(days) < 31 ? relative.format(days, "day") : Math.abs(days) < 365 ? relative.format(Math.round(days / 30), "month") : relative.format(Math.round(days / 365), "year");
-}
-// A channel's badge kind: infected if either scanner says so, partial if either couldn't finish.
-function scanKind(channel) {
-  const results = [channel.clamav?.result, channel.yara?.result].filter(Boolean);
-  return results.includes("infected") ? "infected" : results.some((result) => result !== "clean") ? "partial" : "clean";
-}
-function scanHint(channel, kind) {
-  const lines = [SCAN_BADGES[kind][2], `${channel.file} (${channel.tag})`];
-  for (const [name, scan] of [["ClamAV", channel.clamav], ["YARA", channel.yara]])
-    lines.push(`${name}: ${scan ? SCAN_RESULTS[scan.result] + (scan.found?.length ? `: ${scan.found.join(", ")}` : "") + (scan.reason ? ` (${scan.reason})` : "") : "not scanned yet"}`);
-  const scannedAt = Math.max(...[channel.clamav, channel.yara].map((scan) => Date.parse(scan?.scannedAt || "") || 0));
-  if (scannedAt) lines.push(`Scanned ${age(scannedAt)}`);
-  return lines.join("\n");
-}
-// The Stable channel's badge, and the Pre-release channel's when it's another ZIP that isn't clean
-// (or the plugin has no stable release).
-function scanBadges(app) {
-  const { stable, prerelease } = scans[app.repo.toLowerCase()] || {}, badges = [];
-  for (const [channel, prefix] of [[stable, ""], [prerelease, "Pre-release: "]]) {
-    if (!channel?.clamav) continue;
-    const kind = scanKind(channel);
-    if (prefix && stable?.clamav && kind === "clean") continue;
-    badges.push(el("span", { className: `badge ${SCAN_BADGES[kind][1]}`, title: scanHint(channel, kind), textContent: prefix + SCAN_BADGES[kind][0] }));
-  }
-  return badges;
-}
-function meta(app) {
-  const { downloads, stars, root, fork, ai = [], warnings = [], prereleaseWarnings = [] } = statsOf(app), updated = updatedAt(app), items = [];
-  if (downloads !== undefined) items.push(el("span", { title: `${downloads.toLocaleString("en")} downloads`, textContent: `↓ ${compact.format(downloads)}` }));
-  if (stars != null) items.push(el("span", { title: `${stars.toLocaleString("en")} GitHub stars`, textContent: `★ ${compact.format(stars)}` }));
-  if (updated) items.push(Date.now() - updated > YEAR
-    ? el("span", { className: "badge stale", title: `Last release ${new Date(updated).toLocaleDateString("en")}`, textContent: "No release in a year" })
-    : el("span", { title: new Date(updated).toLocaleDateString("en"), textContent: `Updated ${age(updated)}` }));
-  if (root) items.push(el("span", { className: "badge root", title: "Its plugin.json asks Decky Loader to run it as root, with full access to the system", textContent: "Runs as root" }));
-  if (fork) items.push(el("span", { className: "badge fork", title: `Fork of ${fork}`, textContent: "Fork" }));
-  if (ai.length) items.push(el("span", { className: "badge ai", title: `Likely developed with AI help: its repository has instructions for AI coding assistants (${ai.join(", ")})`, textContent: "AI" }));
-  for (const [key, prefix] of [...warnings.map((key) => [key, ""]), ...prereleaseWarnings.filter((key) => !warnings.includes(key)).map((key) => [key, "Pre-release: "])]) if (WARNINGS[key])
-    items.push(el("span", { className: `badge ${key === "blocked" ? "stale" : "warn"}`, title: WARNINGS[key][1], textContent: prefix + WARNINGS[key][0] }));
-  items.push(...scanBadges(app));
-  return items.length ? [el("div", { className: "meta" }, ...items)] : [];
-}
-
-function el(tag, props, ...children) {
-  const node = Object.assign(document.createElement(tag), props);
-  node.append(...children);
-  return node;
-}
-
-function render() {
-  const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  const shown = apps.filter((app) => (!category || app.category === category)
-    && words.every((word) => `${app.name} ${app.description || ""} ${app.repo} ${app.category}`.toLowerCase().includes(word)));
-  if (Object.keys(stats).length) document.getElementById("total").textContent = compact.format(apps.reduce((sum, app) => sum + (downloadsOf(app) ?? 0), 0));
-  // apps.json only ever appends, so "Recently added" is its order reversed.
-  if (sort.value === "downloads") shown.sort((a, b) => (downloadsOf(b) ?? -1) - (downloadsOf(a) ?? -1));
-  else if (sort.value === "stars") shown.sort((a, b) => (statsOf(b).stars ?? -1) - (statsOf(a).stars ?? -1));
-  else if (sort.value === "updated") shown.sort((a, b) => updatedAt(b) - updatedAt(a));
-  else if (sort.value === "added") shown.reverse();
-  else shown.sort((a, b) => a.name.localeCompare(b.name));
-  list.replaceChildren(...(shown.length ? shown.map((app) => el("a", { className: "app", href: PAGES.has(app.id) ? `/plugins/${app.id}.html` : `https://github.com/${app.repo}` },
-    el("small", { textContent: app.category }), el("strong", { textContent: app.name }),
-    el("p", { textContent: app.description || "" }), ...meta(app),
-    el("code", { textContent: app.repo }))) : [el("p", { className: "empty", textContent: "No plugins match." })]));
-}
-
-function renderChips() {
-  const counts = apps.reduce((all, app) => ({ ...all, [app.category]: (all[app.category] || 0) + 1 }), {});
-  chips.replaceChildren(...[["", "All", apps.length], ...Object.keys(counts).sort().map((name) => [name, name, counts[name]])].map(([value, label, n]) => {
-    const chip = el("button", { type: "button", className: "chip" }, label, el("span", { textContent: n }));
-    chip.setAttribute("aria-pressed", String(value === category));
-    chip.onclick = () => { category = value; renderChips(); render(); };
-    return chip;
-  }));
-}
-
-fetch(URL_, { cache: "no-store" }).then((r) => { if (!r.ok) throw Error(`HTTP ${r.status}`); return r.json(); }).then((data) => {
-  apps = data.apps;
-  document.getElementById("count").textContent = apps.length;
-  document.getElementById("cats").textContent = new Set(apps.map((app) => app.category)).size;
-  renderChips();
-  render();
-}).catch((error) => list.replaceChildren(el("p", { className: "status", textContent: `Couldn't load the registry (${error.message}).` })));
-q.addEventListener("input", render);
-sort.addEventListener("change", render);
-fetch(STATS_URL, { cache: "no-store" }).then((r) => r.ok ? r.json() : null).then((data) => {
-  if (!data) return;
-  stats = data.plugins;
-  render();
-}).catch(() => {});
-fetch(SCANS_URL, { cache: "no-store" }).then((r) => r.ok ? r.json() : null).then((data) => {
-  if (!data?.plugins) return;
-  scans = data.plugins;
-  render();
-}).catch(() => {});
-</script>
+<!-- site-footer -->
 </body>
 </html>

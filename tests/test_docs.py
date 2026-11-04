@@ -19,7 +19,7 @@ PLUGIN = Path(os.environ.get("DECKYHUB_PLUGIN", ROOT.parent / "deckyhub-plugin")
 class CatalogTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("node"), "needs Node")
     def test_every_page_script_parses(self):
-        # A syntax error leaves the catalog on "Loading…" with nothing in CI to say so.
+        # A syntax error leaves the page broken with nothing in CI to say so.
         for page in (ROOT / "docs").glob("*.html"):
             for index, script in enumerate(re.findall(r"<script>(.*?)</script>", page.read_text(encoding="utf-8"), re.S)):
                 with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as file:
@@ -30,18 +30,14 @@ class CatalogTests(unittest.TestCase):
                     os.unlink(file.name)
                 self.assertEqual(result.returncode, 0, f"{page.name} script {index}: {result.stderr}")
 
-    def test_catalog_explains_every_warning(self):
-        page = (ROOT / "docs" / "index.html").read_text(encoding="utf-8")
-        shown = set(re.findall(r'^  "([\w-]+)": \[', page.split("const WARNINGS = {", 1)[1].split("};", 1)[0], re.M))
-        self.assertEqual(shown, WARNING_IDS)
 
-    def test_catalog_explains_every_virus_scan_badge(self):
-        page = (ROOT / "docs" / "index.html").read_text(encoding="utf-8")
-        badges = re.findall(r'^  "[\w-]+": \["([^"]+)", "(\w+)"', page.split("const SCAN_BADGES = {", 1)[1].split("};", 1)[0], re.M)
-        legend = page.split('id="scan-legend"', 1)[1].split("</p>", 1)[0]
-        self.assertEqual(len(badges), 3)
-        for label, kind in badges:
-            self.assertIn(f'<span class="badge {kind}">{label}</span>', legend)
+@unittest.skipUnless((PLUGIN / "devtools" / "plugin_pages.py").exists(), "needs a deckyhub-plugin checkout")
+class PluginPageTests(unittest.TestCase):
+    def test_plugin_pages_explain_every_warning(self):
+        # deckyhub.com's plugin pages (not this site) show these; a new id here needs its text there.
+        text = (PLUGIN / "devtools" / "plugin_pages.py").read_text(encoding="utf-8")
+        shown = set(re.findall(r'^    "([\w-]+)": \(', text.split("WARNINGS = {", 1)[1].split("\n}", 1)[0], re.M))
+        self.assertEqual(shown, WARNING_IDS)
 
 
 class RegistryFileTests(unittest.TestCase):
