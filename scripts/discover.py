@@ -35,7 +35,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 
 from quality import unfinished
-from validate import API, README, REGISTRY, channel_releases, fetch, fetch_github, github_problems, matching_assets, zip_plugin_name
+from validate import load_registry_apps, API, README, REGISTRY, channel_releases, fetch, fetch_github, github_problems, matching_assets, zip_plugin_name
 
 EXPLORER_URL = "https://raw.githubusercontent.com/SafetZahirovic/decky-plugins-explorer/HEAD/data/plugins.json"
 EXTENDED_URL = "https://decky-extended-plugins.beallio.com"
@@ -254,7 +254,7 @@ def add(entries: list[dict]) -> None:
 
 def main() -> int:
     limit = int(sys.argv[sys.argv.index("--limit") + 1]) if "--limit" in sys.argv else 50
-    apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
+    apps = load_registry_apps(REGISTRY)
     listed = {app["repo"].casefold() for app in apps}
 
     def extended():
