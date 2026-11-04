@@ -4817,6 +4817,267 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["steam-hunter-for-deck"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamos-ddplus-decky",
+      "name": "SteamOS DD+",
+      "description": "Adds optional DD+ 5.1 and 7.1 HDMI profiles without replacing SteamOS audio files.",
+      "repo": "enjihn/steamos-ddplus-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SteamOS DD+"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "junkstore",
+      "name": "Junk-Store",
+      "description": "Transform your gaming experience with Junk-Store - the ultimate solution for seamlessly integrating non-Steam games into your Steam Deck...",
+      "repo": "ebenbruyns/junkstore",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Junk-Store"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ludo",
+      "name": "Ludo",
+      "description": "Sync ROMs, saves and states between RomM and RetroArch",
+      "repo": "rommapp/ludo",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Ludo"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "mudfishdecky",
+      "name": "MudfishDecky",
+      "description": "Control Mudfish VPN from the Steam Deck interface.",
+      "repo": "K1ngst0m/MudfishDecky",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["MudfishDecky"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "optideck-deckdeals",
+      "name": "Deckdeals",
+      "description": "Price history and deal tracking directly on Steam Deck store pages.",
+      "repo": "ebdevag/optideck-deckdeals",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Deckdeals"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "xivomega-decky",
+      "name": "XIVOmega",
+      "description": "Latency Mitigator for the Critically Acclaimed MMORPG Final Fantasy XIV - based on XivMitmLatencyMitigator, XivAlexander and XivMitmDocker.",
+      "repo": "shingonati0n/xivomega-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["XIVOmega"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "gamebridge",
+      "name": "GameBridge",
+      "description": "Unified third-party game library and compatibility manager for SteamOS.",
+      "repo": "FelPikachu/GameBridge",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["GameBridge"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "moddy",
+      "name": "Moddy",
+      "description": "One-click mod installation and management for supported games on Steam Deck.",
+      "repo": "FunkyByte1/Moddy",
+      "category": "Mod Managers",
+      "detect": { "type": "decky-plugin", "names": ["Moddy"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamdeck-input-disabler",
+      "name": "steamdeck-input-disabler",
+      "description": "A plugin that lets you disable the steamdeck gamepad to prevent bugs with in game controller order and emulators not picking up the...",
+      "repo": "BurritoSpray/steamdeck-input-disabler",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["steamdeck-input-disabler"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamback",
+      "name": "Steamback",
+      "description": "Automatic save game snapshot/restore for Steam",
+      "repo": "geeksville/steamback",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Steamback"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "sdh-deckautoupdate",
+      "name": "Deck Auto Update",
+      "description": "Update the steam client on a scheduled basis.",
+      "repo": "AkazaRenn/SDH-DeckAutoUpdate",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Deck Auto Update"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "anydeck",
+      "name": "AnyDeck",
+      "description": "SteamOS handheld control center for AMD x86 devices with native performance modes, display controls, battery limits, RGB, diagnostics,...",
+      "repo": "neokura/AnyDeck",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["AnyDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "reshadeckplus",
+      "name": "Reshadeck+",
+      "description": "A plugin for loading reshade shaders on steam deck",
+      "repo": "jeanbottein/ReshadeckPlus",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Reshadeck+"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-protonvpn",
+      "name": "Proton VPN (Unofficial)",
+      "description": "Unofficial Decky integration for Proton VPN. Not affiliated with or endorsed by Proton AG.",
+      "repo": "acestronautical/decky-protonvpn",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["Proton VPN (Unofficial)"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-openwincontrols",
+      "name": "OpenWinControls",
+      "description": "Remap GPD WinControls buttons (Win 4/5, Mini, Max 2/3) from Game Mode, with an on-screen keyboard to pick keys.",
+      "repo": "TheOmega-hash/decky-openwincontrols",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["OpenWinControls"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "amneziavpn-deckyloader",
+      "name": "Amnezia Deck",
+      "description": "AmneziaWG VPN client: import configs (.conf / vpn://), pick one, connect and disconnect.",
+      "repo": "Algorithm0/AmneziaVPN-DeckyLoader",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Amnezia Deck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-ai-assistant",
+      "name": "AI 助手",
+      "description": "Steamdeck上的AI对话助手",
+      "repo": "YunXi-X/Decky-ai-assistant",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["AI 助手"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "helixsr-decky-armada",
+      "name": "HelixSR Decky Armada",
+      "description": "HelixSR 2.0 settings and original-FSR switching for PRAGMATA on Odin 3 Armada.",
+      "repo": "dawoodtogoo2020-code/HelixSR-Decky-Armada",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["HelixSR Decky Armada"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "timeout-decky-plugin",
+      "name": "Timeout",
+      "description": "Play-time limits, focus modes, and parental controls for Steam Deck.",
+      "repo": "Lakeland97/timeout-decky-plugin",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Timeout"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-4x3",
+      "name": "4:3 Library",
+      "description": "Add a native Steam library tab for 4:3-curated games with cached WSGF evidence.",
+      "repo": "xXJSONDeruloXx/decky-4x3",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["4:3 Library"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "gleipnir",
+      "name": "Gleipnir",
+      "description": "Decky plugin that holds the AYN Thor's battery at 80% while plugged in (Armada OS). Watch-only until a measured on-device test passes.",
+      "repo": "venatrix-ritz/Gleipnir",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Gleipnir"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-neutron",
+      "name": "Decky Neutron",
+      "description": "Neutron route plotting with Spansh and automatic next-waypoint clipboard copying.",
+      "repo": "Livonsky/decky-neutron",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Neutron"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-recents-filter",
+      "name": "Recents Filter",
+      "description": "Filter the Recently Played row: hide library categories and collections, set a playtime minimum, hide games from the Start menu, prefer...",
+      "repo": "BirikuSistema/decky-recents-filter",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Recents Filter"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "cec-volume-osd-decky",
+      "name": "CEC Volume OSD",
+      "description": "Shows confirmed HDMI-CEC volume changes over Steam Home and games without taking Gamescope's performance-overlay plane.",
+      "repo": "enjihn/cec-volume-osd-decky",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["CEC Volume OSD"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-remote",
+      "name": "Decky Remote",
+      "description": "Control SteamOS, upload and download shared files from a paired browser, and open Dolphin in Gaming Mode.",
+      "repo": "dv-89/decky-remote",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Remote"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steambooster-decky",
+      "name": "SteamBooster",
+      "description": "SteamBooster catalog, account valuation, balance topup and game purchase offers.",
+      "repo": "Hokage-git/steambooster-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SteamBooster"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-protondb-collections",
+      "name": "decky-protondb-collections",
+      "description": "Decky plugin: generate Steam collections from ProtonDB badges",
+      "repo": "Lui92/decky-protondb-collections",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["decky-protondb-collections"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-script-assigner-legacy",
+      "name": "Script Assigner",
+      "description": "Assign a launch .sh script to any Steam or non-Steam game instead of typing paths into launch options.",
+      "repo": "JDLKMR/Decky-Script-Assigner-Legacy",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["Script Assigner"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-rom-manager-legacy",
+      "name": "ROM Manager",
+      "description": "Pick a ROM file and apply an EmuDeck-style console profile (Target, Start In, Launch Options) to a non-Steam game shortcut.",
+      "repo": "JDLKMR/Decky-ROM-Manager-Legacy",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["ROM Manager"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
