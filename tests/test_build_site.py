@@ -17,16 +17,18 @@ APPS = [
 STATS = {
     "eugeniosegala/mako": {"downloads": 73981, "stars": 680, "updated": "2026-01-01T00:00:00Z", "root": True, "fork": "orig/mako", "ai": ["CLAUDE.md"], "warnings": ["private-data", "unknown-id"]},
 }
+SHA = "c" * 64
 SCANS = {
-    "eugeniosegala/mako": {"stable": {"tag": "v2", "file": "mako.zip", "clamav": {"result": "clean"}, "yara": {"result": "infected", "found": ["Linux_Test"]}}},
+    "eugeniosegala/mako": {"stable": {"tag": "v2", "file": "mako.zip", "sha256": SHA, "clamav": {"result": "clean", "scannedAt": "2026-11-02T15:07:49Z"}, "yara": {"result": "infected", "found": ["Linux_Test"], "scannedAt": "2026-11-02T15:07:49Z"}}},
 }
+REPORTS = {SHA: {"state": "complete", "flagged": 1, "total": 20, "dataId": "abc123"}}
 
 
 class BuildSiteTests(unittest.TestCase):
     def setUp(self):
         self.out = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.out)
-        build(self.out, APPS, STATS, SCANS)
+        build(self.out, APPS, STATS, SCANS, REPORTS)
 
     def read(self, path):
         return (self.out / path).read_text(encoding="utf-8")
@@ -41,6 +43,24 @@ class BuildSiteTests(unittest.TestCase):
         self.assertNotIn("unknown-id", page)
         self.assertIn('href="/plugins/evil.html"', page)  # more from its category
         self.assertIn("No badges", self.read("plugins/tool.html"))
+
+    def test_plugin_pages_show_the_security_scans(self):
+        page = self.read("plugins/mako-decky.html")
+        for text in ("Security scans", "Stable release", "mako.zip", SHA, "ClamAV", "No threats found", "Threat found (Linux_Test)", "November 2, 2026",
+                     f'href="https://www.virustotal.com/gui/file/{SHA}"', "nothing is uploaded", "1 of 20 engines flagged this file",
+                     'href="https://metadefender.opswat.com/results/file/abc123/regular/overview"'):
+            self.assertIn(text, page)
+        # A plugin that hasn't been scanned says so instead of looking clean.
+        self.assertIn("Not scanned yet", self.read("plugins/tool.html"))
+        self.assertNotIn("virustotal.com/gui/file", self.read("plugins/tool.html"))
+
+    def test_a_report_without_a_safe_id_gets_no_link(self):
+        out = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, out)
+        build(out, APPS, STATS, SCANS, {SHA: {"state": "complete", "flagged": 0, "total": 20, "dataId": '"><script>'}})
+        page = (out / "plugins" / "mako-decky.html").read_text(encoding="utf-8")
+        self.assertIn("0 of 20 engines flagged this file", page)
+        self.assertNotIn("results/file/", page)
 
     def test_shared_navigation_on_catalog_pages(self):
         for path in ("index.html", "editor.html", "plugins/mako-decky.html", "categories/frame-generation.html"):
