@@ -27,7 +27,7 @@ class MetaDefenderTests(unittest.TestCase):
             def request(self, path):
                 if path.startswith("/hash/"):
                     raise urllib.error.HTTPError(path, 404, "missing", {}, None)
-                return {"data_id": "abc", "scan_results": {"progress_percentage": 100, "total_detected_avs": 0, "total_avs": 20}}
+                return {"data_id": "abc", "scan_results": {"progress_percentage": 100, "total_detected_avs": 0, "total_avs": 20, "scan_all_result_i": 0}}
             def upload(self, url, digest):
                 return {"state": "pending", "dataId": "abc"}
         pending = md.process(Client(), self.digest, self.url, {})
@@ -38,6 +38,12 @@ class MetaDefenderTests(unittest.TestCase):
         class Client:
             def request(self, path):
                 return {"data_id": "abc", "scan_results": {"progress_percentage": 100, "total_detected_avs": 0, "total_avs": 0}}
+        self.assertEqual(md.process(Client(), self.digest, self.url, {})["state"], "waiting")
+
+    def test_incomplete_scan_with_zero_detections_is_not_clean(self):
+        class Client:
+            def request(self, path):
+                return {"data_id": "abc", "scan_results": {"progress_percentage": 100, "total_detected_avs": 0, "total_avs": 20, "scan_all_result_i": 12}}
         self.assertEqual(md.process(Client(), self.digest, self.url, {})["state"], "waiting")
 
     def test_upload_checks_hash_before_submission(self):

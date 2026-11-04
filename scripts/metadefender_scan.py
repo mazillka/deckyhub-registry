@@ -85,6 +85,10 @@ def process(client, digest, url, previous):
     flagged, total = scan.get("total_detected_avs"), scan.get("total_avs")
     if not isinstance(flagged, int) or not isinstance(total, int) or total <= 0 or flagged < 0 or flagged > total:
         return {"state": "waiting"}
+    # A zero detection count is not a clean verdict if the service skipped or
+    # could not fully scan the archive (encrypted, size limits, errors, etc.).
+    if flagged == 0 and scan.get("scan_all_result_i") != 0:
+        return {"state": "waiting"}
     return {"state": "complete", "flagged": flagged, "total": total, "dataId": result.get("data_id") or previous.get("dataId"), "scannedAt": scan.get("start_time")}
 
 
