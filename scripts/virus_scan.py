@@ -56,7 +56,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from build_release_index import EXTRA_ENTRIES
-from validate import REGISTRY, matching_assets
+from validate import load_registry_apps, REGISTRY, matching_assets
 
 MAX_RUN_BYTES = 6 * 1024**3
 MAX_BATCH_BYTES = 512 * 1024**2
@@ -464,7 +464,7 @@ def main() -> int:
         # Publishing now would drop every report: keep the last ones instead.
         print("error: no release index to scan", file=sys.stderr)
         return 1
-    entries = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"] + EXTRA_ENTRIES
+    entries = load_registry_apps(REGISTRY) + EXTRA_ENTRIES
     wanted = wanted_assets(indexes, entries)
     kept, todo = plan(wanted, read_json(args.old).get("files") or {}, datetime.now(timezone.utc))
     batches = budget(todo, wanted)

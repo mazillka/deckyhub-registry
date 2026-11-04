@@ -13,7 +13,7 @@ import json
 import subprocess
 import sys
 
-from validate import README, REGISTRY
+from validate import load_registry_apps, README, REGISTRY
 
 SECTION = "## Repositories"
 
@@ -38,7 +38,7 @@ def main() -> int:
     ref = sys.argv[1] if len(sys.argv) > 1 else "origin/develop"
     root = REGISTRY.parent.parent
     apps, readme = show(ref, REGISTRY.relative_to(root).as_posix()), show(ref, README.relative_to(root).as_posix())
-    before = {app["id"] for app in json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]}
+    before = {app["id"] for app in load_registry_apps(REGISTRY)}
     after = {app["id"] for app in json.loads(apps)["apps"]}
     REGISTRY.write_text(apps, encoding="utf-8")
     README.write_text(with_section(README.read_text(encoding="utf-8"), repositories_section(readme)), encoding="utf-8")

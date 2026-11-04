@@ -7,12 +7,11 @@ discover.py skips candidates this flags (a skipped plugin is proposed again once
 grows out of it); run on its own, it lists registry entries that look unfinished for a
 person to judge. It never changes apps.json and always exits 0.
 """
-import json
 import re
 import sys
 from datetime import datetime, timedelta, timezone
 
-from validate import REGISTRY, channel_releases, fetch_github, matching_assets
+from validate import load_registry_apps, REGISTRY, channel_releases, fetch_github, matching_assets
 
 # Give a first release this long before proposing it: brand-new plugins are often
 # test builds, renamed or pulled within days.
@@ -45,7 +44,7 @@ def unfinished(entry: dict, repo: dict, now: datetime) -> list[str]:
 
 
 def main() -> int:
-    apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
+    apps = load_registry_apps(REGISTRY)
     github = fetch_github(list({app["repo"].casefold(): app["repo"] for app in apps}.values()), every_release=True)
     now = datetime.now(timezone.utc)
     flagged = 0

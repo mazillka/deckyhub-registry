@@ -27,6 +27,11 @@ README = ROOT / "README.md"
 API = "https://api.github.com"
 
 
+def load_registry_apps(path: Path) -> list[dict]:
+    """Read the app list shared by the registry tools."""
+    return json.loads(path.read_text(encoding="utf-8"))["apps"]
+
+
 def static_errors(apps: list[dict]) -> list[str]:
     """Clashes between entries. DeckyHub matches installed plugins by detect name, so two
     entries sharing one would fight over the same plugin; "DeckyHub" is reserved."""
@@ -335,7 +340,7 @@ def main() -> int:
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--base-registry", type=str, help="Check live assets only for entries changed from this registry JSON file")
     args = parser.parse_args()
-    apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
+    apps = load_registry_apps(REGISTRY)
     errors, warnings = static_errors(apps) + readme_errors(apps, README.read_text(encoding="utf-8")), []
     if not args.offline:
         live_apps = apps

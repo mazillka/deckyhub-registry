@@ -35,7 +35,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from validate import REGISTRY, channel_releases, fetch, fetch_github, installable_releases, matching_assets, zip_plugin_manifest
+from validate import load_registry_apps, REGISTRY, channel_releases, fetch, fetch_github, installable_releases, matching_assets, zip_plugin_manifest
 
 AUDIT_URL = "https://decky-extended-plugins.beallio.com/audit.json"
 # The audit's rule ID prefixes worth a warning on a card, like Runs as root. Routine ones
@@ -165,7 +165,7 @@ def fork_of(repo: dict) -> str | None:
 
 
 def main() -> int:
-    apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
+    apps = load_registry_apps(REGISTRY)
     entries = apps + EXTRA_ENTRIES
     github = fetch_github(list({entry["repo"].casefold(): entry["repo"] for entry in entries}.values()), every_release=True)
     if len(github) < len(entries) / 2:
