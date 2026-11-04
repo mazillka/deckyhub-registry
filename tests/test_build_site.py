@@ -45,9 +45,18 @@ class BuildSiteTests(unittest.TestCase):
         self.assertIn('aria-current="page">Contribute', index)
         self.assertIn("<footer", index)
 
+    def test_ukrainian_pages_have_their_own_menu_and_link_back(self):
+        index = self.read("uk/index.html")
+        self.assertNotIn("<!-- site-", index)
+        self.assertIn('aria-current="page">Долучитися', index)
+        self.assertIn('href="https://registry.deckyhub.com/" hreflang="en"', index)
+        self.assertIn('href="https://registry.deckyhub.com/uk/editor.html" hreflang="uk"', self.read("editor.html"))
+        self.assertIn('rel="canonical" href="https://registry.deckyhub.com/uk/"', index)
+
     def test_sitemap_lists_only_contributor_pages(self):
         sitemap = self.read("sitemap.xml")
         self.assertIn("<loc>https://registry.deckyhub.com/editor.html</loc>", sitemap)
+        self.assertIn("<loc>https://registry.deckyhub.com/uk/editor.html</loc>", sitemap)
         self.assertNotIn("/plugins/", sitemap)
         self.assertIn("https://deckyhub.com/plugins/", self.read("llms.txt"))
 

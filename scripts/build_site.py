@@ -59,6 +59,7 @@ def llms_txt(count: int) -> str:
         f"- [DeckyHub]({DECKYHUB}): the plugin store itself, and how to install it ({DECKYHUB}llms.txt)",
         f"- [Contribute]({SITE}): suggest a plugin, add it yourself, or run your own list",
         f"- [Registry editor]({SITE}editor.html): build or edit a plugin list in the browser",
+        f"- [Contribute, in Ukrainian]({SITE}uk/): the same page in Ukrainian (українською), with its editor at {SITE}uk/editor.html",
         "- [Plugin list as JSON](https://raw.githubusercontent.com/mazillka/deckyhub-registry/main/registry/apps.json)",
         "- [Suggest a plugin](https://github.com/mazillka/deckyhub-registry/issues/new)", ""])
 
@@ -67,7 +68,12 @@ def build(out: Path, apps: list[dict]) -> None:
     shutil.copytree(ROOT / "docs", out, dirs_exist_ok=True)
     for name in ("index.html", "editor.html", "404.html"):
         page = (out / name).read_text(encoding="utf-8").replace("<!-- plugin-count -->", str(len(apps)))
-        (out / name).write_text(site_shell.apply(page), encoding="utf-8")
+        # The two pages with a Ukrainian twin (docs/uk/) link to it from their menu, and back.
+        twin = name != "404.html"
+        (out / name).write_text(site_shell.apply(page, switch=("Українська", f"{SITE}uk/{'' if name == 'index.html' else name}", "uk") if twin else None), encoding="utf-8")
+        if twin:
+            uk_page = (out / "uk" / name).read_text(encoding="utf-8").replace("<!-- plugin-count -->", str(len(apps)))
+            (out / "uk" / name).write_text(site_shell.apply(uk_page, "uk", ("English", f"{SITE}{'' if name == 'index.html' else name}", "en")), encoding="utf-8")
 
     (out / "plugins").mkdir(exist_ok=True)
     for app in apps:
@@ -79,7 +85,7 @@ def build(out: Path, apps: list[dict]) -> None:
     (out / "llms.txt").write_text(llms_txt(len(apps)), encoding="utf-8")
     today = time.strftime("%Y-%m-%d", time.gmtime())
     (out / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-                                     + "".join(f"<url><loc>{SITE}{path}</loc><lastmod>{today}</lastmod></url>\n" for path in ("", "editor.html")) + "</urlset>\n", encoding="utf-8")
+                                     + "".join(f"<url><loc>{SITE}{path}</loc><lastmod>{today}</lastmod></url>\n" for path in ("", "uk/", "editor.html", "uk/editor.html")) + "</urlset>\n", encoding="utf-8")
 
 
 def main() -> int:
