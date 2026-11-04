@@ -69,14 +69,20 @@ code{background:#0f1724;border:1px solid var(--line);border-radius:4px;padding:1
 .caution{border:1px solid #5a4a22;background:#231e12;border-radius:10px;padding:14px 18px;color:#f1dcaa;font-size:.92rem}
 footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-size:.88rem}
 @media(max-width:640px){.wrap{padding:0 16px}header{padding:40px 0 24px}header h1 br{display:none}nav .hide{display:none}section{padding:40px 0}.cta .btn{flex:1;justify-content:center}.stats{gap:22px}}
+
+/* Shared navigation across deckyhub.com and registry.deckyhub.com. */
+nav.site-nav{position:sticky;top:0;z-index:5;background:rgba(16,21,31,.94);backdrop-filter:blur(8px);border-bottom:1px solid #2e405a}
+nav.site-nav .site-nav-inner{max-width:1100px;margin:auto;padding:0 20px;display:flex;align-items:center;gap:24px;min-height:56px}
+nav.site-nav .site-brand{flex:none;color:#eef4ff;font-weight:700;text-decoration:none}
+nav.site-nav .site-links{display:flex;gap:20px;align-items:center;overflow-x:auto;white-space:nowrap;margin-left:auto;scrollbar-width:thin}
+nav.site-nav .site-links a{color:#b6c3d4;text-decoration:none;font-size:.95rem;padding:16px 0}
+nav.site-nav .site-links a:hover,nav.site-nav .site-links a[aria-current=page]{color:#fff}
+nav.site-nav a:focus-visible{outline:2px solid #4b9cf0;outline-offset:3px}
+@media(max-width:640px){nav.site-nav .site-nav-inner{padding:0 16px;gap:16px}nav.site-nav .site-links{gap:16px}}
 </style>
 </head>
 <body>
-<nav><div class="wrap">
-<a class="brand" href="./"><img src="favicon.svg" alt="">DeckyHub Registry</a>
-<a class="hide" href="#catalog">Catalog</a><a class="hide" href="#contribute">Contribute</a><a href="editor.html">Editor</a>
-<a href="https://github.com/mazillka/deckyhub-registry">GitHub</a>
-</div></nav>
+<nav class="site-nav" aria-label="Main navigation"><div class="site-nav-inner"><a class="site-brand" href="https://deckyhub.com/">DeckyHub</a><div class="site-links"><a href="https://deckyhub.com/">Home</a><a href="https://registry.deckyhub.com/" aria-current="page">Catalog</a><a href="https://registry.deckyhub.com/editor.html">Registry editor</a><a href="https://deckyhub.com/#install">Install</a><a href="https://deckyhub.com/releases.html">Release notes</a></div></div></nav>
 
 <main>
 <header><div class="wrap">
@@ -84,7 +90,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--dim);font-siz
 <p>The list behind <a href="https://github.com/mazillka/deckyhub-plugin">DeckyHub</a>'s Discover tab. Every app here installs straight from its author's GitHub releases.</p>
 <div class="cta">
 <a class="btn" href="#catalog">Browse the catalog</a>
-<a class="btn ghost" href="https://github.com/mazillka/deckyhub-plugin/releases/latest">Get DeckyHub</a>
+<a class="btn ghost" href="https://github.com/mazillka/deckyhub-plugin#installing-deckyhub">Get DeckyHub</a>
 </div>
 <div class="stats" aria-live="polite"><div><strong id="count">–</strong>plugins</div><div><strong id="cats">–</strong>categories</div><div><strong id="total">–</strong>downloads</div></div>
 </div></header>
