@@ -44,6 +44,12 @@ class BuildSiteTests(unittest.TestCase):
         self.assertIn('href="/plugins/evil.html"', page)  # more from its category
         self.assertIn("No badges", self.read("plugins/tool.html"))
 
+    def test_a_long_repository_name_gets_a_full_width_tile_that_wraps(self):
+        page = self.read("plugins/mako-decky.html")
+        self.assertIn('<li class="wide"><strong><a href="https://github.com/eugeniosegala/MAKO">eugeniosegala/MAKO</a></strong>Repository</li>', page)
+        self.assertIn(".facts li.wide{grid-column:1/-1}", page)
+        self.assertIn("overflow-wrap:anywhere", page.split(".facts li{", 1)[1].split("}", 1)[0])
+
     def test_plugin_pages_show_the_security_scans(self):
         page = self.read("plugins/mako-decky.html")
         for text in ("Security scans", "Stable release", "mako.zip", SHA, "ClamAV", "No threats found", "Threat found (Linux_Test)", "November 2, 2026",
