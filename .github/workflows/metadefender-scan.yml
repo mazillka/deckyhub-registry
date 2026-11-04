@@ -1,0 +1,54 @@
+name: Registry MetaDefender reports
+
+on:
+  schedule:
+    - cron: "47 5 * * *"
+  push:
+    branches: [develop]
+    paths:
+      - ".github/workflows/metadefender-scan.yml"
+      - "scripts/metadefender_scan.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: registry-metadefender-reports
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Update MetaDefender reports
+        env:
+          METADEFENDER_API_KEY: ${{ secrets.METADEFENDER_API_KEY }}
+        run: |
+          if [ -z "$METADEFENDER_API_KEY" ]; then
+            echo "::notice::Set the registry METADEFENDER_API_KEY secret to enable public ZIP submissions."
+            exit 0
+          fi
+          git fetch --depth 1 origin virus-scans
+          git show FETCH_HEAD:scans.json > "$RUNNER_TEMP/scans.json"
+          if git fetch --depth 1 origin metadefender-reports; then
+            git show FETCH_HEAD:reports.json > "$RUNNER_TEMP/reports.json"
+            git branch metadefender-reports FETCH_HEAD
+          fi
+          python3 scripts/metadefender_scan.py "$RUNNER_TEMP/scans.json" "$RUNNER_TEMP/reports.json"
+      - name: Publish reports
+        run: |
+          [ -f "$RUNNER_TEMP/reports.json" ] || exit 0
+          if git show-ref --verify --quiet refs/heads/metadefender-reports; then
+            git switch metadefender-reports
+          else
+            git switch --orphan metadefender-reports
+          fi
+          cp "$RUNNER_TEMP/reports.json" reports.json
+          git add reports.json
+          git diff --cached --quiet && exit 0
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -qm "Update MetaDefender reports"
+          git push origin HEAD:refs/heads/metadefender-reports
