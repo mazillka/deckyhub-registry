@@ -34,6 +34,7 @@ SITE = "https://registry.deckyhub.com/"
 DECKYHUB = "https://deckyhub.com/"
 STATS_URL = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/release-index/stats.json"
 SCANS_URL = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/virus-scans/plugins.json"
+METADEFENDER_URL = "https://raw.githubusercontent.com/mazillka/deckyhub-registry/metadefender-reports/reports.json"
 SCAN_LABELS = {"clean": ("No threats", "clean"), "infected": ("Threat found", "stale"), "partial": ("Not fully scanned", "warn")}
 SCAN_RESULTS = {"clean": "no threats found", "infected": "threat found", "incomplete": "only partly scanned", "error": "couldn't be scanned"}
 
@@ -65,7 +66,10 @@ def compact(number: int) -> str:
 
 
 def nice_date(iso: str | None) -> str:
-    return time.strftime("%B %-d, %Y", time.strptime(iso[:10], "%Y-%m-%d")) if iso else ""
+    if not iso:
+        return ""
+    day = time.strptime(iso[:10], "%Y-%m-%d")
+    return time.strftime("%B ", day) + f"{day.tm_mday}, {day.tm_year}"  # %-d isn't portable (Windows)
 
 
 def scan_kind(channel: dict) -> str:
@@ -97,6 +101,7 @@ h1{font-size:clamp(1.9rem,5vw,2.6rem);line-height:1.15;margin:0 0 10px}h2{font-s
 .list a:hover{border-color:var(--accent2)}.list small{display:block;color:var(--muted);margin-top:4px}
 code{background:#0f1724;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:.88em;overflow-wrap:anywhere}
 .note{color:var(--dim);font-size:.9rem}
+table.scans{width:100%;border-collapse:collapse;font-size:.92rem;margin:0 0 18px}.scans caption{text-align:left;color:var(--muted);padding:6px 0}.scans th,.scans td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}.scans th{color:var(--dim);font-weight:600}
 footer{margin-top:48px;padding:28px 0;border-top:1px solid var(--line);color:var(--dim);font-size:.88rem}
 /* Shared navigation across deckyhub.com and registry.deckyhub.com. */
 nav.site-nav{position:sticky;top:0;z-index:5;background:rgba(16,21,31,.94);backdrop-filter:blur(8px);border-bottom:1px solid #2e405a}
@@ -169,7 +174,44 @@ def badges_of(app: dict, stats: dict, scans: dict, warnings: dict) -> list[str]:
     return items
 
 
-def plugin_page(app: dict, stats: dict, scans: dict, warnings: dict, others: list[dict]) -> str:
+def security_scans(scans: dict, reports: dict) -> str:
+    """One table per scanned ZIP (the stable release's, and a pre-release's if it's another file):
+    ClamAV and YARA from the registry's own scans, VirusTotal looked up by SHA-256 (nothing is
+    uploaded), MetaDefender from its published report once it has one."""
+    def when(scan: dict) -> str:
+        return nice_date(scan["scannedAt"]) if scan.get("scannedAt") else "date unknown"
+
+    tables, seen = [], set()
+    for channel, prefix in ((scans.get("stable"), "Stable release"), (scans.get("prerelease"), "Pre-release")):
+        if not channel or not channel.get("clamav") or channel.get("sha256") in seen and channel.get("sha256"):
+            continue
+        sha = channel.get("sha256") or ""
+        valid = bool(re.fullmatch(r"[0-9a-fA-F]{64}", sha))
+        seen.add(sha)
+        rows = []
+        for name, scan in (("ClamAV", channel.get("clamav")), ("YARA", channel.get("yara"))):
+            if not scan:
+                rows.append(f"<tr><td>{name}</td><td>Not scanned yet</td><td></td></tr>")
+                continue
+            result = SCAN_RESULTS.get(scan["result"], scan["result"]) + (f" ({', '.join(scan['found'])})" if scan.get("found") else "")
+            rows.append(f"<tr><td>{name}</td><td>{escape(result[:1].upper() + result[1:])}</td><td>{escape(when(scan))}</td></tr>")
+        if valid:
+            rows.append(f'<tr><td>VirusTotal</td><td><a href="https://www.virustotal.com/gui/file/{sha.lower()}">Look this file up</a> (by its SHA-256, nothing is uploaded)</td><td></td></tr>')
+            report = (reports or {}).get(sha.lower()) or {}
+            if report.get("state") == "complete" and isinstance(report.get("flagged"), int) and isinstance(report.get("total"), int):
+                data_id = report.get("dataId")
+                link = f' (<a href="https://metadefender.opswat.com/results/file/{escape(data_id)}/regular/overview">report</a>)' if isinstance(data_id, str) and re.fullmatch(r"[A-Za-z0-9_-]+", data_id) else ""
+                rows.append(f"<tr><td>MetaDefender</td><td>{report['flagged']} of {report['total']} engines flagged this file{link}</td><td></td></tr>")
+            else:
+                rows.append("<tr><td>MetaDefender</td><td>No report yet</td><td></td></tr>")
+        detail = f'{escape(prefix)}: <code>{escape(channel.get("file", ""))}</code> ({escape(channel.get("tag", ""))})' + (f"<br><small>SHA-256 <code>{sha.lower()}</code></small>" if valid else "")
+        tables.append(f'<table class="scans"><caption>{detail}</caption><thead><tr><th>Scanner</th><th>Result</th><th>Scanned</th></tr></thead><tbody>{"".join(rows)}</tbody></table>')
+    if not tables:
+        return "<p>Not scanned yet. The registry scans every ZIP it offers a few times a day, so a new release shows up here soon.</p>"
+    return "".join(tables)
+
+
+def plugin_page(app: dict, stats: dict, scans: dict, warnings: dict, others: list[dict], reports: dict | None = None) -> str:
     name, repo, category, description = app["name"], app["repo"], app["category"], app.get("description") or ""
     repo_url = f"https://github.com/{repo}"
     trail, trail_data = crumbs(("Catalog", "/"), (category, f"/categories/{slug(category)}.html"), (name, None))
@@ -191,6 +233,9 @@ def plugin_page(app: dict, stats: dict, scans: dict, warnings: dict, others: lis
 <p>{escape(name)} is a <a href="https://decky.xyz/">Decky Loader</a> plugin. With <a href="{DECKYHUB}">DeckyHub</a> installed, open DeckyHub's <strong>Discover</strong> tab in Gaming Mode, search for <strong>{escape(name)}</strong> and press <strong>Install</strong>. DeckyHub installs the latest release from <a href="{escape(repo_url)}">{escape(repo)}</a> through Decky Loader, and tells you when there's an update.</p>
 <h2>Safety information</h2>
 {"<ul class='badges'>" + "".join(badges) + "</ul>" if badges else "<p>No badges: it doesn't run as root, and no audit warnings or virus scan findings are known for it.</p>"}
+<h2>Security scans</h2>
+<p>Every ZIP DeckyHub offers is scanned with ClamAV and with YARA rules (YARA Forge's core set), and the same scans are shown in the app. VirusTotal and MetaDefender results are matched by the file's SHA-256, so the file itself is never uploaded.</p>
+{security_scans(scans, reports or {})}
 <p class="note">DeckyHub doesn't make, review or vouch for {escape(name)}; it installs at your own risk. Check its repository before installing.</p>
 {f'<h2>More {escape(category)} plugins</h2><ul class="list">' + "".join(f'<li><a href="/plugins/{escape(other["id"])}.html">{escape(other["name"])}<small>{escape(other.get("description") or "")}</small></a></li>' for other in related) + "</ul>" if related else ""}"""
     data = {
@@ -241,7 +286,7 @@ def llms_txt(apps: list[dict], categories: dict[str, list[dict]]) -> str:
     return "\n".join(lines)
 
 
-def build(out: Path, apps: list[dict], stats: dict, scans: dict) -> None:
+def build(out: Path, apps: list[dict], stats: dict, scans: dict, reports: dict | None = None) -> None:
     shutil.copytree(ROOT / "docs", out, dirs_exist_ok=True)
     index = out / "index.html"
     html = index.read_text(encoding="utf-8")
@@ -253,7 +298,7 @@ def build(out: Path, apps: list[dict], stats: dict, scans: dict) -> None:
     (out / "plugins").mkdir(exist_ok=True)
     for app in apps:
         key = app["repo"].casefold()
-        (out / "plugins" / f"{app['id']}.html").write_text(plugin_page(app, stats.get(key) or {}, scans.get(key) or {}, warnings, categories[app["category"]]), encoding="utf-8")
+        (out / "plugins" / f"{app['id']}.html").write_text(plugin_page(app, stats.get(key) or {}, scans.get(key) or {}, warnings, categories[app["category"]], reports), encoding="utf-8")
     (out / "categories").mkdir(exist_ok=True)
     for category, members in categories.items():
         (out / "categories" / f"{slug(category)}.html").write_text(category_page(category, members, stats), encoding="utf-8")
@@ -282,7 +327,7 @@ def build(out: Path, apps: list[dict], stats: dict, scans: dict) -> None:
 def main() -> int:
     out = Path(sys.argv[1] if len(sys.argv) > 1 else "_site")
     apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
-    build(out, apps, fetch_json(STATS_URL, "plugins"), fetch_json(SCANS_URL, "plugins"))
+    build(out, apps, fetch_json(STATS_URL, "plugins"), fetch_json(SCANS_URL, "plugins"), fetch_json(METADEFENDER_URL, "reports"))
     print(f"{len(apps)} plugin pages written to {out}")
     return 0
 
