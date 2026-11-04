@@ -20,7 +20,7 @@ class CatalogTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("node"), "needs Node")
     def test_every_page_script_parses(self):
         # A syntax error leaves the page broken with nothing in CI to say so.
-        for page in (ROOT / "docs").glob("*.html"):
+        for page in (ROOT / "docs").rglob("*.html"):
             for index, script in enumerate(re.findall(r"<script>(.*?)</script>", page.read_text(encoding="utf-8"), re.S)):
                 with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as file:
                     file.write(script)
