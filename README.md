@@ -48,6 +48,9 @@ Every plugin ZIP DeckyHub can install is also scanned for viruses with [ClamAV](
 
 New plugins are found automatically too. Every day the [discover workflow](.github/workflows/discover.yml) runs [`scripts/discover.py`](scripts/discover.py) over two community catalogs, [Decky Plugins Explorer](https://safetzahirovic.github.io/decky-plugins-explorer/)'s nightly list of every public repository with a Decky `plugin.json` and [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) (the Decky store plus community plugins), and our own GitHub search: repositories tagged or named like Decky plugins (`topic:decky-plugin`, `decky in:name` and a few more) with a `plugin.json` at their root. The search keeps discovery working if both catalogs go away. Plugins that aren't listed yet, pass the same checks as `validate.py` (on their newest stable release, else their newest pre-release, so plugins with pre-releases only are found too) and don't look unfinished ([`scripts/quality.py`](scripts/quality.py): a first release under 14 days old, no stars and under 10 downloads, a `0.0.x` version or no description; those are tried again later) are opened as a pull request against `develop`, at most 50 at a time. Nothing is merged without review.
 
+
+The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up public plugin ZIPs by SHA-256 and uploads the ZIP to MetaDefender Cloud if it has no report. Uploaded files are shared with that service. It works through the backlog within the API quota and publishes separate results on `metadefender-reports`; missing, pending, oversized, or failed scans are not clean verdicts. Set the registry's `METADEFENDER_API_KEY` secret to enable it.
+
 ## Repositories
 
 | Tool | Category | Repository |
