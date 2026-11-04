@@ -15,12 +15,16 @@
 [![virus scan](https://img.shields.io/github/last-commit/mazillka/deckyhub-registry/virus-scans?label=virus%20scan&color=1d75cc)](https://github.com/mazillka/deckyhub-registry/tree/virus-scans)
 [![discover](https://github.com/mazillka/deckyhub-registry/actions/workflows/discover.yml/badge.svg)](https://github.com/mazillka/deckyhub-registry/actions/workflows/discover.yml)
 
-[**Browse the catalog**](https://registry.deckyhub.com/) · [Registry editor](https://registry.deckyhub.com/editor.html) · [Get DeckyHub](https://github.com/mazillka/deckyhub-plugin/releases/latest) · [Suggest a plugin](https://github.com/mazillka/deckyhub-registry/issues/new)
+[**Browse the catalog**](https://registry.deckyhub.com/) · [Registry editor](https://registry.deckyhub.com/editor.html) · [Get DeckyHub](https://github.com/mazillka/deckyhub-plugin#installing-deckyhub) · [Suggest a plugin](https://github.com/mazillka/deckyhub-registry/issues/new)
 
 </div>
 
 > [!CAUTION]
 > **DeckyHub only fetches releases from their authors' GitHub repositories. It doesn't make, review or vouch for these plugins and isn't responsible for anything they do to your device or data. Install at your own risk.**
+
+## Installing DeckyHub
+
+New to DeckyHub? The [installation guide](https://github.com/mazillka/deckyhub-plugin#installing-deckyhub) covers the Desktop Mode installer and the options available when Decky Loader is already installed. The Desktop Mode installer explains each step and shows progress as it installs.
 
 ## How it works
 

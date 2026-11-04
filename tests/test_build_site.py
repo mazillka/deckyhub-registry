@@ -42,6 +42,12 @@ class BuildSiteTests(unittest.TestCase):
         self.assertIn('href="/plugins/evil.html"', page)  # more from its category
         self.assertIn("No badges", self.read("plugins/tool.html"))
 
+    def test_shared_navigation_on_catalog_pages(self):
+        for path in ("index.html", "editor.html", "plugins/mako-decky.html", "categories/frame-generation.html"):
+            page = self.read(path)
+            for link in ("https://deckyhub.com/", "https://registry.deckyhub.com/", "https://registry.deckyhub.com/editor.html", "https://deckyhub.com/#install", "https://deckyhub.com/releases.html"):
+                self.assertIn(f'href="{link}"', page, path)
+
     def test_text_from_the_list_is_escaped(self):
         page = self.read("plugins/evil.html")
         self.assertNotIn("<img src=x", page)

@@ -97,7 +97,17 @@ h1{font-size:clamp(1.9rem,5vw,2.6rem);line-height:1.15;margin:0 0 10px}h2{font-s
 .list a:hover{border-color:var(--accent2)}.list small{display:block;color:var(--muted);margin-top:4px}
 code{background:#0f1724;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:.88em;overflow-wrap:anywhere}
 .note{color:var(--dim);font-size:.9rem}
-footer{margin-top:48px;padding:28px 0;border-top:1px solid var(--line);color:var(--dim);font-size:.88rem}"""
+footer{margin-top:48px;padding:28px 0;border-top:1px solid var(--line);color:var(--dim);font-size:.88rem}
+/* Shared navigation across deckyhub.com and registry.deckyhub.com. */
+nav.site-nav{position:sticky;top:0;z-index:5;background:rgba(16,21,31,.94);backdrop-filter:blur(8px);border-bottom:1px solid #2e405a}
+nav.site-nav .site-nav-inner{max-width:1100px;margin:auto;padding:0 20px;display:flex;align-items:center;gap:24px;min-height:56px}
+nav.site-nav .site-brand{flex:none;color:#eef4ff;font-weight:700;text-decoration:none}
+nav.site-nav .site-links{display:flex;gap:20px;align-items:center;overflow-x:auto;white-space:nowrap;margin-left:auto;scrollbar-width:thin}
+nav.site-nav .site-links a{color:#b6c3d4;text-decoration:none;font-size:.95rem;padding:16px 0}
+nav.site-nav .site-links a:hover,nav.site-nav .site-links a[aria-current=page]{color:#fff}
+nav.site-nav a:focus-visible{outline:2px solid #4b9cf0;outline-offset:3px}
+@media(max-width:640px){nav.site-nav .site-nav-inner{padding:0 16px;gap:16px}nav.site-nav .site-links{gap:16px}}
+"""
 
 
 def page(title: str, description: str, path: str, body: str, data: list[str]) -> str:
@@ -118,7 +128,7 @@ def page(title: str, description: str, path: str, body: str, data: list[str]) ->
 <style>{STYLE}</style>
 </head>
 <body>
-<nav><div class="wrap"><a class="brand" href="/">DeckyHub Registry</a><a href="/#catalog">Catalog</a><a href="{DECKYHUB}">Get DeckyHub</a></div></nav>
+<nav class="site-nav" aria-label="Main navigation"><div class="site-nav-inner"><a class="site-brand" href="https://deckyhub.com/">DeckyHub</a><div class="site-links"><a href="https://deckyhub.com/">Home</a><a href="https://registry.deckyhub.com/" aria-current="page">Catalog</a><a href="https://registry.deckyhub.com/editor.html">Registry editor</a><a href="https://deckyhub.com/#install">Install</a><a href="https://deckyhub.com/releases.html">Release notes</a></div></div></nav>
 <main><div class="wrap">
 {body}
 </div></main>
