@@ -592,6 +592,35 @@ The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up pu
 | DiscordDeck | Game Libraries | [Lexodeus/DiscordDeck](https://github.com/Lexodeus/DiscordDeck) |
 | Opti2XMX | Frame Generation | [FlightDan/Opti2XMX](https://github.com/FlightDan/Opti2XMX) |
 | steam-hunter-for-deck | Game Libraries | [KimaCuda/decky-steamhunter](https://github.com/KimaCuda/decky-steamhunter) |
+| SteamOS DD+ | Utilities | [enjihn/steamos-ddplus-decky](https://github.com/enjihn/steamos-ddplus-decky) |
+| Junk-Store | Game Libraries | [ebenbruyns/junkstore](https://github.com/ebenbruyns/junkstore) |
+| Ludo | Game Libraries | [rommapp/ludo](https://github.com/rommapp/ludo) |
+| MudfishDecky | Customization | [K1ngst0m/MudfishDecky](https://github.com/K1ngst0m/MudfishDecky) |
+| Deckdeals | Utilities | [ebdevag/optideck-deckdeals](https://github.com/ebdevag/optideck-deckdeals) |
+| XIVOmega | Utilities | [shingonati0n/xivomega-decky](https://github.com/shingonati0n/xivomega-decky) |
+| GameBridge | Launch Options | [FelPikachu/GameBridge](https://github.com/FelPikachu/GameBridge) |
+| Moddy | Mod Managers | [FunkyByte1/Moddy](https://github.com/FunkyByte1/Moddy) |
+| steamdeck-input-disabler | Controllers | [BurritoSpray/steamdeck-input-disabler](https://github.com/BurritoSpray/steamdeck-input-disabler) |
+| Steamback | Utilities | [geeksville/steamback](https://github.com/geeksville/steamback) |
+| Deck Auto Update | Utilities | [AkazaRenn/SDH-DeckAutoUpdate](https://github.com/AkazaRenn/SDH-DeckAutoUpdate) |
+| AnyDeck | Performance | [neokura/AnyDeck](https://github.com/neokura/AnyDeck) |
+| Reshadeck+ | Utilities | [jeanbottein/ReshadeckPlus](https://github.com/jeanbottein/ReshadeckPlus) |
+| Proton VPN (Unofficial) | Launch Options | [acestronautical/decky-protonvpn](https://github.com/acestronautical/decky-protonvpn) |
+| OpenWinControls | Controllers | [TheOmega-hash/decky-openwincontrols](https://github.com/TheOmega-hash/decky-openwincontrols) |
+| Amnezia Deck | Utilities | [Algorithm0/AmneziaVPN-DeckyLoader](https://github.com/Algorithm0/AmneziaVPN-DeckyLoader) |
+| AI 助手 | Utilities | [YunXi-X/Decky-ai-assistant](https://github.com/YunXi-X/Decky-ai-assistant) |
+| HelixSR Decky Armada | Frame Generation | [dawoodtogoo2020-code/HelixSR-Decky-Armada](https://github.com/dawoodtogoo2020-code/HelixSR-Decky-Armada) |
+| Timeout | Utilities | [Lakeland97/timeout-decky-plugin](https://github.com/Lakeland97/timeout-decky-plugin) |
+| 4:3 Library | Game Libraries | [xXJSONDeruloXx/decky-4x3](https://github.com/xXJSONDeruloXx/decky-4x3) |
+| Gleipnir | Performance | [venatrix-ritz/Gleipnir](https://github.com/venatrix-ritz/Gleipnir) |
+| Decky Neutron | Utilities | [Livonsky/decky-neutron](https://github.com/Livonsky/decky-neutron) |
+| Recents Filter | Game Libraries | [BirikuSistema/decky-recents-filter](https://github.com/BirikuSistema/decky-recents-filter) |
+| CEC Volume OSD | Performance | [enjihn/cec-volume-osd-decky](https://github.com/enjihn/cec-volume-osd-decky) |
+| Decky Remote | Utilities | [dv-89/decky-remote](https://github.com/dv-89/decky-remote) |
+| SteamBooster | Utilities | [Hokage-git/steambooster-decky](https://github.com/Hokage-git/steambooster-decky) |
+| decky-protondb-collections | Launch Options | [Lui92/decky-protondb-collections](https://github.com/Lui92/decky-protondb-collections) |
+| Script Assigner | Launch Options | [JDLKMR/Decky-Script-Assigner-Legacy](https://github.com/JDLKMR/Decky-Script-Assigner-Legacy) |
+| ROM Manager | Launch Options | [JDLKMR/Decky-ROM-Manager-Legacy](https://github.com/JDLKMR/Decky-ROM-Manager-Legacy) |
 
 ## Where the plugins come from
 
