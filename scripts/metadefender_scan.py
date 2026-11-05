@@ -101,7 +101,10 @@ def main(scans_path, reports_path):
         if re.fullmatch(r"[0-9a-f]{64}", digest) and re.fullmatch(r"https://github\.com/[^/]+/[^/]+/releases/download/[^/]+/[^/?#]+", url):
             wanted.setdefault(digest, url)
     client = MetaDefender(os.environ["METADEFENDER_API_KEY"])
-    for digest in sorted(wanted, key=lambda value: reports.get(value, {}).get("checkedAt", 0)):
+    # Pending uploads first: they only need one poll each, and new hashes (never checked, so
+    # checkedAt 0) would otherwise take the whole daily budget until every one was seen.
+    order = lambda value: (reports.get(value, {}).get("state") != "pending", reports.get(value, {}).get("checkedAt", 0))
+    for digest in sorted(wanted, key=order):
         previous = reports.get(digest, {})
         if previous.get("state") in {"complete", "unsupported"}:
             continue
