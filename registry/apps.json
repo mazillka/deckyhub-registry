@@ -252,7 +252,7 @@
       "repo": "ValentineBSAA/Game-Theme-Music",
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["Game Theme Music"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source", "screenshots"] }
     },
     {
       "id": "resonadeck",
@@ -1117,7 +1117,7 @@
       "repo": "wheaney/decky-XRGaming",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["XR Gaming"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source", "aarch64"] }
     },
     {
       "id": "simpledeckytdp",
@@ -1189,15 +1189,6 @@
       "repo": "Hooandee/decky-colores",
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["Colores"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
-      "id": "bc250-steamos-real-toolkit",
-      "name": "BC-250 FSR4 Launch Options",
-      "description": "Big Picture controls for the BC-250 SteamOS toolkit.",
-      "repo": "rpf16rj/bc250-steamos-real-toolkit",
-      "category": "Performance",
-      "detect": { "type": "decky-plugin", "names": ["BC-250 FSR4 Launch Options"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
@@ -1306,15 +1297,6 @@
       "repo": "spacemeowx2/rabbit-digger-pro",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Rabbit Digger Pro"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
-      "id": "playhub-metadata",
-      "name": "Playhub Metadata",
-      "description": "Add clean game metadata, Steam activity news, RetroAchievements, RPCS3 (PS3) trophies and optional Xbox achievements to non-Steam games...",
-      "repo": "LoZazaMastro/Playhub-Metadata",
-      "category": "Game Libraries",
-      "detect": { "type": "decky-plugin", "names": ["Playhub Metadata"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
@@ -2368,7 +2350,7 @@
       "repo": "elyarim/Deckamine",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Deckamine"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": ["deckamine.zip"], "exclude": ["source"] }
     },
     {
       "id": "network-manager",
@@ -2893,15 +2875,6 @@
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
-      "id": "decky-chen",
-      "name": "decky-chen",
-      "description": "Session Guardian: track your current game session, daily playtime, and get break reminders.",
-      "repo": "evachxji/decky-chen",
-      "category": "Game Libraries",
-      "detect": { "type": "decky-plugin", "names": ["decky-chen"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
       "id": "deckstream",
       "name": "DeckStream",
       "description": "DeckStream Gaming Mode companion: manage remote mounts, local cache, performance presets, and game streaming.",
@@ -3208,15 +3181,6 @@
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
-      "id": "launch-curtain",
-      "name": "Launch Curtain",
-      "description": "A Windows launch curtain for Steam Big Picture with per-game artwork, iiDB Soundbites, and Modern or Classic launch modes.",
-      "repo": "LoZazaMastro/Launch-Curtain",
-      "category": "Utilities",
-      "detect": { "type": "decky-plugin", "names": ["Launch Curtain"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
       "id": "forza-dualsense-decky",
       "name": "Forza DualSense Haptics",
       "description": "Forza telemetry-driven DualSense adaptive triggers with live traction feedback.",
@@ -3349,15 +3313,6 @@
       "repo": "Ken5998/armada-box64",
       "category": "Launch Options",
       "detect": { "type": "decky-plugin", "names": ["Armada Box64"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
-      "id": "playhub-surround",
-      "name": "Playhub Surround",
-      "description": "A friendly surround speaker checker for Decky Loader with Playhub styling, game-inspired tones, and automatic language matching.",
-      "repo": "LoZazaMastro/Playhub-Surround",
-      "category": "Utilities",
-      "detect": { "type": "decky-plugin", "names": ["Playhub Surround"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
@@ -3538,15 +3493,6 @@
       "repo": "olivervbk/decky-macro",
       "category": "Controllers",
       "detect": { "type": "decky-plugin", "names": ["Decky Macro"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
-      "id": "playhub-notifications",
-      "name": "Playhub Notifications",
-      "description": "Replace Steam Big Picture toasts and style the system volume overlay with seven native Playhub themes.",
-      "repo": "LoZazaMastro/Playhub-Notifications",
-      "category": "Customization",
-      "detect": { "type": "decky-plugin", "names": ["Playhub Notifications"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
@@ -3799,15 +3745,6 @@
       "repo": "Lexodeus/DeckWebBrowser",
       "category": "Controllers",
       "detect": { "type": "decky-plugin", "names": ["Web Browser"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
-      "id": "dualsensedeck",
-      "name": "DualSenseDeck",
-      "description": "DualSense / DualSense Edge adaptive triggers, lightbar, mic LED and DSX mod UDP compatibility.",
-      "repo": "the8055u/DualSenseDeck",
-      "category": "Controllers",
-      "detect": { "type": "decky-plugin", "names": ["DualSenseDeck"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
@@ -4375,15 +4312,6 @@
       "repo": "Logic-mle/decky-guide",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decky Guide"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
-      "id": "fengyumu-decky",
-      "name": "枫语幕",
-      "description": "Local MapleStory Classic OCR and dictionary overlay for SteamOS Game Mode",
-      "repo": "Herzzzz/fengyumu-decky",
-      "category": "Utilities",
-      "detect": { "type": "decky-plugin", "names": ["枫语幕"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {

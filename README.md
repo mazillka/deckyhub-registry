@@ -189,7 +189,6 @@ The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up pu
 | Hiddify VPN | Utilities | [b-ostrov/hiddify-steam-deck-vpn](https://github.com/b-ostrov/hiddify-steam-deck-vpn) |
 | To Moon | Utilities | [YukiCoco/ToMoon](https://github.com/YukiCoco/ToMoon) |
 | Colores | Customization | [Hooandee/decky-colores](https://github.com/Hooandee/decky-colores) |
-| BC-250 FSR4 Launch Options | Performance | [rpf16rj/bc250-steamos-real-toolkit](https://github.com/rpf16rj/bc250-steamos-real-toolkit) |
 | Desk of Madness | Utilities | [Marshy-Madness/desk-of-madness](https://github.com/Marshy-Madness/desk-of-madness) |
 | OpenSave | Utilities | [Liquid-co/OpenSave](https://github.com/Liquid-co/OpenSave) |
 | Xray Decky | Utilities | [VadimOnix/xray-decky](https://github.com/VadimOnix/xray-decky) |
@@ -202,7 +201,6 @@ The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up pu
 | GameVault | Game Libraries | [Starkka15/GameVault](https://github.com/Starkka15/GameVault) |
 | CheevoDeck | Game Libraries | [FAILINATOR5000/decky-cheevodeck](https://github.com/FAILINATOR5000/decky-cheevodeck) |
 | Rabbit Digger Pro | Utilities | [spacemeowx2/rabbit-digger-pro](https://github.com/spacemeowx2/rabbit-digger-pro) |
-| Playhub Metadata | Game Libraries | [LoZazaMastro/Playhub-Metadata](https://github.com/LoZazaMastro/Playhub-Metadata) |
 | SteamOS LACT Toolkit | Performance | [Twsts/steamos-lact-toolkit](https://github.com/Twsts/steamos-lact-toolkit) |
 | Decktation | Utilities | [silverfoxy/decktation](https://github.com/silverfoxy/decktation) |
 | Decky OptiScaler | Frame Generation | [danielcamilo1/decky-optiscaler](https://github.com/danielcamilo1/decky-optiscaler) |
@@ -378,7 +376,6 @@ The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up pu
 | WhisPTT | Controllers | [PsykomantaBrain/WhisPTT](https://github.com/PsykomantaBrain/WhisPTT) |
 | Deck Mic Toggle | Utilities | [SpookyJoshua/Deck-Mic-Toggle](https://github.com/SpookyJoshua/Deck-Mic-Toggle) |
 | Decky API Caller | Utilities | [ZacTyAdams/Decky-API-Caller](https://github.com/ZacTyAdams/Decky-API-Caller) |
-| decky-chen | Game Libraries | [evachxji/decky-chen](https://github.com/evachxji/decky-chen) |
 | DeckStream | Performance | [hffgzktbcc-blip/deckstream](https://github.com/hffgzktbcc-blip/deckstream) |
 | Deck Curfew | Utilities | [MichielSaey/deck-curfew](https://github.com/MichielSaey/deck-curfew) |
 | FNV Settings | Utilities | [qahtni/decky-fnv-settings](https://github.com/qahtni/decky-fnv-settings) |
@@ -413,7 +410,6 @@ The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up pu
 | Now Playing | Game Libraries | [LoZazaMastro/Now-Playing](https://github.com/LoZazaMastro/Now-Playing) |
 | SDC Benchmark | Performance | [Steamdeckchecker/SDC-Benchmark-](https://github.com/Steamdeckchecker/SDC-Benchmark-) |
 | Stormbreaker | Utilities | [FAILINATOR5000/decky-stormbreaker](https://github.com/FAILINATOR5000/decky-stormbreaker) |
-| Launch Curtain | Utilities | [LoZazaMastro/Launch-Curtain](https://github.com/LoZazaMastro/Launch-Curtain) |
 | Forza DualSense Haptics | Controllers | [woodsi3/forza-dualsense-decky](https://github.com/woodsi3/forza-dualsense-decky) |
 | Decky NVIDIA Update | Performance | [moi952/decky-nvidia-update](https://github.com/moi952/decky-nvidia-update) |
 | ControllerPriority | Controllers | [FGOD1983/ControllerPriority](https://github.com/FGOD1983/ControllerPriority) |
@@ -429,7 +425,6 @@ The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up pu
 | Uran | Game Libraries | [niwia/Uran](https://github.com/niwia/Uran) |
 | SpoutRemotePlay | Utilities | [justjoseorg/SpoutRemotePlay](https://github.com/justjoseorg/SpoutRemotePlay) |
 | Armada Box64 | Launch Options | [Ken5998/armada-box64](https://github.com/Ken5998/armada-box64) |
-| Playhub Surround | Utilities | [LoZazaMastro/Playhub-Surround](https://github.com/LoZazaMastro/Playhub-Surround) |
 | Colorful | Game Libraries | [cedricdelpoux/steam-deck-colorful](https://github.com/cedricdelpoux/steam-deck-colorful) |
 | Friend Plaza | Utilities | [otisabiburada/friend-plaza](https://github.com/otisabiburada/friend-plaza) |
 | Time Changer | Utilities | [nanwangjkl/decky-time-changer](https://github.com/nanwangjkl/decky-time-changer) |
@@ -450,7 +445,6 @@ The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up pu
 | Add Non-Steam Games | Launch Options | [danielcamilo1/decky-add-non-steam-games](https://github.com/danielcamilo1/decky-add-non-steam-games) |
 | Podman Compose | Utilities | [dr1s/decky-podman-compose](https://github.com/dr1s/decky-podman-compose) |
 | Decky Macro | Controllers | [olivervbk/decky-macro](https://github.com/olivervbk/decky-macro) |
-| Playhub Notifications | Customization | [LoZazaMastro/Playhub-Notifications](https://github.com/LoZazaMastro/Playhub-Notifications) |
 | Sharp Filter Selector | Frame Generation | [N3ruk/Sharp-Filter-Selector](https://github.com/N3ruk/Sharp-Filter-Selector) |
 | CouchLink | Performance | [Nico8324/CouchLink](https://github.com/Nico8324/CouchLink) |
 | DSH 鲸鱼娘桌宠 | Utilities | [228co/dsh-deck-pet](https://github.com/228co/dsh-deck-pet) |
@@ -479,7 +473,6 @@ The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up pu
 | AmneziaVpnToggle | Utilities | [tyrypyrking/AmneziaVpnToggle](https://github.com/tyrypyrking/AmneziaVpnToggle) |
 | Digimon Time Stranger Team Builder | Controllers | [danielcamilo1/decky-digimon-sts-team-builder](https://github.com/danielcamilo1/decky-digimon-sts-team-builder) |
 | Web Browser | Controllers | [Lexodeus/DeckWebBrowser](https://github.com/Lexodeus/DeckWebBrowser) |
-| DualSenseDeck | Controllers | [the8055u/DualSenseDeck](https://github.com/the8055u/DualSenseDeck) |
 | SyncDeck | Utilities | [infernokun/SyncDeck](https://github.com/infernokun/SyncDeck) |
 | STWebSRV | Utilities | [koua29/decky-stwebsrv](https://github.com/koua29/decky-stwebsrv) |
 | Local Saves Sync | Game Libraries | [danielcamilo1/decky-local-saves-sync](https://github.com/danielcamilo1/decky-local-saves-sync) |
@@ -543,7 +536,6 @@ The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up pu
 | Backlog Picker | Game Libraries | [babi723/decky-backlog-picker](https://github.com/babi723/decky-backlog-picker) |
 | APDetail | Utilities | [miguellara999/Decky-APDetail](https://github.com/miguellara999/Decky-APDetail) |
 | Decky Guide | Utilities | [Logic-mle/decky-guide](https://github.com/Logic-mle/decky-guide) |
-| 枫语幕 | Utilities | [Herzzzz/fengyumu-decky](https://github.com/Herzzzz/fengyumu-decky) |
 | Decky Player | Utilities | [mdusmb/decky-player](https://github.com/mdusmb/decky-player) |
 | SaveLocker | Launch Options | [SkorcherX/SaveLocker-Decky](https://github.com/SkorcherX/SaveLocker-Decky) |
 | DSH Chat | Utilities | [gangoogle/decky-dsh-chat](https://github.com/gangoogle/decky-dsh-chat) |
