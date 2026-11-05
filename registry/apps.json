@@ -27,7 +27,8 @@
       "repo": "mubaraknumann/unifideck",
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["Unifideck"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "knownIssues": [{ "title": "Updating can stall at 95% while Decky Loader downloads its extra tools; reload Decky and try again", "url": "https://github.com/mazillka/deckyhub-plugin/issues/32" }]
     },
     {
       "id": "decky-framegen",
@@ -757,7 +758,8 @@
       "repo": "MoYoez/Decky-LocalSend",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decky Localsend"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "knownIssues": [{ "title": "Shows an update that never sticks: its release tag v0.45 doesn't match the plugin's version 0.4.5", "url": "https://github.com/MoYoez/Decky-LocalSend/issues/3" }]
     },
     {
       "id": "decky-ludusavi",
