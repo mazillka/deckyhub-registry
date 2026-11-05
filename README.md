@@ -665,7 +665,7 @@ Open a pull request against `develop` that adds one entry to [`registry/apps.jso
 | `detect.names` | The plugin's name exactly as its `plugin.json` reports it, so DeckyHub recognises it once installed. |
 | `asset.include` / `asset.exclude` | Words that pick exactly one release ZIP. |
 | `releaseTagInclude` | Optional: only releases whose tag contains this, for repos that publish other releases too. |
-| `knownIssues` | Optional: problems that affect the plugin in DeckyHub, listed in its **Manage** window: `[{"title": "...", "url": "https://..."}]`, each linking to its report. Remove one once it's fixed. Shown by DeckyHub releases after 3.2.2; older ones ignore it. |
+| `knownIssues` | Optional: known problems with the plugin itself (a release tag that doesn't match its version, a Decky Loader bug it hits...), listed in its **Manage** window: `[{"title": "...", "url": "https://..."}]`, each linking to its report. Remove one once it's fixed. Shown by DeckyHub releases after 3.2.2; older ones ignore it. |
 
 Every released DeckyHub reads this file, so keep changes additive. A change older versions can't read must bump `schemaVersion` (they reject it and keep their cached list) rather than reshape version 1.
 
