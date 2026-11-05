@@ -2350,7 +2350,7 @@
       "repo": "elyarim/Deckamine",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Deckamine"] },
-      "asset": { "include": ["Deckamine-v"], "exclude": ["source"] }
+      "asset": { "include": ["deckamine.zip"], "exclude": ["source"] }
     },
     {
       "id": "network-manager",
