@@ -133,4 +133,6 @@ CI запускається для кожного pull request, при push у `
 
 ## Ліцензія
 
+Copyright © 2026 Andrii Shevchuk-Yuhanets ([mazillka](https://github.com/mazillka)).
+
 [GPL-3.0](LICENSE.md). Кожен плагін зі списку належить своїм авторам і має власну ліцензію.

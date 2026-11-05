@@ -699,4 +699,6 @@ Not affiliated with Valve or the Decky Loader project. This list is collected fr
 
 ## License
 
+Copyright © 2026 Andrii Shevchuk-Yuhanets ([mazillka](https://github.com/mazillka)).
+
 [GPL-3.0](LICENSE.md). Each listed plugin belongs to its authors and has its own license.
