@@ -147,15 +147,16 @@ class RangedFile(io.RawIOBase):
         return data
 
 
-def zip_plugin_manifest(asset: dict) -> dict | None:
-    """The ZIP's top-level plugin.json, which Decky Loader reads once it's installed."""
+def zip_plugin_files(asset: dict) -> tuple[dict | None, dict]:
+    """The ZIP's top-level plugin.json, which Decky Loader reads once it's installed, and
+    the package.json beside it ({} when there's none or it isn't a JSON object)."""
     try:
-        return _read_zip_plugin_manifest(asset)
+        return _read_zip_plugin_files(asset)
     except zipfile.BadZipFile:
-        return _read_zip_plugin_manifest(asset)
+        return _read_zip_plugin_files(asset)
 
 
-def _read_zip_plugin_manifest(asset: dict) -> dict | None:
+def _read_zip_plugin_files(asset: dict) -> tuple[dict | None, dict]:
     with zipfile.ZipFile(RangedFile(asset["browser_download_url"], asset["size"])) as archive:
         manifests = []
         for entry in archive.infolist():
@@ -163,17 +164,53 @@ def _read_zip_plugin_manifest(asset: dict) -> dict | None:
             if not entry.is_dir() and parts[-1] == "plugin.json" and "node_modules" not in parts[:-1]:
                 manifests.append(entry)
         if not manifests:
-            return None
+            return None, {}
         depth = min(entry.filename.count("/") for entry in manifests)
         candidates = [entry for entry in manifests if entry.filename.count("/") == depth]
         if len(candidates) > 1:
             names = ", ".join(repr(entry.filename) for entry in candidates)
             raise ValueError(f"ambiguous plugin.json manifests in ZIP: {names}")
-        return json.loads(archive.read(candidates[0]))
+        try:
+            package = json.loads(archive.read(candidates[0].filename.removesuffix("plugin.json") + "package.json"))
+        except (KeyError, ValueError):
+            package = {}
+        return json.loads(archive.read(candidates[0])), package if isinstance(package, dict) else {}
+
+
+def zip_plugin_manifest(asset: dict) -> dict | None:
+    return zip_plugin_files(asset)[0]
 
 
 def zip_plugin_name(asset: dict) -> str | None:
     return (zip_plugin_manifest(asset) or {}).get("name")
+
+
+def plugin_version(manifest: dict | None, package: dict) -> str | None:
+    """The version DeckyHub reads from an installed plugin (_decky_plugin_version in its
+    main.py): plugin.json's, else package.json's. None when neither has one."""
+    version = (manifest or {}).get("version") or package.get("version")
+    return str(version) if version else None
+
+
+def _version_number(value: str) -> list[int] | None:
+    match = re.search(r"\d+(?:\.\d+)+", value)
+    if not match:
+        return None
+    numbers = [int(part) for part in match.group().split(".")]
+    while numbers and numbers[-1] == 0:
+        numbers.pop()
+    return numbers
+
+
+def version_mismatch(tag: str, version: str | None) -> bool:
+    """True when a release's tag and the version its ZIP installs as name different
+    version numbers (v0.45 vs 0.4.5): DeckyHub would then compare the installed plugin
+    with the tag and offer the same release again forever, unless it reads the index's
+    pluginVersion. False when either has no dotted version number."""
+    if not version:
+        return False
+    a, b = _version_number(tag), _version_number(version)
+    return a is not None and b is not None and a != b
 
 
 def github_problems(app: dict, repo: dict | None = None) -> tuple[list[str], list[str]]:
@@ -206,11 +243,14 @@ def github_problems(app: dict, repo: dict | None = None) -> tuple[list[str], lis
             continue
         if not assets[0].get("digest"):
             warnings.append(f"{where}: {assets[0]['name']} has no SHA-256 digest; Decky installs it unverified")
-        name = zip_plugin_name(assets[0])
+        manifest, package = zip_plugin_files(assets[0])
+        name = (manifest or {}).get("name")
         if name is None:
             errors.append(f"{where}: {assets[0]['name']} has no plugin.json")
         elif name.casefold() not in {detect.casefold() for detect in app["detect"]["names"]}:
             errors.append(f"{where}: plugin.json name {name!r} isn't in detect.names {app['detect']['names']}")
+        if version_mismatch(release["tag_name"], version := plugin_version(manifest, package)):
+            warnings.append(f"{where}: the ZIP installs as version {version}, which doesn't match the tag; ask the author to make them match")
     return errors, warnings
 
 

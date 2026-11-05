@@ -50,6 +50,18 @@ class BuildReleaseIndexTests(unittest.TestCase):
         # Nothing installable: an empty list, which DeckyHub reads as "no release" without asking GitHub.
         self.assertEqual(build([entry()], lambda repo: [release("v1", 1, [("Setup.exe", 1)])], no_stats)["releases"]["o/a"], [])
 
+    def test_each_channels_newest_release_says_what_version_its_zip_installs_as(self):
+        history = [release("v3-beta", 3, [("plugin.zip", 1)], prerelease=True), release("v0.45", 2, [("plugin.zip", 1)]), release("v0.40", 1, [("plugin.zip", 1)])]
+        read = []
+        versions = {"v3-beta": None, "v0.45": "0.4.5"}
+        index = build([entry()], lambda repo: history, no_stats, version=lambda asset: read.append(asset) or versions[history[len(read) - 1]["tag_name"]])
+        items = {item["tag_name"]: item for item in index["releases"]["o/a"]}
+        self.assertEqual(items["v0.45"]["pluginVersion"], "0.4.5")
+        # Unknown for the pre-release, and older releases aren't read at all.
+        self.assertNotIn("pluginVersion", items["v3-beta"])
+        self.assertNotIn("pluginVersion", items["v0.40"])
+        self.assertEqual(len(read), 2)
+
     def test_stats_count_plugin_zips_over_every_release_and_read_the_shown_release(self):
         history = [release(f"v{day}", day, [("plugin.zip", 10), ("plugin-source.zip", 7), ("Setup.exe", 3)]) for day in range(1, 26)]
         history.insert(0, release("v99-beta", 28, [("plugin.zip", 1)], prerelease=True))

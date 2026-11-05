@@ -22,6 +22,12 @@ It also writes stats.json for the catalog page, per plugin:
   (and in a newer pre-release, if any) that's worth warning about (see WARNINGS). Matched
   by the ZIP's sha256, else by tag. Missing when there's nothing to warn about.
 
+Each channel's newest release in releases.json (the one DeckyHub's card compares with)
+also gets pluginVersion: the version its ZIP installs as (plugin.json's, else
+package.json's), when it has one. A tag like v0.45 on a plugin that calls itself 0.4.5
+would otherwise look like an update forever, because DeckyHub compares the installed
+plugin's own version with the tag.
+
 releases.json keeps, per repo, only the KEEP newest releases DeckyHub can install (with
 the entry's plugin ZIP), plus the newest stable one when it's older, so the default
 Stable channel always finds it. DeckyHub skips the others anyway; leaving them out keeps
@@ -29,13 +35,14 @@ the file it downloads small.
 
 Releases and stars come from GitHub's GraphQL API (fetch_github in validate.py).
 """
+import functools
 import json
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from validate import load_registry_apps, REGISTRY, channel_releases, fetch, fetch_github, installable_releases, matching_assets, zip_plugin_manifest
+from validate import load_registry_apps, REGISTRY, channel_releases, fetch, fetch_github, installable_releases, matching_assets, plugin_version, zip_plugin_files
 
 AUDIT_URL = "https://decky-extended-plugins.beallio.com/audit.json"
 # The audit's rule ID prefixes worth a warning on a card, like Runs as root. Routine ones
@@ -105,7 +112,7 @@ def warnings_of(entry: dict, release: dict | None, audits: dict) -> list[str]:
     return audits.get((entry["repo"].casefold(), release.get("tag_name"))) or []
 
 
-def plugin_stats(entry: dict, releases: list[dict], stars, manifest=zip_plugin_manifest, audits: dict | None = None, fork: str | None = None, ai: list[str] | None = None) -> dict:
+def plugin_stats(entry: dict, releases: list[dict], stars, manifest=lambda asset: zip_plugin_files(asset)[0], audits: dict | None = None, fork: str | None = None, ai: list[str] | None = None) -> dict:
     channels = channel_releases(entry, releases)
     shown = channels["stable"] or channels["prerelease"]
     assets = matching_assets(entry, shown) if shown else []
@@ -136,17 +143,24 @@ def kept_releases(entry: dict, releases: list[dict]) -> list[dict]:
     return kept + [stable] if stable and stable not in kept else kept
 
 
-def build(entries: list[dict], fetch, stats) -> dict:
+def build(entries: list[dict], fetch, stats, version=lambda asset: None) -> dict:
     """Keyed by lowercase owner/name: each repo's kept releases, and its stats (see the
     module docstring). A repo whose lookup fails is left out, so DeckyHub asks GitHub for
-    it directly rather than trusting an empty list."""
+    it directly rather than trusting an empty list. version(asset): the version a plugin
+    ZIP installs as, or None."""
     def one(entry):
         try:
             releases = sorted((release for release in fetch(entry["repo"]) if not release.get("draft")), key=lambda release: release.get("published_at") or "", reverse=True)
         except Exception as error:  # noqa: BLE001 - one broken repo mustn't sink the index
             print(f"warning: {entry['repo']}: {error}", file=sys.stderr)
             return None
-        return entry["repo"].casefold(), [slim(release) for release in kept_releases(entry, releases)], stats(entry, releases)
+        kept = kept_releases(entry, releases)
+        slimmed = [slim(release) for release in kept]
+        newest = [release for release in channel_releases(entry, releases).values() if release]
+        for release, item in zip(kept, slimmed):
+            if any(release is other for other in newest) and (found := best_effort(version, matching_assets(entry, release)[0])):
+                item["pluginVersion"] = found
+        return entry["repo"].casefold(), slimmed, stats(entry, releases)
 
     unique: dict[str, dict] = {}
     for entry in entries:
@@ -174,7 +188,10 @@ def main() -> int:
         return 1
     # The audit is someone else's site: without it the index just goes out without verdicts.
     audits = audit_index(best_effort(lambda url: json.loads(fetch(url, auth=False)), AUDIT_URL) or {})
-    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], audits=audits, fork=fork_of(github[entry["repo"].casefold()]), ai=github[entry["repo"].casefold()].get("ai")))
+    # One read per ZIP: the shown release's feeds both root (stats) and pluginVersion.
+    files = functools.lru_cache(maxsize=None)(lambda url, size: zip_plugin_files({"browser_download_url": url, "size": size}))
+    read = lambda asset: files(asset["browser_download_url"], asset["size"])  # noqa: E731
+    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], manifest=lambda asset: read(asset)[0], audits=audits, fork=fork_of(github[entry["repo"].casefold()]), ai=github[entry["repo"].casefold()].get("ai")), version=lambda asset: plugin_version(*read(asset)))
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     # DeckyHub reads releases; the catalog page reads the much smaller stats file.
