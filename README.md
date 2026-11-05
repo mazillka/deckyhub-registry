@@ -36,6 +36,8 @@ Testers can see changes before they ship: the opt-in **Registry Channel: Pre-rel
 
 DeckyHub also reads every listed plugin's recent releases from one file (its 5 newest installable releases, plus the newest stable one if that's older), so it doesn't spend a GitHub API call per plugin (60 an hour without a token). The [release-index workflow](.github/workflows/release-index.yml) runs [`scripts/build_release_index.py`](scripts/build_release_index.py) every hour and whenever `apps.json` changes, and publishes `releases.json` on the [`release-index`](https://github.com/mazillka/deckyhub-registry/tree/release-index) branch. A new release can take up to an hour to show up in DeckyHub.
 
+Each channel's newest release in `releases.json` also says which version its ZIP installs as (`pluginVersion`: its `plugin.json`'s version, else its `package.json`'s). DeckyHub compares the installed plugin with that, not with the tag, so a plugin tagged `v0.45` that calls itself `0.4.5` isn't shown an update forever. `validate.py` warns about every such mismatch, so its author can be asked to make the tag and the version match.
+
 The same job writes `stats.json` for the [catalog](https://registry.deckyhub.com/), which shows these on each card and can sort by them:
 
 - **Downloads:** all-time, summed over the plugin's ZIPs (the entry's `asset` filter) across every release. GitHub counts every download of a file, whether from DeckyHub, Decky, a browser or a script, so these are downloads, not installs.
@@ -663,6 +665,7 @@ Open a pull request against `develop` that adds one entry to [`registry/apps.jso
 | `detect.names` | The plugin's name exactly as its `plugin.json` reports it, so DeckyHub recognises it once installed. |
 | `asset.include` / `asset.exclude` | Words that pick exactly one release ZIP. |
 | `releaseTagInclude` | Optional: only releases whose tag contains this, for repos that publish other releases too. |
+| `knownIssues` | Optional: problems that affect the plugin in DeckyHub, listed in its **Manage** window: `[{"title": "...", "url": "https://..."}]`, each linking to its report. Remove one once it's fixed. Shown by DeckyHub releases after 3.2.2; older ones ignore it. |
 
 Every released DeckyHub reads this file, so keep changes additive. A change older versions can't read must bump `schemaVersion` (they reject it and keep their cached list) rather than reshape version 1.
 
@@ -674,7 +677,7 @@ CI runs on every pull request, on pushes to `main` and `develop`, and weekly bec
   ```bash
   DECKYHUB_REGISTRY=../deckyhub-registry/registry/apps.json python -m unittest tests.test_registry_schema
   ```
-- **Entries:** `scripts/validate.py` checks each entry the way DeckyHub will see it: the repository exists, each channel's newest release has exactly one ZIP matching `asset`, and that ZIP's `plugin.json` name is in `detect.names`. It also rejects shared ids, repos and detect names, `DeckyHub` as a detect name, and a README table that doesn't match `apps.json`. `--offline` skips the GitHub checks.
+- **Entries:** `scripts/validate.py` checks each entry the way DeckyHub will see it: the repository exists, each channel's newest release has exactly one ZIP matching `asset`, and that ZIP's `plugin.json` name is in `detect.names`. It warns when that ZIP's version doesn't match the release tag. It also rejects shared ids, repos and detect names, `DeckyHub` as a detect name, and a README table that doesn't match `apps.json`. `--offline` skips the GitHub checks.
   ```bash
   GITHUB_TOKEN=$(gh auth token) python scripts/validate.py
   ```
