@@ -28,7 +28,7 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["Unifideck"] },
       "asset": { "include": [".zip"], "exclude": ["source"] },
-      "knownIssues": [{ "title": "Decky Loader bug (reported): an in-place update starts Unifideck mid-install and stops it again, which can freeze the Deck. DeckyHub works around it by removing the old version first, then installing fresh.", "url": "https://github.com/SteamDeckHomebrew/decky-loader/issues/982" }]
+      "knownIssues": [{ "title": "Decky Loader bug (reported): updating in place starts Unifideck mid-install and then stops it, which can freeze the Deck. DeckyHub avoids it by removing the old version first.", "url": "https://github.com/SteamDeckHomebrew/decky-loader/issues/982" }]
     },
     {
       "id": "decky-framegen",
