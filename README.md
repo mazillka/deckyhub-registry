@@ -613,6 +613,15 @@ The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up pu
 | decky-protondb-collections | Launch Options | [Lui92/decky-protondb-collections](https://github.com/Lui92/decky-protondb-collections) |
 | Script Assigner | Launch Options | [JDLKMR/Decky-Script-Assigner-Legacy](https://github.com/JDLKMR/Decky-Script-Assigner-Legacy) |
 | ROM Manager | Launch Options | [JDLKMR/Decky-ROM-Manager-Legacy](https://github.com/JDLKMR/Decky-ROM-Manager-Legacy) |
+| Emuchievements | Game Libraries | [JDLKMR/Emuchievements](https://github.com/JDLKMR/Emuchievements) |
+| PS5 Hardware Control | Performance | [NotHavocc/ps5-hwcon-plugin](https://github.com/NotHavocc/ps5-hwcon-plugin) |
+| Amethyst Deploy | Controllers | [BradleySharp/amethyst-deploy-decky](https://github.com/BradleySharp/amethyst-deploy-decky) |
+| Eclipse | Utilities | [1m93/DeckyEclipse](https://github.com/1m93/DeckyEclipse) |
+| AppID Lister | Utilities | [JDLKMR/Decky-AppID-Lister](https://github.com/JDLKMR/Decky-AppID-Lister) |
+| DateDeck | Utilities | [JDLKMR/DateDeck](https://github.com/JDLKMR/DateDeck) |
+| Museck | Utilities | [JDLKMR/Museck](https://github.com/JDLKMR/Museck) |
+| Ratatoskr | Controllers | [venatrix-ritz/Ratatoskr](https://github.com/venatrix-ritz/Ratatoskr) |
+| MangoPeel Neo | Performance | [NeoSloth/MangoPeel](https://github.com/NeoSloth/MangoPeel) |
 
 ## Where the plugins come from
 

@@ -5006,6 +5006,87 @@
       "category": "Launch Options",
       "detect": { "type": "decky-plugin", "names": ["ROM Manager"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "emuchievements",
+      "name": "Emuchievements",
+      "description": "Official store has 2.0.5-f3d8621; this store has 2.1.2. Plugin for viewing RetroAchievements progress. Part of the EmuDeck Project",
+      "repo": "JDLKMR/Emuchievements",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Emuchievements"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ps5-hwcon-plugin",
+      "name": "PS5 Hardware Control",
+      "description": "Control the PlayStation 5 fan target temperature, CPU and GPU governors and clocks, and indicator LED presets on Linux.",
+      "repo": "NotHavocc/ps5-hwcon-plugin",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["PS5 Hardware Control"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "amethyst-deploy-decky",
+      "name": "Amethyst Deploy",
+      "description": "Amethyst Mod Manager in Gaming Mode: set up games, find and install mods, sort load order, deploy and play with a controller.",
+      "repo": "BradleySharp/amethyst-deploy-decky",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Amethyst Deploy"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyeclipse",
+      "name": "Eclipse",
+      "description": "Stream from your Sunshine hosts with Moonlight straight from Gaming Mode, manage pairing, Wake-on-LAN and the local Sunshine server.",
+      "repo": "1m93/DeckyEclipse",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Eclipse"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-appid-lister",
+      "name": "AppID Lister",
+      "description": "Lists the Steam App IDs of installed games in the plugin menu.",
+      "repo": "JDLKMR/Decky-AppID-Lister",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["AppID Lister"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "datedeck",
+      "name": "DateDeck",
+      "description": "Shows the date next to the clock in the Steam Deck header.",
+      "repo": "JDLKMR/DateDeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DateDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "museck",
+      "name": "Museck",
+      "description": "A Decky Loader plugin for Steam Deck to play tracks from Plex, Jellyfin, Emby, Navidrome, and Subsonic.",
+      "repo": "JDLKMR/Museck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Museck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ratatoskr",
+      "name": "Ratatoskr",
+      "description": "Decky plugin and input driver that turns the AYN Thor's bottom screen into a trackpad, keyboard and quick-settings surface (Armada OS).",
+      "repo": "venatrix-ritz/Ratatoskr",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Ratatoskr"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "mangopeel",
+      "name": "MangoPeel Neo",
+      "description": "An independently maintained MangoPeel fork for customizing Steam Deck performance overlay styles.",
+      "repo": "NeoSloth/MangoPeel",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["MangoPeel Neo"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
