@@ -17,6 +17,8 @@ permissions:
   contents: write
   # For the audit warning issue.
   issues: write
+  # To start the virus scan when releases changed (see the last step).
+  actions: write
 
 jobs:
   publish:
@@ -78,7 +80,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
       # One orphan commit, force-pushed, so the branch never grows a history.
-      - run: |
+      - id: push
+        run: |
+          # The releases the published index had, to tell whether this run brought new ones.
+          git fetch -q --depth 1 origin "$TARGET" && git show FETCH_HEAD:releases.json > "$RUNNER_TEMP/old-releases.json" || : > "$RUNNER_TEMP/old-releases.json"
+          # Releases only: generatedAt differs on every run.
+          changed=$(python3 -c 'import json, sys
+          def releases(path):
+              try: return json.load(open(path, encoding="utf-8")).get("releases")
+              except (OSError, ValueError): return None
+          print(str(releases(sys.argv[1]) != releases(sys.argv[2])).lower())' "$RUNNER_TEMP/old-releases.json" "$RUNNER_TEMP/index/releases.json")
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
           git checkout --orphan "$TARGET"
           git rm -rfq .
           cp "$RUNNER_TEMP"/index/*.json .
@@ -87,3 +99,12 @@ jobs:
           git push -fq origin "$TARGET"
         env:
           MATRIX_BRANCH: ${{ matrix.branch }}
+      # A new release would otherwise wait for virus-scan's own schedule (every 3 hours, and
+      # GitHub skips scheduled runs when it's busy: 5 hours passed once), and DeckyHub's
+      # Manage window would say its newest version isn't scanned yet all that time. A run
+      # with nothing new to scan takes under a minute; runs queue (virus-scan's concurrency).
+      - if: steps.push.outputs.changed == 'true'
+        continue-on-error: true
+        run: gh workflow run virus-scan.yml --ref main --repo "$GITHUB_REPOSITORY"
+        env:
+          GH_TOKEN: ${{ github.token }}
