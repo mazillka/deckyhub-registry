@@ -9,6 +9,7 @@ by deckyhub-plugin's tests/test_registry_schema.py; this covers what it can't:
 entries that clash with each other and entries that don't match their repository.
 Exits 1 on any error; warnings are printed but don't fail.
 """
+import argparse
 import io
 import json
 import os
@@ -24,6 +25,11 @@ ROOT = Path(__file__).resolve().parent.parent
 REGISTRY = ROOT / "registry" / "apps.json"
 README = ROOT / "README.md"
 API = "https://api.github.com"
+
+
+def load_registry_apps(path: Path) -> list[dict]:
+    """Read the app list shared by the registry tools."""
+    return json.loads(path.read_text(encoding="utf-8"))["apps"]
 
 
 def static_errors(apps: list[dict]) -> list[str]:
@@ -80,12 +86,18 @@ def channel_releases(app: dict, releases: list[dict]) -> dict[str, dict | None]:
     return {"stable": next((release for release in candidates if not release.get("prerelease")), None), "prerelease": next(iter(candidates), None)}
 
 
-def fetch(url: str, headers: dict | None = None, auth: bool = True) -> bytes:
+def fetch(url: str, headers: dict | None = None, auth: bool = True, *, byte_range: tuple[int, int, int] | None = None) -> bytes:
     token = os.environ.get("GITHUB_TOKEN", "") if auth else ""
     headers = {"User-Agent": "deckyhub-registry-validate", **(headers or {})}
     if token and url.startswith(API):
         headers["Authorization"] = f"Bearer {token}"
     with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=60) as response:
+        if byte_range is not None:
+            start, end, total = byte_range
+            expected = f"bytes {start}-{end}/{total}"
+            if response.status != 206 or response.headers.get("Content-Range") != expected:
+                raise OSError(f"invalid range response for {url}: expected HTTP 206 and {expected}")
+            return response.read(end - start + 2)
         return response.read()
 
 
@@ -121,7 +133,8 @@ class RangedFile(io.RawIOBase):
         wanted = end - self.position
         for attempt in range(2):
             try:
-                data = fetch(self.url, {"Range": f"bytes={self.position}-{end - 1}"})
+                data = fetch(self.url, {"Range": f"bytes={self.position}-{end - 1}"},
+                             byte_range=(self.position, end - 1, self.size))
             except OSError:
                 if attempt:
                     raise
@@ -136,9 +149,27 @@ class RangedFile(io.RawIOBase):
 
 def zip_plugin_manifest(asset: dict) -> dict | None:
     """The ZIP's top-level plugin.json, which Decky Loader reads once it's installed."""
+    try:
+        return _read_zip_plugin_manifest(asset)
+    except zipfile.BadZipFile:
+        return _read_zip_plugin_manifest(asset)
+
+
+def _read_zip_plugin_manifest(asset: dict) -> dict | None:
     with zipfile.ZipFile(RangedFile(asset["browser_download_url"], asset["size"])) as archive:
-        manifests = sorted((name for name in archive.namelist() if name.endswith("plugin.json") and "node_modules/" not in name), key=lambda name: name.count("/"))
-        return json.loads(archive.read(manifests[0])) if manifests else None
+        manifests = []
+        for entry in archive.infolist():
+            parts = entry.filename.split("/")
+            if not entry.is_dir() and parts[-1] == "plugin.json" and "node_modules" not in parts[:-1]:
+                manifests.append(entry)
+        if not manifests:
+            return None
+        depth = min(entry.filename.count("/") for entry in manifests)
+        candidates = [entry for entry in manifests if entry.filename.count("/") == depth]
+        if len(candidates) > 1:
+            names = ", ".join(repr(entry.filename) for entry in candidates)
+            raise ValueError(f"ambiguous plugin.json manifests in ZIP: {names}")
+        return json.loads(archive.read(candidates[0]))
 
 
 def zip_plugin_name(asset: dict) -> str | None:
@@ -305,11 +336,20 @@ def fetch_github(repos: list[str], every_release: bool = False) -> dict[str, dic
 
 
 def main() -> int:
-    apps = json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--offline", action="store_true")
+    parser.add_argument("--base-registry", type=str, help="Check live assets only for entries changed from this registry JSON file")
+    args = parser.parse_args()
+    apps = load_registry_apps(REGISTRY)
     errors, warnings = static_errors(apps) + readme_errors(apps, README.read_text(encoding="utf-8")), []
-    if "--offline" not in sys.argv:
-        github = fetch_github(list({app["repo"].casefold(): app["repo"] for app in apps}.values()))
-        for app in apps:
+    if not args.offline:
+        live_apps = apps
+        if args.base_registry:
+            with open(args.base_registry, encoding="utf-8-sig") as base:
+                previous = {app["id"]: app for app in json.load(base)["apps"]}
+            live_apps = [app for app in apps if previous.get(app["id"]) != app]
+        github = fetch_github(list({app["repo"].casefold(): app["repo"] for app in live_apps}.values())) if live_apps else {}
+        for app in live_apps:
             try:
                 app_errors, app_warnings = github_problems(app, github.get(app["repo"].casefold(), {}))
             except Exception as error:  # one unreachable repo shouldn't hide the rest

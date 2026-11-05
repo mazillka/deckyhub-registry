@@ -6,6 +6,8 @@
 
 **The list of Steam Deck plugins that [DeckyHub](https://github.com/mazillka/deckyhub-plugin) shows on Discover.**
 
+English · [Українська](README.uk.md)
+
 [![validate](https://github.com/mazillka/deckyhub-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/mazillka/deckyhub-registry/actions/workflows/ci.yml)
 [![apps](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmazillka%2Fdeckyhub-registry%2Frefs%2Fheads%2Fmain%2Fregistry%2Fapps.json&query=%24.apps.length&label=apps&color=1d75cc)](registry/apps.json)
 [![registry release](https://img.shields.io/github/v/release/mazillka/deckyhub-registry?label=registry&color=1d75cc)](https://github.com/mazillka/deckyhub-registry/releases/latest)
@@ -15,12 +17,16 @@
 [![virus scan](https://img.shields.io/github/last-commit/mazillka/deckyhub-registry/virus-scans?label=virus%20scan&color=1d75cc)](https://github.com/mazillka/deckyhub-registry/tree/virus-scans)
 [![discover](https://github.com/mazillka/deckyhub-registry/actions/workflows/discover.yml/badge.svg)](https://github.com/mazillka/deckyhub-registry/actions/workflows/discover.yml)
 
-[**Browse the catalog**](https://registry.deckyhub.com/) · [Registry editor](https://registry.deckyhub.com/editor.html) · [Get DeckyHub](https://github.com/mazillka/deckyhub-plugin/releases/latest) · [Suggest a plugin](https://github.com/mazillka/deckyhub-registry/issues/new)
+[**Browse the catalog**](https://registry.deckyhub.com/) · [Registry editor](https://registry.deckyhub.com/editor.html) · [Get DeckyHub](https://github.com/mazillka/deckyhub-plugin#installing-deckyhub) · [Suggest a plugin](https://github.com/mazillka/deckyhub-registry/issues/new)
 
 </div>
 
 > [!CAUTION]
 > **DeckyHub only fetches releases from their authors' GitHub repositories. It doesn't make, review or vouch for these plugins and isn't responsible for anything they do to your device or data. Install at your own risk.**
+
+## Installing DeckyHub
+
+New to DeckyHub? The [installation guide](https://github.com/mazillka/deckyhub-plugin#installing-deckyhub) covers the Desktop Mode installer and the options available when Decky Loader is already installed. The Desktop Mode installer explains each step and shows progress as it installs.
 
 ## How it works
 
@@ -43,6 +49,9 @@ The same job writes `stats.json` for the [catalog](https://registry.deckyhub.com
 Every plugin ZIP DeckyHub can install is also scanned for viruses with [ClamAV](https://www.clamav.net/), and the files inside it with [YARA](https://virustotal.github.io/yara/) and [YARA Forge](https://github.com/YARAHQ/yara-forge)'s core rules (its set tuned for few false positives, with many rules for Linux malware), DeckyHub's own releases included. The [virus-scan workflow](.github/workflows/virus-scan.yml) runs [`scripts/virus_scan.py`](scripts/virus_scan.py) every 3 hours, and on every push to `develop` or `main` that changes the scanner, over both branches' `releases.json`: it downloads each ZIP it has no report for (every plugin's Stable and Pre-release channel releases first, then older pre-releases and stable versions, a few GB per run), scans it with that day's ClamAV signatures and that week's YARA Forge rules, and publishes one report per ZIP as `scans.json` on the [`virus-scans`](https://github.com/mazillka/deckyhub-registry/tree/virus-scans) branch: its sha256, the result (**clean**, **infected** with what ClamAV matched, **incomplete** when the ZIP went past ClamAV's size limits, or **error** with why: the download failed, or ClamAV couldn't read the file or couldn't run), the ClamAV and signature versions, and when, plus the same for YARA under `yara` (**infected** lists the YARA rules that matched; **incomplete** names the files in the ZIP it couldn't look at). The top-level fields stay ClamAV's alone, so DeckyHub releases from before YARA still read them as they did. A failed scan never stops the workflow: the ZIP gets an error report and is tried again on the next run, while one that already had a good report keeps it, for each scanner on its own. A report without a YARA result is scanned again, so the ZIPs scanned before YARA was added get one over the next few runs. A ZIP replaced under the same name is scanned again, and reports older than a month are redone with newer signatures. Every listed plugin ends up with a report for both channels, pre-releases included; each run's log says how many are still waiting. It also publishes [shields.io](https://shields.io/badges/endpoint-badge) badges for every plugin's Stable release (else its Pre-release one), one per scanner, which plugin authors can put in their READMEs: `https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/mazillka/deckyhub-registry/virus-scans/badges/<owner>/<name>/clamav.json` (or `yara.json`), with `<owner>/<name>` in lowercase. The run also publishes `plugins.json` there: the same results per plugin, for the ZIP each channel installs, which the [catalog](https://registry.deckyhub.com/) shows as a **No threats** / **Threat found** / **Not fully scanned** badge with each scanner's result on hover. DeckyHub's **Manage** window shows the report for the release you're about to install, or says it hasn't been scanned yet. It also has a **VirusTotal** button that looks the ZIP's sha256 up on [VirusTotal](https://www.virustotal.com/) in Steam's browser. Nothing is uploaded, and VirusTotal only knows files someone has already sent it. A report is information, not a block: whether to install is up to you. ClamAV knows Linux malware less well than Windows malware: a clean report isn't proof of safety.
 
 New plugins are found automatically too. Every day the [discover workflow](.github/workflows/discover.yml) runs [`scripts/discover.py`](scripts/discover.py) over two community catalogs, [Decky Plugins Explorer](https://safetzahirovic.github.io/decky-plugins-explorer/)'s nightly list of every public repository with a Decky `plugin.json` and [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) (the Decky store plus community plugins), and our own GitHub search: repositories tagged or named like Decky plugins (`topic:decky-plugin`, `decky in:name` and a few more) with a `plugin.json` at their root. The search keeps discovery working if both catalogs go away. Plugins that aren't listed yet, pass the same checks as `validate.py` (on their newest stable release, else their newest pre-release, so plugins with pre-releases only are found too) and don't look unfinished ([`scripts/quality.py`](scripts/quality.py): a first release under 14 days old, no stars and under 10 downloads, a `0.0.x` version or no description; those are tried again later) are opened as a pull request against `develop`, at most 50 at a time. Nothing is merged without review.
+
+
+The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up public plugin ZIPs by SHA-256 and uploads the ZIP to MetaDefender Cloud if it has no report. Uploaded files are shared with that service. It works through the backlog within the API quota and publishes separate results on `metadefender-reports`; missing, pending, oversized, or failed scans are not clean verdicts. Set the registry's `METADEFENDER_API_KEY` secret to enable it.
 
 ## Repositories
 
@@ -180,7 +189,6 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Hiddify VPN | Utilities | [b-ostrov/hiddify-steam-deck-vpn](https://github.com/b-ostrov/hiddify-steam-deck-vpn) |
 | To Moon | Utilities | [YukiCoco/ToMoon](https://github.com/YukiCoco/ToMoon) |
 | Colores | Customization | [Hooandee/decky-colores](https://github.com/Hooandee/decky-colores) |
-| BC-250 FSR4 Launch Options | Performance | [rpf16rj/bc250-steamos-real-toolkit](https://github.com/rpf16rj/bc250-steamos-real-toolkit) |
 | Desk of Madness | Utilities | [Marshy-Madness/desk-of-madness](https://github.com/Marshy-Madness/desk-of-madness) |
 | OpenSave | Utilities | [Liquid-co/OpenSave](https://github.com/Liquid-co/OpenSave) |
 | Xray Decky | Utilities | [VadimOnix/xray-decky](https://github.com/VadimOnix/xray-decky) |
@@ -193,7 +201,6 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | GameVault | Game Libraries | [Starkka15/GameVault](https://github.com/Starkka15/GameVault) |
 | CheevoDeck | Game Libraries | [FAILINATOR5000/decky-cheevodeck](https://github.com/FAILINATOR5000/decky-cheevodeck) |
 | Rabbit Digger Pro | Utilities | [spacemeowx2/rabbit-digger-pro](https://github.com/spacemeowx2/rabbit-digger-pro) |
-| Playhub Metadata | Game Libraries | [LoZazaMastro/Playhub-Metadata](https://github.com/LoZazaMastro/Playhub-Metadata) |
 | SteamOS LACT Toolkit | Performance | [Twsts/steamos-lact-toolkit](https://github.com/Twsts/steamos-lact-toolkit) |
 | Decktation | Utilities | [silverfoxy/decktation](https://github.com/silverfoxy/decktation) |
 | Decky OptiScaler | Frame Generation | [danielcamilo1/decky-optiscaler](https://github.com/danielcamilo1/decky-optiscaler) |
@@ -369,7 +376,6 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | WhisPTT | Controllers | [PsykomantaBrain/WhisPTT](https://github.com/PsykomantaBrain/WhisPTT) |
 | Deck Mic Toggle | Utilities | [SpookyJoshua/Deck-Mic-Toggle](https://github.com/SpookyJoshua/Deck-Mic-Toggle) |
 | Decky API Caller | Utilities | [ZacTyAdams/Decky-API-Caller](https://github.com/ZacTyAdams/Decky-API-Caller) |
-| decky-chen | Game Libraries | [evachxji/decky-chen](https://github.com/evachxji/decky-chen) |
 | DeckStream | Performance | [hffgzktbcc-blip/deckstream](https://github.com/hffgzktbcc-blip/deckstream) |
 | Deck Curfew | Utilities | [MichielSaey/deck-curfew](https://github.com/MichielSaey/deck-curfew) |
 | FNV Settings | Utilities | [qahtni/decky-fnv-settings](https://github.com/qahtni/decky-fnv-settings) |
@@ -404,7 +410,6 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Now Playing | Game Libraries | [LoZazaMastro/Now-Playing](https://github.com/LoZazaMastro/Now-Playing) |
 | SDC Benchmark | Performance | [Steamdeckchecker/SDC-Benchmark-](https://github.com/Steamdeckchecker/SDC-Benchmark-) |
 | Stormbreaker | Utilities | [FAILINATOR5000/decky-stormbreaker](https://github.com/FAILINATOR5000/decky-stormbreaker) |
-| Launch Curtain | Utilities | [LoZazaMastro/Launch-Curtain](https://github.com/LoZazaMastro/Launch-Curtain) |
 | Forza DualSense Haptics | Controllers | [woodsi3/forza-dualsense-decky](https://github.com/woodsi3/forza-dualsense-decky) |
 | Decky NVIDIA Update | Performance | [moi952/decky-nvidia-update](https://github.com/moi952/decky-nvidia-update) |
 | ControllerPriority | Controllers | [FGOD1983/ControllerPriority](https://github.com/FGOD1983/ControllerPriority) |
@@ -420,7 +425,6 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Uran | Game Libraries | [niwia/Uran](https://github.com/niwia/Uran) |
 | SpoutRemotePlay | Utilities | [justjoseorg/SpoutRemotePlay](https://github.com/justjoseorg/SpoutRemotePlay) |
 | Armada Box64 | Launch Options | [Ken5998/armada-box64](https://github.com/Ken5998/armada-box64) |
-| Playhub Surround | Utilities | [LoZazaMastro/Playhub-Surround](https://github.com/LoZazaMastro/Playhub-Surround) |
 | Colorful | Game Libraries | [cedricdelpoux/steam-deck-colorful](https://github.com/cedricdelpoux/steam-deck-colorful) |
 | Friend Plaza | Utilities | [otisabiburada/friend-plaza](https://github.com/otisabiburada/friend-plaza) |
 | Time Changer | Utilities | [nanwangjkl/decky-time-changer](https://github.com/nanwangjkl/decky-time-changer) |
@@ -441,7 +445,6 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Add Non-Steam Games | Launch Options | [danielcamilo1/decky-add-non-steam-games](https://github.com/danielcamilo1/decky-add-non-steam-games) |
 | Podman Compose | Utilities | [dr1s/decky-podman-compose](https://github.com/dr1s/decky-podman-compose) |
 | Decky Macro | Controllers | [olivervbk/decky-macro](https://github.com/olivervbk/decky-macro) |
-| Playhub Notifications | Customization | [LoZazaMastro/Playhub-Notifications](https://github.com/LoZazaMastro/Playhub-Notifications) |
 | Sharp Filter Selector | Frame Generation | [N3ruk/Sharp-Filter-Selector](https://github.com/N3ruk/Sharp-Filter-Selector) |
 | CouchLink | Performance | [Nico8324/CouchLink](https://github.com/Nico8324/CouchLink) |
 | DSH 鲸鱼娘桌宠 | Utilities | [228co/dsh-deck-pet](https://github.com/228co/dsh-deck-pet) |
@@ -470,7 +473,6 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | AmneziaVpnToggle | Utilities | [tyrypyrking/AmneziaVpnToggle](https://github.com/tyrypyrking/AmneziaVpnToggle) |
 | Digimon Time Stranger Team Builder | Controllers | [danielcamilo1/decky-digimon-sts-team-builder](https://github.com/danielcamilo1/decky-digimon-sts-team-builder) |
 | Web Browser | Controllers | [Lexodeus/DeckWebBrowser](https://github.com/Lexodeus/DeckWebBrowser) |
-| DualSenseDeck | Controllers | [the8055u/DualSenseDeck](https://github.com/the8055u/DualSenseDeck) |
 | SyncDeck | Utilities | [infernokun/SyncDeck](https://github.com/infernokun/SyncDeck) |
 | STWebSRV | Utilities | [koua29/decky-stwebsrv](https://github.com/koua29/decky-stwebsrv) |
 | Local Saves Sync | Game Libraries | [danielcamilo1/decky-local-saves-sync](https://github.com/danielcamilo1/decky-local-saves-sync) |
@@ -534,7 +536,6 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | Backlog Picker | Game Libraries | [babi723/decky-backlog-picker](https://github.com/babi723/decky-backlog-picker) |
 | APDetail | Utilities | [miguellara999/Decky-APDetail](https://github.com/miguellara999/Decky-APDetail) |
 | Decky Guide | Utilities | [Logic-mle/decky-guide](https://github.com/Logic-mle/decky-guide) |
-| 枫语幕 | Utilities | [Herzzzz/fengyumu-decky](https://github.com/Herzzzz/fengyumu-decky) |
 | Decky Player | Utilities | [mdusmb/decky-player](https://github.com/mdusmb/decky-player) |
 | SaveLocker | Launch Options | [SkorcherX/SaveLocker-Decky](https://github.com/SkorcherX/SaveLocker-Decky) |
 | DSH Chat | Utilities | [gangoogle/decky-dsh-chat](https://github.com/gangoogle/decky-dsh-chat) |
@@ -579,6 +580,39 @@ New plugins are found automatically too. Every day the [discover workflow](.gith
 | SCopy | Utilities | [MWGIH/SCopy](https://github.com/MWGIH/SCopy) |
 | Power Timeline | Performance | [ZacharyQin/power-timeline](https://github.com/ZacharyQin/power-timeline) |
 | AI Deck | Utilities | [leoredrum/Ai-deck](https://github.com/leoredrum/Ai-deck) |
+| DSH Launcher | Utilities | [3570548848/dsh-decky](https://github.com/3570548848/dsh-decky) |
+| DiscordDeck | Game Libraries | [Lexodeus/DiscordDeck](https://github.com/Lexodeus/DiscordDeck) |
+| Opti2XMX | Frame Generation | [FlightDan/Opti2XMX](https://github.com/FlightDan/Opti2XMX) |
+| steam-hunter-for-deck | Game Libraries | [KimaCuda/decky-steamhunter](https://github.com/KimaCuda/decky-steamhunter) |
+| SteamOS DD+ | Utilities | [enjihn/steamos-ddplus-decky](https://github.com/enjihn/steamos-ddplus-decky) |
+| Junk-Store | Game Libraries | [ebenbruyns/junkstore](https://github.com/ebenbruyns/junkstore) |
+| Ludo | Game Libraries | [rommapp/ludo](https://github.com/rommapp/ludo) |
+| MudfishDecky | Customization | [K1ngst0m/MudfishDecky](https://github.com/K1ngst0m/MudfishDecky) |
+| Deckdeals | Utilities | [ebdevag/optideck-deckdeals](https://github.com/ebdevag/optideck-deckdeals) |
+| XIVOmega | Utilities | [shingonati0n/xivomega-decky](https://github.com/shingonati0n/xivomega-decky) |
+| GameBridge | Launch Options | [FelPikachu/GameBridge](https://github.com/FelPikachu/GameBridge) |
+| Moddy | Mod Managers | [FunkyByte1/Moddy](https://github.com/FunkyByte1/Moddy) |
+| steamdeck-input-disabler | Controllers | [BurritoSpray/steamdeck-input-disabler](https://github.com/BurritoSpray/steamdeck-input-disabler) |
+| Steamback | Utilities | [geeksville/steamback](https://github.com/geeksville/steamback) |
+| Deck Auto Update | Utilities | [AkazaRenn/SDH-DeckAutoUpdate](https://github.com/AkazaRenn/SDH-DeckAutoUpdate) |
+| AnyDeck | Performance | [neokura/AnyDeck](https://github.com/neokura/AnyDeck) |
+| Reshadeck+ | Utilities | [jeanbottein/ReshadeckPlus](https://github.com/jeanbottein/ReshadeckPlus) |
+| Proton VPN (Unofficial) | Launch Options | [acestronautical/decky-protonvpn](https://github.com/acestronautical/decky-protonvpn) |
+| OpenWinControls | Controllers | [TheOmega-hash/decky-openwincontrols](https://github.com/TheOmega-hash/decky-openwincontrols) |
+| Amnezia Deck | Utilities | [Algorithm0/AmneziaVPN-DeckyLoader](https://github.com/Algorithm0/AmneziaVPN-DeckyLoader) |
+| AI 助手 | Utilities | [YunXi-X/Decky-ai-assistant](https://github.com/YunXi-X/Decky-ai-assistant) |
+| HelixSR Decky Armada | Frame Generation | [dawoodtogoo2020-code/HelixSR-Decky-Armada](https://github.com/dawoodtogoo2020-code/HelixSR-Decky-Armada) |
+| Timeout | Utilities | [Lakeland97/timeout-decky-plugin](https://github.com/Lakeland97/timeout-decky-plugin) |
+| 4:3 Library | Game Libraries | [xXJSONDeruloXx/decky-4x3](https://github.com/xXJSONDeruloXx/decky-4x3) |
+| Gleipnir | Performance | [venatrix-ritz/Gleipnir](https://github.com/venatrix-ritz/Gleipnir) |
+| Decky Neutron | Utilities | [Livonsky/decky-neutron](https://github.com/Livonsky/decky-neutron) |
+| Recents Filter | Game Libraries | [BirikuSistema/decky-recents-filter](https://github.com/BirikuSistema/decky-recents-filter) |
+| CEC Volume OSD | Performance | [enjihn/cec-volume-osd-decky](https://github.com/enjihn/cec-volume-osd-decky) |
+| Decky Remote | Utilities | [dv-89/decky-remote](https://github.com/dv-89/decky-remote) |
+| SteamBooster | Utilities | [Hokage-git/steambooster-decky](https://github.com/Hokage-git/steambooster-decky) |
+| decky-protondb-collections | Launch Options | [Lui92/decky-protondb-collections](https://github.com/Lui92/decky-protondb-collections) |
+| Script Assigner | Launch Options | [JDLKMR/Decky-Script-Assigner-Legacy](https://github.com/JDLKMR/Decky-Script-Assigner-Legacy) |
+| ROM Manager | Launch Options | [JDLKMR/Decky-ROM-Manager-Legacy](https://github.com/JDLKMR/Decky-ROM-Manager-Legacy) |
 
 ## Where the plugins come from
 
@@ -644,7 +678,7 @@ CI runs on every pull request, on pushes to `main` and `develop`, and weekly bec
   ```bash
   GITHUB_TOKEN=$(gh auth token) python scripts/validate.py
   ```
-- **Catalog site:** [registry.deckyhub.com](https://registry.deckyhub.com/) is built by [`scripts/build_site.py`](scripts/build_site.py) and deployed by the [pages workflow](.github/workflows/pages.yml) from `main` (on changes, and daily for fresh stats). Besides the catalog (filled in as HTML, so it reads without JavaScript), it writes a page per plugin and per category with structured data, `sitemap.xml`, and `llms.txt`: every plugin as plain text for AI assistants. `docs/robots.txt` lets search engines and AI crawlers in.
+- **Contributor site:** [registry.deckyhub.com](https://registry.deckyhub.com/) (how to contribute and the registry editor, with the same menu and footer as deckyhub.com) is built by [`scripts/build_site.py`](scripts/build_site.py) and deployed by the [pages workflow](.github/workflows/pages.yml) from `main`. Plugins are browsed on [deckyhub.com/plugins/](https://deckyhub.com/plugins/); the old `plugins/<id>.html` and `categories/<slug>.html` addresses here redirect there. `scripts/site_shell.py` is a copy of deckyhub-plugin's `devtools/site_shell.py`: change both together.
 - **Tests:** `python -m unittest discover -s tests` covers the scripts, and also checks that `apps.json` stays under the 512 KB DeckyHub 3.0.0 and older accept, that the catalog page's script parses, and that `stats.json` keeps every field and warning the DeckyHub people run reads (against deckyhub-plugin's `main`, which CI checks out).
 
 ## Your own registry
@@ -656,5 +690,7 @@ DeckyHub's **Settings** → **Repositories** → **Custom Registries** accepts `
 Not affiliated with Valve or the Decky Loader project. This list is collected from public GitHub repositories, and every plugin belongs to its own authors. Entries are checked for a working release, not reviewed for safety: DeckyHub doesn't own, endorse or take responsibility for any listed plugin. Plugins are installed at your own risk, so look at a plugin's repository before you install it.
 
 ## License
+
+Copyright © 2026 Andrii Shevchuk-Yuhanets ([mazillka](https://github.com/mazillka)).
 
 [GPL-3.0](LICENSE.md). Each listed plugin belongs to its authors and has its own license.

@@ -1,16 +1,15 @@
 name: Deploy catalog site
 
-# Builds registry.deckyhub.com with scripts/build_site.py (the catalog filled in as HTML,
-# a page per plugin and per category, sitemap.xml, llms.txt) and deploys it to GitHub
+# Builds registry.deckyhub.com with scripts/build_site.py (the contributor pages, redirects
+# from the old plugin and category addresses to deckyhub.com, sitemap.xml, llms.txt) and deploys it to GitHub
 # Pages. The repository's Pages source must be "GitHub Actions" (Settings → Pages) for
 # the deploy to take effect, with registry.deckyhub.com as its custom domain.
 #
-# Runs from main only: on pushes that change the site or the plugin list, daily so the
-# pages pick up new downloads, stars, releases, warnings and virus scans, and by hand.
+# Runs from main only: on pushes that change the site or the plugin list, daily, and by hand.
 on:
   push:
     branches: [main]
-    paths: [docs/**, registry/apps.json, scripts/build_site.py, .github/workflows/pages.yml]
+    paths: [docs/**, registry/apps.json, scripts/build_site.py, scripts/site_shell.py, .github/workflows/pages.yml]
   schedule:
     - cron: "17 7 * * *"
   workflow_dispatch:

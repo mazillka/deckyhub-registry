@@ -1,0 +1,54 @@
+name: Registry VirusTotal reports
+
+on:
+  schedule:
+    - cron: "37 4 * * *"
+  push:
+    branches: [develop]
+    paths:
+      - ".github/workflows/virustotal-scan.yml"
+      - "scripts/virustotal_scan.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: registry-virustotal-reports
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Update VirusTotal reports
+        env:
+          VIRUSTOTAL_API_KEY: ${{ secrets.VIRUSTOTAL_API_KEY }}
+        run: |
+          if [ -z "$VIRUSTOTAL_API_KEY" ]; then
+            echo "::notice::Set the registry VIRUSTOTAL_API_KEY secret to enable public ZIP submissions."
+            exit 0
+          fi
+          git fetch --depth 1 origin virus-scans
+          git show FETCH_HEAD:scans.json > "$RUNNER_TEMP/scans.json"
+          if git fetch --depth 1 origin virustotal-reports; then
+            git show FETCH_HEAD:reports.json > "$RUNNER_TEMP/reports.json"
+            git branch virustotal-reports FETCH_HEAD
+          fi
+          python3 scripts/virustotal_scan.py "$RUNNER_TEMP/scans.json" "$RUNNER_TEMP/reports.json"
+      - name: Publish reports
+        run: |
+          [ -f "$RUNNER_TEMP/reports.json" ] || exit 0
+          if git show-ref --verify --quiet refs/heads/virustotal-reports; then
+            git switch virustotal-reports
+          else
+            git switch --orphan virustotal-reports
+          fi
+          cp "$RUNNER_TEMP/reports.json" reports.json
+          git add reports.json
+          git diff --cached --quiet && exit 0
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -qm "Update VirusTotal reports"
+          git push origin HEAD:refs/heads/virustotal-reports

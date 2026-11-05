@@ -18,7 +18,7 @@ import json
 import sys
 from pathlib import Path
 
-from validate import REGISTRY
+from validate import load_registry_apps, REGISTRY
 
 ISSUE_TITLE = "Audit warnings"
 AUDIT_URL = "https://decky-extended-plugins.beallio.com/audit"
@@ -79,7 +79,7 @@ def body(old: dict, new: dict, names: dict[str, str], generated: str) -> tuple[s
 
 def main() -> int:
     old, new = (json.loads(Path(path).read_text(encoding="utf-8")) for path in sys.argv[1:3])
-    names = {app["repo"].casefold(): app["name"] for app in json.loads(REGISTRY.read_text(encoding="utf-8"))["apps"]}
+    names = {app["repo"].casefold(): app["name"] for app in load_registry_apps(REGISTRY)}
     action, text = body(old.get("plugins", {}), new.get("plugins", {}), names, new.get("generatedAt", "?"))
     Path(sys.argv[3]).write_text(text, encoding="utf-8")
     print(action)
