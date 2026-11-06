@@ -629,6 +629,7 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | Proton Picker | Launch Options | [Shadoww23/proton-picker-decky](https://github.com/Shadoww23/proton-picker-decky) |
 | Moonshine Config | Utilities | [johngrantdev/moonshine-decky](https://github.com/johngrantdev/moonshine-decky) |
 | System Monitor | Controllers | [paulorband/decky-system-monitor](https://github.com/paulorband/decky-system-monitor) |
+| SpeedHack | Utilities | [Diegocorp/decky-speedhack](https://github.com/Diegocorp/decky-speedhack) |
 
 ## Where the plugins come from
 
