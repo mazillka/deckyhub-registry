@@ -1,0 +1,33 @@
+name: Add a plugin
+description: Suggest a Decky Loader plugin for DeckyHub's list.
+title: "Add <plugin name>"
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion! DeckyHub installs plugins from their authors' GitHub releases, so the plugin needs a public GitHub repository with at least one release that has a plugin ZIP attached. Comfortable editing JSON? You can open a pull request against `develop` instead, or use the [registry editor](https://deckyhub.com/contribute/editor.html).
+  - type: input
+    id: repo
+    attributes:
+      label: GitHub repository
+      placeholder: "https://github.com/owner/repo"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What does it do?
+      description: One or two sentences. It may become the plugin's description in DeckyHub.
+    validations:
+      required: true
+  - type: input
+    id: category
+    attributes:
+      label: Category
+      description: Optional. One of the categories in the [plugin table](https://github.com/mazillka/deckyhub-registry#repositories), or a new one.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else?
+      description: Optional. Which release ZIP to install if there are several, known problems, whether you're the author...

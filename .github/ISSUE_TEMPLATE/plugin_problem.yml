@@ -1,0 +1,41 @@
+name: Problem with a listed plugin
+description: A plugin in DeckyHub's list shows the wrong version, downloads the wrong file, isn't detected, or has wrong details.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is for the registry's data about a plugin. A bug in the plugin itself (it crashes, a feature doesn't work) goes to that plugin's own repository. A bug in DeckyHub goes to [mazillka/deckyhub-plugin](https://github.com/mazillka/deckyhub-plugin/issues/new/choose).
+  - type: input
+    id: plugin
+    attributes:
+      label: Plugin
+      description: Its name in DeckyHub, or its GitHub repository.
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What's wrong?
+      options:
+        - Wrong or missing version
+        - Downloads the wrong file, or the install fails
+        - Not shown as installed
+        - Wrong name, description, category or icon
+        - Broken link, or the repository moved
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What you expected and what you see instead. Screenshots help.
+    validations:
+      required: true
+  - type: input
+    id: deckyhub-version
+    attributes:
+      label: DeckyHub version
+      description: Optional. Shown as "DeckyHub vX.Y.Z" in DeckyHub's Quick Access Menu tab.
+      placeholder: "3.1.0"
