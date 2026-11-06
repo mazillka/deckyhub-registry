@@ -3059,7 +3059,7 @@
     {
       "id": "reshadeck",
       "name": "Reshadeck",
-      "description": "A plugin for loading reshade shaders on steam deck",
+      "description": "Loads ReShade shaders in games and Gaming Mode.",
       "repo": "mspeedo/Reshadeck",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Reshadeck"] },
@@ -4859,7 +4859,7 @@
     {
       "id": "reshadeckplus",
       "name": "Reshadeck+",
-      "description": "A plugin for loading reshade shaders on steam deck",
+      "description": "Reshadeck fork with per-game profiles, shader settings and crash protection.",
       "repo": "jeanbottein/ReshadeckPlus",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Reshadeck+"] },
