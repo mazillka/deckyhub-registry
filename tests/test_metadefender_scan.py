@@ -34,6 +34,20 @@ class MetaDefenderTests(unittest.TestCase):
         self.assertEqual(pending["state"], "pending")
         self.assertEqual(md.process(Client(), self.digest, self.url, pending)["state"], "complete")
 
+    def test_pending_uploads_are_polled_before_new_hashes(self):
+        new, pending = "a" * 64, "b" * 64
+        with tempfile.TemporaryDirectory() as folder:
+            scans, reports = Path(folder) / "scans.json", Path(folder) / "reports.json"
+            scans.write_text('{"files": {"https://github.com/a/b/releases/download/v1/new.zip": {"sha256": "%s"}, "https://github.com/a/b/releases/download/v1/old.zip": {"sha256": "%s"}}}' % (new, pending), encoding="utf-8")
+            reports.write_text('{"reports": {"%s": {"state": "pending", "dataId": "abc", "checkedAt": 1793804000}}}' % pending, encoding="utf-8")
+            seen = []
+            def process(client, digest, url, previous):
+                seen.append(digest)
+                raise md.BudgetExhausted  # the budget runs out after the first one
+            with patch.dict("os.environ", {"METADEFENDER_API_KEY": "key"}), patch.object(md, "process", process), patch("sys.stdout", io.StringIO()):
+                md.main(scans, reports)
+        self.assertEqual(seen, [pending])
+
     def test_partial_or_missing_results_are_not_clean(self):
         class Client:
             def request(self, path):

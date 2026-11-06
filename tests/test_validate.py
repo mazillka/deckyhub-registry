@@ -1,5 +1,9 @@
+import io
+import json
 import sys
 import unittest
+import zipfile
+from unittest import mock
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
@@ -48,6 +52,28 @@ class ValidateTests(unittest.TestCase):
         releases = [release("v1", "2026-01-01"), release("windows-v2", "2026-02-01", assets=("Setup.exe", "windows.zip.sha256"))]
         self.assertEqual(channel_releases(app(), releases)["stable"]["tag_name"], "v1")
         self.assertIsNone(channel_releases(app(), releases[1:])["prerelease"])
+
+
+class PluginVersionTests(unittest.TestCase):
+    def test_the_zip_gives_plugin_json_and_the_package_json_beside_it(self):
+        data = io.BytesIO()
+        with zipfile.ZipFile(data, "w") as archive:
+            archive.writestr("A/plugin.json", json.dumps({"name": "A"}))
+            archive.writestr("A/package.json", json.dumps({"version": "0.4.5"}))
+            archive.writestr("A/node_modules/x/package.json", json.dumps({"version": "9.9.9"}))
+        with mock.patch.object(validate, "RangedFile", lambda url, size: io.BytesIO(data.getvalue())):
+            manifest, package = validate.zip_plugin_files({"browser_download_url": "https://x/a.zip", "size": 1})
+        self.assertEqual(validate.plugin_version(manifest, package), "0.4.5")
+        # plugin.json's own version wins, as in DeckyHub; none at all is None.
+        self.assertEqual(validate.plugin_version({"version": "1.0"}, {"version": "2.0"}), "1.0")
+        self.assertIsNone(validate.plugin_version(None, {}))
+
+    def test_a_tag_naming_another_version_number_is_a_mismatch(self):
+        for tag, version in [("v0.45", "0.4.5"), ("v1.0.9", "1.0.8"), ("v0.2.0", "0.0.1")]:
+            self.assertTrue(validate.version_mismatch(tag, version), tag)
+        # Prefixes, suffixes and trailing zeros don't count; nothing to compare isn't a mismatch.
+        for tag, version in [("v1.0", "1.0.0"), ("plugin-v3.3.0", "3.3.0"), ("v0.2.0-with-cache", "0.2"), ("v1.2.0-rc.1", "1.2.0-rc.1"), ("nightly", "1.0.0"), ("v1.0.0", None)]:
+            self.assertFalse(validate.version_mismatch(tag, version), tag)
 
 
 class AiFilesTests(unittest.TestCase):
