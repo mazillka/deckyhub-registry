@@ -27,7 +27,8 @@
       "repo": "mubaraknumann/unifideck",
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["Unifideck"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "knownIssues": [{ "title": "Decky Loader bug (reported): updating in place starts Unifideck mid-install and then stops it, which can freeze the Deck. DeckyHub avoids it by removing the old version first.", "url": "https://github.com/SteamDeckHomebrew/decky-loader/issues/982" }]
     },
     {
       "id": "decky-framegen",
@@ -757,7 +758,8 @@
       "repo": "MoYoez/Decky-LocalSend",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decky Localsend"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "knownIssues": [{ "title": "Shows an update that never sticks: its release tag v0.45 doesn't match the plugin's version 0.4.5", "url": "https://github.com/MoYoez/Decky-LocalSend/issues/3" }]
     },
     {
       "id": "decky-ludusavi",
