@@ -1,6 +1,5 @@
-# registry.deckyhub.com: the Steam Deck plugin catalog. Everything here is public and
-# meant to be found, by search engines and by AI assistants answering questions about
-# Steam Deck plugins (see /llms.txt for the whole list as plain text).
+# registry.deckyhub.com moved to deckyhub.com: every page here redirects there. Crawlers are
+# welcome so they follow the redirects (see https://deckyhub.com/robots.txt for the site itself).
 User-agent: *
 Allow: /
 
@@ -17,5 +16,3 @@ User-agent: Applebot-Extended
 User-agent: Amazonbot
 User-agent: CCBot
 Allow: /
-
-Sitemap: https://registry.deckyhub.com/sitemap.xml
