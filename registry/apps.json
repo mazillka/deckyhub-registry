@@ -936,7 +936,7 @@
       "id": "moondeck",
       "name": "MoonDeck",
       "description": "Streams your Steam games through Moonlight without adding them to Sunshine.",
-      "repo": "FrogTheFrog/moondeck",
+      "repo": "MoonDeckTeam/moondeck",
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["MoonDeck"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
