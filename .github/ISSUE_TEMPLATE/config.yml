@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Bug in the DeckyHub app
+    url: https://github.com/mazillka/deckyhub-plugin/issues/new/choose
+    about: Problems with DeckyHub itself (installing, updating, its screens) go to mazillka/deckyhub-plugin.
+  - name: Report a security vulnerability
+    url: https://github.com/mazillka/deckyhub-plugin/security/advisories/new
+    about: Please report vulnerabilities in DeckyHub or this registry privately, not in a public issue.
