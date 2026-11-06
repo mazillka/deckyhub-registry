@@ -164,7 +164,7 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | IsThereAnyDeal for Deck | Game Libraries | [JtdeGraaf/IsThereAnyDeal-DeckyPlugin](https://github.com/JtdeGraaf/IsThereAnyDeal-DeckyPlugin) |
 | MagicBlack | Customization | [steam3d/MagicBlackDecky](https://github.com/steam3d/MagicBlackDecky) |
 | MagicPods | Utilities | [steam3d/MagicPodsDecky](https://github.com/steam3d/MagicPodsDecky) |
-| MoonDeck | Game Libraries | [FrogTheFrog/moondeck](https://github.com/FrogTheFrog/moondeck) |
+| MoonDeck | Game Libraries | [MoonDeckTeam/moondeck](https://github.com/MoonDeckTeam/moondeck) |
 | Muon | Utilities | [wtlnetwork/muon](https://github.com/wtlnetwork/muon) |
 | MuraDeck | Customization | [Moonveil-Kanata/MuraDeck](https://github.com/Moonveil-Kanata/MuraDeck) |
 | MuteOnSleep | Utilities | [genc-v/mute-on-sleep](https://github.com/genc-v/mute-on-sleep) |
