@@ -1,4 +1,3 @@
-import json
 import shutil
 import sys
 import tempfile
@@ -35,30 +34,11 @@ class BuildSiteTests(unittest.TestCase):
         self.assertNotIn("<script>Evil", self.read("plugins/evil.html"))
         self.assertIn("Evil &lt;script&gt;", self.read("plugins/evil.html"))
 
-    def test_contributor_pages_get_the_shared_menu_and_footer(self):
-        for name in ("index.html", "editor.html", "404.html"):
-            page = self.read(name)
-            self.assertNotIn("<!-- site-", page)
-            self.assertNotIn("/* site-nav-style */", page)
-        index = self.read("index.html")
-        self.assertIn('class="site-nav"', index)
-        self.assertIn('aria-current="page">Contribute', index)
-        self.assertIn("<footer", index)
-
-    def test_ukrainian_pages_have_their_own_menu_and_link_back(self):
-        index = self.read("uk/index.html")
-        self.assertNotIn("<!-- site-", index)
-        self.assertIn('aria-current="page">Долучитися', index)
-        self.assertIn('href="https://registry.deckyhub.com/" hreflang="en"', index)
-        self.assertIn('href="https://registry.deckyhub.com/uk/editor.html" hreflang="uk"', self.read("editor.html"))
-        self.assertIn('rel="canonical" href="https://registry.deckyhub.com/uk/"', index)
-
-    def test_sitemap_lists_only_contributor_pages(self):
-        sitemap = self.read("sitemap.xml")
-        self.assertIn("<loc>https://registry.deckyhub.com/editor.html</loc>", sitemap)
-        self.assertIn("<loc>https://registry.deckyhub.com/uk/editor.html</loc>", sitemap)
-        self.assertNotIn("/plugins/", sitemap)
-        self.assertIn("https://deckyhub.com/plugins/", self.read("llms.txt"))
+    def test_contributor_pages_and_editor_redirect_to_deckyhub(self):
+        for old, new in (("index.html", "contribute/"), ("editor.html", "contribute/editor.html"), ("uk/index.html", "uk/contribute/"), ("uk/editor.html", "uk/contribute/editor.html")):
+            self.assertIn(f'<link rel="canonical" href="https://deckyhub.com/{new}">', self.read(old))
+        self.assertFalse((self.out / "sitemap.xml").exists())
+        self.assertIn("https://deckyhub.com/contribute/", self.read("llms.txt"))
 
 
 if __name__ == "__main__":
