@@ -5089,6 +5089,33 @@
       "category": "Performance",
       "detect": { "type": "decky-plugin", "names": ["MangoPeel Neo"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "proton-picker-decky",
+      "name": "Proton Picker",
+      "description": "Read-only status panel for Proton Picker: installed version, routed games, fallback build, pins, and recent updater activity.",
+      "repo": "Shadoww23/proton-picker-decky",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["Proton Picker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "moonshine-decky",
+      "name": "Moonshine Config",
+      "description": "Safely edit Moonshine's server name, HDR and Steam mode from the Steam Game Mode Quick Access menu.",
+      "repo": "johngrantdev/moonshine-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Moonshine Config"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-system-monitor",
+      "name": "System Monitor",
+      "description": "Lightweight, fully gamepad-navigable CPU/GPU/RAM/battery monitor for Game Mode.",
+      "repo": "paulorband/decky-system-monitor",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["System Monitor"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
