@@ -624,6 +624,9 @@ The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up pu
 | Museck | Utilities | [JDLKMR/Museck](https://github.com/JDLKMR/Museck) |
 | Ratatoskr | Controllers | [venatrix-ritz/Ratatoskr](https://github.com/venatrix-ritz/Ratatoskr) |
 | MangoPeel Neo | Performance | [NeoSloth/MangoPeel](https://github.com/NeoSloth/MangoPeel) |
+| Proton Picker | Launch Options | [Shadoww23/proton-picker-decky](https://github.com/Shadoww23/proton-picker-decky) |
+| Moonshine Config | Utilities | [johngrantdev/moonshine-decky](https://github.com/johngrantdev/moonshine-decky) |
+| System Monitor | Controllers | [paulorband/decky-system-monitor](https://github.com/paulorband/decky-system-monitor) |
 
 ## Where the plugins come from
 
