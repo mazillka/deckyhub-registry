@@ -5154,6 +5154,27 @@
       "category": "Frame Generation",
       "detect": { "type": "decky-plugin", "names": ["Clarity"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamos-orphan",
+      "name": "Orphan Finder",
+      "description": "Detect and clean orphaned game folders in Steam libraries on internal storage and microSD cards.",
+      "repo": "deamos/steamos-orphan",
+      "category": "Utilities",
+      "detect": {
+        "type": "decky-plugin",
+        "names": [
+          "Orphan Finder"
+        ]
+      },
+      "asset": {
+        "include": [
+          "steamos-orphan.zip"
+        ],
+        "exclude": [
+          "source"
+        ]
+      }
     }
   ]
 }

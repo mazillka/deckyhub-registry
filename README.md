@@ -633,6 +633,7 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | Overdrive | Controllers | [musika08/overdrive](https://github.com/musika08/overdrive) |
 | Control Center | Performance | [musika08/decky-control-center](https://github.com/musika08/decky-control-center) |
 | Clarity | Frame Generation | [musika08/clarity](https://github.com/musika08/clarity) |
+| Orphan Finder | Utilities | [deamos/steamos-orphan](https://github.com/deamos/steamos-orphan) |
 
 ## Where the plugins come from
 
