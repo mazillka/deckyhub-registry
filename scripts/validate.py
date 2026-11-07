@@ -45,6 +45,9 @@ def static_errors(apps: list[dict]) -> list[str]:
             if name.casefold() in names:
                 errors.append(f"{app['id']}: detect name {name!r} is already claimed by {names[name.casefold()]}")
             names[name.casefold()] = app["id"]
+        upstream = app.get("upstream")
+        if upstream is not None and (not isinstance(upstream, str) or not re.fullmatch(r"[\w.-]+/[\w.-]+", upstream) or upstream.casefold() == app["repo"].casefold()):
+            errors.append(f"{app['id']}: upstream {upstream!r} must be another repo's owner/name")
     return errors
 
 

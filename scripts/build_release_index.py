@@ -14,7 +14,8 @@ It also writes stats.json for the catalog page, per plugin:
 - stars: the repo's GitHub stars.
 - updated: when the release DeckyHub shows (newest stable, else newest pre-release) came out.
 - root: whether that release's plugin.json asks Decky to run it as root.
-- fork: the owner/name a repo was forked from, for repos that are forks (missing otherwise).
+- fork: the owner/name a repo was forked from, for repos that are forks (missing otherwise):
+  the entry's upstream when it has one, else the parent GitHub knows of.
 - ai: the AI coding assistant files (CLAUDE.md, AGENTS.md, .cursorrules... see AI_FILES in
   validate.py) on the repo's default branch, a sign it's developed with AI help. Missing
   when there are none; no files isn't proof no AI was used.
@@ -191,7 +192,7 @@ def main() -> int:
     # One read per ZIP: the shown release's feeds both root (stats) and pluginVersion.
     files = functools.lru_cache(maxsize=None)(lambda url, size: zip_plugin_files({"browser_download_url": url, "size": size}))
     read = lambda asset: files(asset["browser_download_url"], asset["size"])  # noqa: E731
-    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], manifest=lambda asset: read(asset)[0], audits=audits, fork=fork_of(github[entry["repo"].casefold()]), ai=github[entry["repo"].casefold()].get("ai")), version=lambda asset: plugin_version(*read(asset)))
+    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], manifest=lambda asset: read(asset)[0], audits=audits, fork=entry.get("upstream") or fork_of(github[entry["repo"].casefold()]), ai=github[entry["repo"].casefold()].get("ai")), version=lambda asset: plugin_version(*read(asset)))
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     # DeckyHub reads releases; the catalog page reads the much smaller stats file.
