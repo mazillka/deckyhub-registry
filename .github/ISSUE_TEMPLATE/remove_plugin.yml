@@ -1,0 +1,35 @@
+name: Remove or flag a plugin
+description: A listed plugin is abandoned, broken for good, duplicated, unsafe, or its author wants it removed.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If you think a plugin is malicious, say what you found and how you found it. Don't post working exploit details or anyone's private data.
+  - type: input
+    id: plugin
+    attributes:
+      label: Plugin
+      description: Its name in DeckyHub, or its GitHub repository.
+    validations:
+      required: true
+  - type: dropdown
+    id: reason
+    attributes:
+      label: Reason
+      options:
+        - The repository is archived, deleted or abandoned
+        - It no longer works on current Decky Loader or SteamOS
+        - It duplicates another listed plugin
+        - It looks unsafe or malicious
+        - I'm the author and want it removed
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Links, scan results, the replacement plugin, or anything else that helps.
+    validations:
+      required: true
