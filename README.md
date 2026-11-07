@@ -162,7 +162,7 @@ The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up pu
 | IsThereAnyDeal for Deck | Game Libraries | [JtdeGraaf/IsThereAnyDeal-DeckyPlugin](https://github.com/JtdeGraaf/IsThereAnyDeal-DeckyPlugin) |
 | MagicBlack | Customization | [steam3d/MagicBlackDecky](https://github.com/steam3d/MagicBlackDecky) |
 | MagicPods | Utilities | [steam3d/MagicPodsDecky](https://github.com/steam3d/MagicPodsDecky) |
-| MoonDeck | Game Libraries | [FrogTheFrog/moondeck](https://github.com/FrogTheFrog/moondeck) |
+| MoonDeck | Game Libraries | [MoonDeckTeam/moondeck](https://github.com/MoonDeckTeam/moondeck) |
 | Muon | Utilities | [wtlnetwork/muon](https://github.com/wtlnetwork/muon) |
 | MuraDeck | Customization | [Moonveil-Kanata/MuraDeck](https://github.com/Moonveil-Kanata/MuraDeck) |
 | MuteOnSleep | Utilities | [genc-v/mute-on-sleep](https://github.com/genc-v/mute-on-sleep) |
@@ -624,6 +624,9 @@ The [MetaDefender backfill](.github/workflows/metadefender-scan.yml) looks up pu
 | Museck | Utilities | [JDLKMR/Museck](https://github.com/JDLKMR/Museck) |
 | Ratatoskr | Controllers | [venatrix-ritz/Ratatoskr](https://github.com/venatrix-ritz/Ratatoskr) |
 | MangoPeel Neo | Performance | [NeoSloth/MangoPeel](https://github.com/NeoSloth/MangoPeel) |
+| Proton Picker | Launch Options | [Shadoww23/proton-picker-decky](https://github.com/Shadoww23/proton-picker-decky) |
+| Moonshine Config | Utilities | [johngrantdev/moonshine-decky](https://github.com/johngrantdev/moonshine-decky) |
+| System Monitor | Controllers | [paulorband/decky-system-monitor](https://github.com/paulorband/decky-system-monitor) |
 
 ## Where the plugins come from
 
