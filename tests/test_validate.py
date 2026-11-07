@@ -23,6 +23,9 @@ def release(tag, published, prerelease=False, draft=False, assets=("plugin.zip",
 class ValidateTests(unittest.TestCase):
     def test_static_errors_catch_clashing_ids_repos_and_detect_names(self):
         self.assertEqual(static_errors([app(), app(id="b", repo="o/b", names=("B",))]), [])
+        self.assertEqual(static_errors([{**app(), "upstream": "orig/a"}]), [])
+        for upstream in ["orig", "https://github.com/orig/a", "O/A", 5]:
+            self.assertEqual(len(static_errors([{**app(repo="o/a"), "upstream": upstream}])), 1, upstream)
         self.assertEqual(len(static_errors([app(), app(repo="o/b", names=("B",))])), 1)
         self.assertEqual(len(static_errors([app(), app(id="b", repo="O/A", names=("B",))])), 1)
         self.assertEqual(len(static_errors([app(), app(id="b", repo="o/b", names=("a",))])), 1)

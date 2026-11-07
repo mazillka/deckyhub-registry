@@ -1279,6 +1279,7 @@
       "name": "GameVault",
       "description": "An open and extensible multi-store game launcher for Steam Deck. Access Epic, GOG, Amazon, and itch.io games directly from Game Mode.",
       "repo": "Starkka15/GameVault",
+      "upstream": "ebenbruyns/junkstore",
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["GameVault"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
@@ -1441,6 +1442,7 @@
       "name": "SkullKey",
       "description": "The key that opens every store.",
       "repo": "Necrosiak/SkullKey",
+      "upstream": "ebenbruyns/junkstore",
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["SkullKey"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
