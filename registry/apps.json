@@ -1442,6 +1442,7 @@
       "name": "SkullKey",
       "description": "The key that opens every store.",
       "repo": "Necrosiak/SkullKey",
+      "upstream": "ebenbruyns/junkstore",
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["SkullKey"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
