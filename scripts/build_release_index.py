@@ -16,7 +16,8 @@ It also writes stats.json for the catalog page, per plugin:
 - root: whether that release's plugin.json asks Decky to run it as root.
 - fork: the owner/name a repo was forked from, for repos that are forks (missing otherwise).
 - ai: the AI coding assistant files (CLAUDE.md, AGENTS.md, .cursorrules... see AI_FILES in
-  validate.py) on the repo's default branch, a sign it's developed with AI help. Missing
+  validate.py) on the repo's default branch, plus 'README: "<phrase>"' when its README
+  says it's made with AI (AI_README), a sign it's developed with AI help. Missing
   when there are none; no files isn't proof no AI was used.
 - warnings / prereleaseWarnings: what Decky Extended Plugins' audit found in that release
   (and in a newer pre-release, if any) that's worth warning about (see WARNINGS). Matched
