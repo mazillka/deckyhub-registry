@@ -5118,6 +5118,15 @@
       "category": "Controllers",
       "detect": { "type": "decky-plugin", "names": ["System Monitor"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-speedhack",
+      "name": "SpeedHack",
+      "description": "Control game speed multiplier on SteamOS, replicating Cheat Engine's TimeFaster functionality.",
+      "repo": "Diegocorp/decky-speedhack",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SpeedHack"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
