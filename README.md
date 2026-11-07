@@ -630,6 +630,9 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | Moonshine Config | Utilities | [johngrantdev/moonshine-decky](https://github.com/johngrantdev/moonshine-decky) |
 | System Monitor | Controllers | [paulorband/decky-system-monitor](https://github.com/paulorband/decky-system-monitor) |
 | SpeedHack | Utilities | [Diegocorp/decky-speedhack](https://github.com/Diegocorp/decky-speedhack) |
+| Overdrive | Controllers | [musika08/overdrive](https://github.com/musika08/overdrive) |
+| Control Center | Performance | [musika08/decky-control-center](https://github.com/musika08/decky-control-center) |
+| Clarity | Frame Generation | [musika08/clarity](https://github.com/musika08/clarity) |
 
 ## Where the plugins come from
 

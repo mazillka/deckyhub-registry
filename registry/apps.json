@@ -5127,6 +5127,33 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["SpeedHack"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "overdrive",
+      "name": "Overdrive",
+      "description": "Performance mode, power limits, FPS limit and fan curves for the ROG Ally family (unofficial; based on G-Helper).",
+      "repo": "musika08/overdrive",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Overdrive"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-control-center",
+      "name": "Control Center",
+      "description": "Brightness, volume, Wi-Fi, Bluetooth and the ASUS battery charge limit from the Quick Access menu on Windows.",
+      "repo": "musika08/decky-control-center",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Control Center"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "clarity",
+      "name": "Clarity",
+      "description": "Sharper, smoother games: installs OptiScaler per game with AMD FSR 4 Lite and frame generation (unofficial).",
+      "repo": "musika08/clarity",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["Clarity"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
