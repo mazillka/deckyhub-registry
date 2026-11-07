@@ -23,6 +23,9 @@ def release(tag, published, prerelease=False, draft=False, assets=("plugin.zip",
 class ValidateTests(unittest.TestCase):
     def test_static_errors_catch_clashing_ids_repos_and_detect_names(self):
         self.assertEqual(static_errors([app(), app(id="b", repo="o/b", names=("B",))]), [])
+        self.assertEqual(static_errors([{**app(), "upstream": "orig/a"}]), [])
+        for upstream in ["orig", "https://github.com/orig/a", "O/A", 5]:
+            self.assertEqual(len(static_errors([{**app(repo="o/a"), "upstream": upstream}])), 1, upstream)
         self.assertEqual(len(static_errors([app(), app(repo="o/b", names=("B",))])), 1)
         self.assertEqual(len(static_errors([app(), app(id="b", repo="O/A", names=("B",))])), 1)
         self.assertEqual(len(static_errors([app(), app(id="b", repo="o/b", names=("a",))])), 1)
@@ -83,6 +86,17 @@ class AiFilesTests(unittest.TestCase):
             "dotGithub": {"entries": [{"name": "workflows"}, {"name": "copilot-instructions.md"}]},
         }
         self.assertEqual(validate.ai_files(result), [".cursorrules", ".github/copilot-instructions.md", "CLAUDE.md", "agents.MD"])
+
+    def test_a_readme_saying_it_is_made_with_ai_counts(self):
+        result = {"root": {"entries": [{"name": "CLAUDE.md"}]}, "readme": {"text": "# GameVault\n\nThis plugin was vibe-coded with Claude."}}
+        self.assertEqual(validate.ai_files(result), ["CLAUDE.md", 'README: "vibe-coded"'])
+        self.assertEqual(validate.ai_files({"readmeLower": {"text": "Built  with\nClaude Code."}}), ['README: "Built with Claude Code"'])
+        for text in ["This code is 100% AI.", "Made with the help of ChatGPT.", "The plugin was largely AI-written.", "Developed using AI assistants."]:
+            self.assertIsNotNone(validate.ai_readme(text), text)
+
+    def test_readme_wording_about_ai_features_or_a_denial_does_not_count(self):
+        for text in ["Not vibe-coded!", "No AI was used, nor built with AI.", "Turns your screenshots into AI-generated wallpapers.", "Built with React and aiohttp.", "Uses the Gemini API.", "Made by aidan", None]:
+            self.assertIsNone(validate.ai_readme(text), text)
 
     def test_a_repo_without_them_or_without_a_tree_has_none(self):
         self.assertEqual(validate.ai_files({"root": {"entries": [{"name": "README.md"}]}, "dotGithub": None}), [])
