@@ -634,6 +634,11 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | Control Center | Performance | [musika08/decky-control-center](https://github.com/musika08/decky-control-center) |
 | Clarity | Frame Generation | [musika08/clarity](https://github.com/musika08/clarity) |
 | Orphan Finder | Utilities | [deamos/steamos-orphan](https://github.com/deamos/steamos-orphan) |
+| DeckyScaler | Frame Generation | [arttttt/DeckyScaler](https://github.com/arttttt/DeckyScaler) |
+| JarnGrip | Controllers | [Zensenshi/JarnGrip](https://github.com/Zensenshi/JarnGrip) |
+| SteamGridDB | Game Libraries | [K1tsune12/decky-steamgriddb-kitsune](https://github.com/K1tsune12/decky-steamgriddb-kitsune) |
+| V-Deck | Utilities | [GoldDGaro/V-Deck](https://github.com/GoldDGaro/V-Deck) |
+| Wake on LAN | Utilities | [Picardas/Decky-WoL](https://github.com/Picardas/Decky-WoL) |
 
 ## Where the plugins come from
 

@@ -5175,6 +5175,51 @@
           "source"
         ]
       }
+    },
+    {
+      "id": "deckyscaler",
+      "name": "DeckyScaler",
+      "description": "This plugin installs and manages OptiScaler, a tool that enhances upscaling and enables frame generation in a range of DirectX 12 games.",
+      "repo": "arttttt/DeckyScaler",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["DeckyScaler"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "jarngrip",
+      "name": "JarnGrip",
+      "description": "Touch control pad for the AYN Thor's bottom screen: buttons, number pad, trackpad and keyboard for WoW and other MMOs.",
+      "repo": "Zensenshi/JarnGrip",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["JarnGrip"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-steamgriddb-kitsune",
+      "name": "SteamGridDB",
+      "description": "Customize your library with user-submitted images or local files, and other style tweaks like square capsules, uniform sizing, and more!",
+      "repo": "K1tsune12/decky-steamgriddb-kitsune",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["SteamGridDB"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "v-deck",
+      "name": "V-Deck",
+      "description": "Decky VPN manager / Менеджер VPN для Steam Deck: AmneziaWG, WireGuard, OpenVPN, Xray Reality, Amnezia Premium. v0.2.0 public preview.",
+      "repo": "GoldDGaro/V-Deck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["V-Deck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-wol",
+      "name": "Wake on LAN",
+      "description": "Find PCs on your network and wake them with one tap.",
+      "repo": "Picardas/Decky-WoL",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Wake on LAN"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
