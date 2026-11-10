@@ -5445,6 +5445,24 @@
       "category": "Performance",
       "detect": { "type": "decky-plugin", "names": ["Nothing Ear Control"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "psdeck",
+      "name": "PSDeck",
+      "description": "PS Vita-inspired Home and LiveArea interface for Steam Deck Gaming Mode.",
+      "repo": "chmodmasx/PSDeck",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["PSDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "diablo-loot-filter-decky-plugin",
+      "name": "Diablo Loot Filters Preview",
+      "description": "Browse public loot filters, generate from Maxroll builds, and copy codes into Diablo IV in gamescope.",
+      "repo": "shaifvier/Diablo-Loot-Filter-Decky-plugin",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Diablo Loot Filters Preview"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
