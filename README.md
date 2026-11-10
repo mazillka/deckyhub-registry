@@ -641,6 +641,29 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | Wake on LAN | Utilities | [Picardas/Decky-WoL](https://github.com/Picardas/Decky-WoL) |
 | DeckyGCM | Utilities | [Qiming-Liu/Decky-Game-Cheats-Manager](https://github.com/Qiming-Liu/Decky-Game-Cheats-Manager) |
 | Control Cult | Controllers | [killdano/control-cult-decky](https://github.com/killdano/control-cult-decky) |
+| Playhub Metadata | Game Libraries | [LoZazaMastro/Playhub-Metadata](https://github.com/LoZazaMastro/Playhub-Metadata) |
+| Wine Cellar | Launch Options | [FlashyReese/decky-wine-cellar](https://github.com/FlashyReese/decky-wine-cellar) |
+| Animated Screensaver | Game Libraries | [Alyenax/Decky-Animated-Screensaver](https://github.com/Alyenax/Decky-Animated-Screensaver) |
+| Deck Doctor | Launch Options | [Forlarin/deck-doctor](https://github.com/Forlarin/deck-doctor) |
+| Switch 2 Dashboard | Customization | [kromossomom-debug/decky-switch2-dashboard](https://github.com/kromossomom-debug/decky-switch2-dashboard) |
+| Touch Trackpad | Controllers | [nikitautiu/decky-armada-trackpad](https://github.com/nikitautiu/decky-armada-trackpad) |
+| CopyDeck | Utilities | [geecaleb/CopyDeck](https://github.com/geecaleb/CopyDeck) |
+| Launch Manager | Launch Options | [JDLKMR/Decky-Launch-Manager](https://github.com/JDLKMR/Decky-Launch-Manager) |
+| Sideloader | Utilities | [ZacharyQin/decky-sideloader](https://github.com/ZacharyQin/decky-sideloader) |
+| Deck Animations | Performance | [K1tsune12/deck-animations](https://github.com/K1tsune12/deck-animations) |
+| Booty | Performance | [Tman600/Booty](https://github.com/Tman600/Booty) |
+| XBOX Chat | Mod Managers | [burghr/decky-xodus-chat](https://github.com/burghr/decky-xodus-chat) |
+| Legion Go 2 LEDs | Controllers | [WilliamG007/legion-go2-leds](https://github.com/WilliamG007/legion-go2-leds) |
+| ClipLink | Utilities | [JayPrates/cliplink-decky](https://github.com/JayPrates/cliplink-decky) |
+| Decky Pinyin | Utilities | [xmfan/decky-pinyin](https://github.com/xmfan/decky-pinyin) |
+| DeckDrop | Utilities | [JayPrates/deckdrop-decky](https://github.com/JayPrates/deckdrop-decky) |
+| Decky Eclipse | Mod Managers | [sunim87/decky-eclipse](https://github.com/sunim87/decky-eclipse) |
+| Decky Codex | Utilities | [Kevni92/decky-codex](https://github.com/Kevni92/decky-codex) |
+| Tuning Advisor | Performance | [breakmylegs/tuning-advisor](https://github.com/breakmylegs/tuning-advisor) |
+| SABnzbd Monitor | Utilities | [breakmylegs/sabnzbd-monitor](https://github.com/breakmylegs/sabnzbd-monitor) |
+| qBittorrent Monitor | Utilities | [breakmylegs/qbittorrent-monitor](https://github.com/breakmylegs/qbittorrent-monitor) |
+| PS XMB | Customization | [ProjectsConsoles/PS-XMB](https://github.com/ProjectsConsoles/PS-XMB) |
+| Nothing Ear Control | Performance | [JayPrates/nothing-ear-control-decky](https://github.com/JayPrates/nothing-ear-control-decky) |
 
 ## Where the plugins come from
 
