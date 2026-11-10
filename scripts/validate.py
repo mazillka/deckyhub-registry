@@ -369,8 +369,11 @@ def ai_files(result: dict) -> list[str]:
                     and email in {"noreply@anthropic.com", "noreply@claude.ai"}):
                 tool = "Claude"
             elif (re.fullmatch(r"(?:openai\s+)?codex", identity)
-                    and (email == "noreply@openai.com" or email.endswith("@users.noreply.github.com"))):
+                    and (email == "noreply@openai.com" or re.fullmatch(r"(?:\d+\+)?codex@users\.noreply\.github\.com", email))):
                 tool = "Codex"
+            elif (identity in {"copilot", "github copilot", "copilot-swe-agent[bot]"}
+                    and re.fullmatch(r"(?:\d+\+)?(?:copilot|copilot-swe-agent\[bot\])@users\.noreply\.github\.com", email)):
+                tool = "GitHub Copilot"
             if tool and tool not in seen_tools:
                 url = commit.get("url")
                 evidence.append(f"Commit co-author: {tool}" + (f" ({url})" if url else ""))
