@@ -227,7 +227,6 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | Github Plugin Updater | Utilities | [Steamdeckchecker/Github-Decky-Plugins-Updater](https://github.com/Steamdeckchecker/Github-Decky-Plugins-Updater) |
 | Decky Manager | Utilities | [Ciphay/Decky-File-Manager](https://github.com/Ciphay/Decky-File-Manager) |
 | eGPUBridge | Utilities | [WowOne987/eGPUBridge](https://github.com/WowOne987/eGPUBridge) |
-| CreamDeck | Game Libraries | [Qiming-Liu/CreamDeck](https://github.com/Qiming-Liu/CreamDeck) |
 | YouTube Music Player | Utilities | [artistro08/decky-youtube-music-player](https://github.com/artistro08/decky-youtube-music-player) |
 | Spotify Connect | Utilities | [Janleyx/decky-spotify-connect](https://github.com/Janleyx/decky-spotify-connect) |
 | Launch Options Recipes | Launch Options | [Wurielle/decky-launch-options-recipes](https://github.com/Wurielle/decky-launch-options-recipes) |
@@ -641,7 +640,6 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | SteamGridDB | Game Libraries | [K1tsune12/decky-steamgriddb-kitsune](https://github.com/K1tsune12/decky-steamgriddb-kitsune) |
 | V-Deck | Utilities | [GoldDGaro/V-Deck](https://github.com/GoldDGaro/V-Deck) |
 | Wake on LAN | Utilities | [Picardas/Decky-WoL](https://github.com/Picardas/Decky-WoL) |
-| DeckyGCM | Utilities | [Qiming-Liu/Decky-Game-Cheats-Manager](https://github.com/Qiming-Liu/Decky-Game-Cheats-Manager) |
 | Control Cult | Controllers | [killdano/control-cult-decky](https://github.com/killdano/control-cult-decky) |
 | Playhub Metadata | Game Libraries | [LoZazaMastro/Playhub-Metadata](https://github.com/LoZazaMastro/Playhub-Metadata) |
 | Wine Cellar | Launch Options | [FlashyReese/decky-wine-cellar](https://github.com/FlashyReese/decky-wine-cellar) |
