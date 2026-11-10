@@ -21,7 +21,7 @@ skipped this time and proposed again once it grows out of it. Passing ones are
 appended to registry/apps.json and the README table; the discover workflow then opens
 a pull request, so a person still reviews every addition before it's merged.
 
---ignore names a text file whose GitHub repository links are skipped: the workflow
+--ignore names a text file whose discovery PR entry links are skipped: the workflow
 passes the bodies of closed discovery PRs, so a plugin dropped from one (the PR closed,
 or its entry deleted before merging) isn't proposed again.
 """
@@ -108,7 +108,11 @@ def search_repos(query: str, search=None) -> list[dict]:
     search = search or (lambda url: json.loads(fetch(url)))
     repos = []
     for page in range(1, 11):
-        result = search(f"{API}/search/repositories?q={urllib.parse.quote(query + ' fork:true archived:false')}&per_page=100&page={page}")
+        try:
+            result = search(f"{API}/search/repositories?q={urllib.parse.quote(query + ' fork:true archived:false')}&per_page=100&page={page}")
+        except Exception as error:  # noqa: BLE001 - retain the pages already fetched
+            print(f"warning: GitHub search {query!r} page {page} failed: {error}", file=sys.stderr)
+            break
         repos += result.get("items", [])
         if len(result.get("items", [])) < 100:
             break
@@ -145,28 +149,51 @@ def raw_manifest(repo: str) -> dict | None:
 
 
 def ignored_repos(text: str) -> set[str]:
-    """Lowercase owner/name of every GitHub repository link in the text."""
-    return {repo.casefold().removesuffix(".git") for repo in re.findall(r"github\.com/([\w.-]+/[\w.-]+)", text)}
+    """Repositories proposed by generated discovery PR bullet lines only."""
+    repos = set()
+    for line in text.splitlines():
+        # Generated lines put the proposed repo immediately after the category.
+        # A later "fork of" URL names the parent and must not be ignored instead.
+        match = re.match(r"^- .+? \([^\n()]*\): https?://github\.com/([\w.-]+/[\w.-]+)(?:\.git)?(?:\s|$)", line)
+        if match:
+            repos.add(match.group(1).casefold().removesuffix(".git"))
+    return repos
+
+
+def search_queries(queries: list[str], search=search_repos) -> list[dict]:
+    """Run each GitHub search independently, retaining results around failures."""
+    found = []
+    for query in queries:
+        try:
+            found.extend(search(query))
+        except Exception as error:  # noqa: BLE001 - one query must not stop the others
+            print(f"warning: GitHub search {query!r} failed: {error}", file=sys.stderr)
+    return found
 
 
 def candidates(explorer: list[dict], apps: list[dict], now: datetime, ignored: set[str] = frozenset()) -> list[dict]:
-    """The catalogs' repos worth a GitHub check: not listed, not archived, not a
-    template, released within MAX_AGE (a catalog saying "never released" rules a repo
-    out; an unknown date doesn't), and a plugin name nobody here uses yet. One item
-    per repo; most downloaded first, so the busiest of two same-named repos goes first."""
+    """Eligible catalog records, one per repo, preferring the highest downloads."""
     listed = {app["repo"].casefold() for app in apps} | ignored
     names = {name.casefold() for app in apps for name in app["detect"]["names"]} | {"deckyhub"}
-    picked, seen = [], set()
+    by_repo = {}
     for item in explorer:
         name = ((item.get("plugin") or {}).get("name") or "").strip()
         release = item.get("latest_release")
-        published = datetime.fromisoformat(release["published_at"].replace("Z", "+00:00")) if release and release.get("published_at") else None
+        published = None
+        if release and release.get("published_at"):
+            try:
+                published = datetime.fromisoformat(release["published_at"].replace("Z", "+00:00"))
+                if published.tzinfo is None:
+                    published = published.replace(tzinfo=timezone.utc)
+            except (AttributeError, TypeError, ValueError):
+                published = None
         repo = item["repo"].casefold()
-        if repo in listed or repo in seen or item.get("archived") or not name or TEMPLATE.search(name) or name.casefold() in names or not release or (published and now - published > MAX_AGE):
+        if repo in listed or item.get("archived") or not name or TEMPLATE.search(name) or name.casefold() in names or not release or (published and now - published > MAX_AGE):
             continue
-        seen.add(repo)
-        picked.append(item)
-    return sorted(picked, key=lambda item: -(item.get("downloads") or 0))
+        previous = by_repo.get(repo)
+        if previous is None or (item.get("downloads") or 0) > (previous.get("downloads") or 0):
+            by_repo[repo] = item
+    return sorted(by_repo.values(), key=lambda item: -(item.get("downloads") or 0))
 
 
 def active_fork(repo: dict, release: dict) -> bool:
@@ -262,7 +289,7 @@ def main() -> int:
         return extended_items(json.loads(fetch(f"{EXTENDED_URL}/storefront.json", auth=False)), store)
 
     def github():
-        found = [repo for query in SEARCHES for repo in search_repos(query)]
+        found = search_queries(SEARCHES)
         # Only unlisted repos are worth a plugin.json download.
         return github_items([repo for repo in found if repo["full_name"].casefold() not in listed], raw_manifest)
 
