@@ -5490,6 +5490,24 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decky Translator RU"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-agent-remote",
+      "name": "Agent Remote",
+      "description": "Talk to DeepSeek Harness (DSH) from Steam Deck Gaming Mode.",
+      "repo": "kongdayan/decky-agent-remote",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Agent Remote"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deck-jisho",
+      "name": "Decky Jisho",
+      "description": "Decky Plugin to Recognize Japanese Characters",
+      "repo": "IktaS/deck-jisho",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Jisho"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
