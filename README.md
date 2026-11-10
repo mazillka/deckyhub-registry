@@ -664,6 +664,8 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | qBittorrent Monitor | Utilities | [breakmylegs/qbittorrent-monitor](https://github.com/breakmylegs/qbittorrent-monitor) |
 | PS XMB | Customization | [ProjectsConsoles/PS-XMB](https://github.com/ProjectsConsoles/PS-XMB) |
 | Nothing Ear Control | Performance | [JayPrates/nothing-ear-control-decky](https://github.com/JayPrates/nothing-ear-control-decky) |
+| PSDeck | Customization | [chmodmasx/PSDeck](https://github.com/chmodmasx/PSDeck) |
+| Diablo Loot Filters Preview | Controllers | [shaifvier/Diablo-Loot-Filter-Decky-plugin](https://github.com/shaifvier/Diablo-Loot-Filter-Decky-plugin) |
 
 ## Where the plugins come from
 
