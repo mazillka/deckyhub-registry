@@ -1,4 +1,5 @@
 import json
+import io
 import sys
 import unittest
 from unittest import mock
@@ -7,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import discover  # noqa: E402
-from discover import active_fork, candidates, check, category, entry_json, extended_items, github_items, ignored_repos, pick, search_repos, short_description  # noqa: E402
+from discover import active_fork, candidates, check, category, entry_json, extended_items, github_items, ignored_repos, pick, search_queries, search_repos, short_description  # noqa: E402
 
 NOW = datetime(2026, 10, 28, tzinfo=timezone.utc)
 
@@ -35,10 +36,45 @@ class DiscoverTests(unittest.TestCase):
         self.assertEqual([found["repo"] for found in candidates(explorer, LISTED, NOW)], ["o/busy", "o/quiet"])
 
     def test_repos_from_closed_discovery_prs_are_skipped(self):
-        body = "- Busy (Utilities): https://github.com/O/Busy (via explorer)\n- Other: https://github.com/o/other.git"
-        self.assertEqual(ignored_repos(body), {"o/busy", "o/other"})
+        body = """Discovery results are here: https://github.com/o/unrelated
+- Busy (Utilities): https://github.com/O/Busy (via explorer)
+- Fork (Utilities): https://github.com/o/fork (via GitHub search, fork of https://github.com/o/parent)
+- Other (Utilities): https://github.com/o/other.git (via explorer)"""
+        self.assertEqual(ignored_repos(body), {"o/busy", "o/fork", "o/other"})
         explorer = [item("o/busy", "Busy"), item("o/quiet", "Quiet")]
         self.assertEqual([found["repo"] for found in candidates(explorer, LISTED, NOW, ignored_repos(body))], ["o/quiet"])
+
+    def test_github_search_queries_continue_after_a_query_fails(self):
+        errors = io.StringIO()
+        def search(query):
+            if query == "middle":
+                raise RuntimeError("temporary API error")
+            return [{"full_name": query}]
+        with mock.patch.object(discover.sys, "stderr", errors):
+            found = search_queries(["first", "middle", "last"], search)
+        self.assertEqual([repo["full_name"] for repo in found], ["first", "last"])
+        self.assertIn("middle", errors.getvalue())
+
+    def test_search_keeps_successful_pages_when_a_later_page_fails(self):
+        calls = []
+        def search(url):
+            calls.append(url)
+            if len(calls) == 2:
+                raise RuntimeError("temporary API error")
+            return {"items": [{"full_name": f"o/{n}"} for n in range(100)]}
+        with mock.patch.object(discover.time, "sleep"), mock.patch.object(discover.sys, "stderr", io.StringIO()):
+            self.assertEqual(len(search_repos("topic:decky", search)), 100)
+
+    def test_candidates_tolerate_bad_dates_and_prefer_highest_eligible_duplicate(self):
+        malformed = item("o/date", "Date Plugin", published="not-a-date", downloads=2)
+        malformed_type = item("o/type", "Type Plugin", published=42, downloads=1)
+        good = item("o/date", "Date Plugin", published="2026-10-01T00:00:00", downloads=9)
+        invalid = item("o/duplicate", "Example Plugin", downloads=100)
+        later_valid = item("O/DUPLICATE", "Duplicate", downloads=3)
+        items = [malformed, malformed_type, good, invalid, later_valid]
+        found = candidates(items, LISTED, NOW)
+        self.assertEqual([(entry["repo"], entry["downloads"]) for entry in found], [("o/date", 9), ("O/DUPLICATE", 3), ("o/type", 1)])
+        self.assertEqual(malformed["latest_release"]["published_at"], "not-a-date")
 
     def test_extended_items_take_the_main_repo_and_store_details(self):
         storefront = {"plugins": {
