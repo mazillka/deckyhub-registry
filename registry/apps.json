@@ -5229,6 +5229,15 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["DeckyGCM"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "control-cult-decky",
+      "name": "Control Cult",
+      "description": "Builds and tunes controller layouts by conversation, live in game. Requires the Control Cult app.",
+      "repo": "killdano/control-cult-decky",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Control Cult", "NoobDeity"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
