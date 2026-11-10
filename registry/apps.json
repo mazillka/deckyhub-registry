@@ -5224,7 +5224,7 @@
     {
       "id": "deckygcm",
       "name": "DeckyGCM",
-      "description": "Searches and downloads game trainers from the Game Cheats Manager catalog.",
+      "description": "Searches and downloads game trainers, sideloads them with games, and manages launch options.",
       "repo": "Qiming-Liu/Decky-Game-Cheats-Manager",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["DeckyGCM"] },
