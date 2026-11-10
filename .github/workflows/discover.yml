@@ -1,13 +1,13 @@
 name: Discover
 
-# Daily: scripts/discover.py adds plugins from Decky Plugins Explorer, Decky Extended
+# Every three hours: scripts/discover.py adds plugins from Decky Plugins Explorer, Decky Extended
 # Plugins and our own GitHub search that pass validate.py's checks, and this opens a
 # pull request against develop with them for review. Never merges. Skips the run while
 # an earlier discover PR is still open.
 on:
   workflow_dispatch:
   schedule:
-    - cron: "41 6 * * *"
+    - cron: "41 */3 * * *"
 
 permissions:
   contents: write
@@ -36,6 +36,8 @@ jobs:
           python3 scripts/discover.py --ignore "$RUNNER_TEMP/closed.txt" | tee "$RUNNER_TEMP/found.txt"
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
       - if: steps.open.outputs.count == '0'
         run: |
           git diff --quiet && { echo "Nothing new."; exit 0; }
@@ -45,7 +47,7 @@ jobs:
           git -c user.name="github-actions[bot]" -c user.email="41898341+github-actions[bot]@users.noreply.github.com" commit -qam "feat: add plugins found by community catalogs"
           git push -q origin "$branch"
           {
-            echo "Plugins found by [Decky Plugins Explorer](https://github.com/SafetZahirovic/decky-plugins-explorer), [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/) and our own GitHub search that pass \`validate.py\`'s checks and have a stable release. Opened by the discover workflow, which never merges."
+            echo "Plugins found by [Decky Plugins Explorer](https://github.com/SafetZahirovic/decky-plugins-explorer), [Decky Extended Plugins](https://decky-extended-plugins.beallio.com/), our own GitHub search, and Reddit's r/deckyloader when approved API credentials are configured, that pass \`validate.py\`'s checks and have an installable release. Opened by the discover workflow, which never merges."
             echo
             echo "**Review before merging:** each one's category (picked by keyword) and description (from its plugin.json), and anything that looks like a fork, a test build or not really a plugin. Delete an entry and its README row to drop it; plugins dropped that way, or by closing this PR, aren't proposed again."
             echo

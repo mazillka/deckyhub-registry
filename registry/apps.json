@@ -28,7 +28,7 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["Unifideck"] },
       "asset": { "include": [".zip"], "exclude": ["source"] },
-      "knownIssues": [{ "title": "Decky Loader bug (reported): updating in place starts Unifideck mid-install and then stops it, which can freeze the Deck. DeckyHub avoids it by removing the old version first.", "url": "https://github.com/SteamDeckHomebrew/decky-loader/issues/982" }]
+      "knownIssues": [{ "title": "Installed plugin identity could not be verified: the 0.8.0 release ZIP does not declare its GitHub repository.", "url": "https://github.com/mubaraknumann/unifideck/issues/525" }, { "title": "Decky Loader bug (reported): updating in place starts Unifideck mid-install and then stops it, which can freeze the Deck. DeckyHub avoids it by removing the old version first.", "url": "https://github.com/SteamDeckHomebrew/decky-loader/issues/982" }]
     },
     {
       "id": "decky-framegen",
@@ -100,7 +100,8 @@
       "repo": "DeckThemes/SDH-CssLoader",
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["CSS Loader"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "knownIssues": [{ "title": "Installed plugin identity could not be verified: the 2.1.2 release ZIP declares the upstream repository instead of the DeckThemes repository.", "url": "https://github.com/DeckThemes/SDH-CssLoader/issues/133" }]
     },
     {
       "id": "deck-as-controller",
@@ -136,7 +137,8 @@
       "repo": "justinca92/spindeck",
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["Spindeck"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "knownIssues": [{ "title": "Installed plugin identity could not be verified: the 1.4.1 release ZIP does not declare its GitHub repository.", "url": "https://github.com/justinca92/spindeck/issues/5" }]
     },
     {
       "id": "game-glance",
@@ -163,7 +165,8 @@
       "repo": "otisabiburada/finally-decky-achievements",
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["Finally Achievement Plugin"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "knownIssues": [{ "title": "Installed plugin identity could not be verified: the 1.7.0 release ZIP does not declare its GitHub repository.", "url": "https://github.com/otisabiburada/finally-decky-achievements/issues/3" }]
     },
     {
       "id": "decky-ps5-dashboard",
@@ -199,7 +202,8 @@
       "repo": "bonorca/DeckSMB",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["DeckSMB"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "knownIssues": [{ "title": "Installed plugin identity could not be verified: the 1.0.3 release ZIP declares the Decky plugin template instead of this repository.", "url": "https://github.com/bonorca/DeckSMB/issues/2" }]
     },
     {
       "id": "panel-de-control",
@@ -208,7 +212,8 @@
       "repo": "Hooandee/panel-de-control",
       "category": "Performance",
       "detect": { "type": "decky-plugin", "names": ["Panel de Control"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "knownIssues": [{ "title": "Installed plugin identity could not be verified: the 0.86.1 release ZIP does not declare its GitHub repository.", "url": "https://github.com/Hooandee/panel-de-control/issues/1232" }]
     },
     {
       "id": "deckyshare",
@@ -244,7 +249,7 @@
       "repo": "ValentineBSAA/TitleDeck",
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["TitleDeck"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source", "organized-screenshots"] }
     },
     {
       "id": "game-theme-music",
@@ -578,7 +583,7 @@
       "repo": "Alyenax/GabeCubeAura",
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["GabeCubeAura"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source", "gabecubeaura.zip"] }
     },
     {
       "id": "ambideck",
@@ -849,7 +854,8 @@
       "repo": "bentemple/decky-download-all",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Download All"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "knownIssues": [{ "title": "Installed plugin identity could not be verified: the 1.1.0 release ZIP declares the Decky plugin template instead of this repository.", "url": "https://github.com/bentemple/decky-download-all/issues/3" }]
     },
     {
       "id": "emudecky",
@@ -1481,15 +1487,6 @@
       "repo": "WowOne987/eGPUBridge",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["eGPUBridge"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
-      "id": "creamdeck",
-      "name": "CreamDeck",
-      "description": "Select an installed Steam game from its library context menu and unlock its DLC (SmokeAPI/CreamAPI/ScreamAPI/Uplay R1&R2/Koaloader),...",
-      "repo": "Qiming-Liu/CreamDeck",
-      "category": "Game Libraries",
-      "detect": { "type": "decky-plugin", "names": ["CreamDeck"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
@@ -5126,6 +5123,378 @@
       "repo": "Diegocorp/decky-speedhack",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["SpeedHack"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "overdrive",
+      "name": "Overdrive",
+      "description": "Performance mode, power limits, FPS limit and fan curves for the ROG Ally family (unofficial; based on G-Helper).",
+      "repo": "musika08/overdrive",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Overdrive"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-control-center",
+      "name": "Control Center",
+      "description": "Brightness, volume, Wi-Fi, Bluetooth and the ASUS battery charge limit from the Quick Access menu on Windows.",
+      "repo": "musika08/decky-control-center",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Control Center"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "clarity",
+      "name": "Clarity",
+      "description": "Sharper, smoother games: installs OptiScaler per game with AMD FSR 4 Lite and frame generation (unofficial).",
+      "repo": "musika08/clarity",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["Clarity"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamos-orphan",
+      "name": "Orphan Finder",
+      "description": "Detect and clean orphaned game folders in Steam libraries on internal storage and microSD cards.",
+      "repo": "deamos/steamos-orphan",
+      "category": "Utilities",
+      "detect": {
+        "type": "decky-plugin",
+        "names": [
+          "Orphan Finder"
+        ]
+      },
+      "asset": {
+        "include": [
+          "steamos-orphan.zip"
+        ],
+        "exclude": [
+          "source"
+        ]
+      }
+    },
+    {
+      "id": "deckyscaler",
+      "name": "DeckyScaler",
+      "description": "This plugin installs and manages OptiScaler, a tool that enhances upscaling and enables frame generation in a range of DirectX 12 games.",
+      "repo": "arttttt/DeckyScaler",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["DeckyScaler"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "jarngrip",
+      "name": "JarnGrip",
+      "description": "Touch control pad for the AYN Thor's bottom screen: buttons, number pad, trackpad and keyboard for WoW and other MMOs.",
+      "repo": "Zensenshi/JarnGrip",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["JarnGrip"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-steamgriddb-kitsune",
+      "name": "SteamGridDB",
+      "description": "Customize your library with user-submitted images or local files, and other style tweaks like square capsules, uniform sizing, and more!",
+      "repo": "K1tsune12/decky-steamgriddb-kitsune",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["SteamGridDB"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "v-deck",
+      "name": "V-Deck",
+      "description": "Decky VPN manager / Менеджер VPN для Steam Deck: AmneziaWG, WireGuard, OpenVPN, Xray Reality, Amnezia Premium. v0.2.0 public preview.",
+      "repo": "GoldDGaro/V-Deck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["V-Deck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-wol",
+      "name": "Wake on LAN",
+      "description": "Find PCs on your network and wake them with one tap.",
+      "repo": "Picardas/Decky-WoL",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Wake on LAN"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "control-cult-decky",
+      "name": "Control Cult",
+      "description": "Builds and tunes controller layouts by conversation, live in game. Requires the Control Cult app.",
+      "repo": "killdano/control-cult-decky",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Control Cult", "NoobDeity"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "playhub-metadata",
+      "name": "Playhub Metadata",
+      "description": "Add clean game metadata, Steam activity news, RetroAchievements, RPCS3 (PS3) trophies and optional Xbox achievements to non-Steam games...",
+      "repo": "LoZazaMastro/Playhub-Metadata",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Playhub Metadata"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-wine-cellar",
+      "name": "Wine Cellar",
+      "description": "A decky plugin to manage Steam Play compatibility tools",
+      "repo": "FlashyReese/decky-wine-cellar",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["Wine Cellar"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-animated-screensaver",
+      "name": "Animated Screensaver",
+      "description": "Your game artwork, animated in Steam's screensaver. Library, preview and preparation inside Decky.",
+      "repo": "Alyenax/Decky-Animated-Screensaver",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Animated Screensaver"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deck-doctor",
+      "name": "Deck Doctor",
+      "description": "Find out why a game won't launch, in plain English, and fix it with one tap.",
+      "repo": "Forlarin/deck-doctor",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["Deck Doctor"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-switch2-dashboard",
+      "name": "Switch 2 Dashboard",
+      "description": "A Nintendo Switch 2-style HOME Menu for SteamOS Game Mode: status bar, a row of square game tiles with the selected title above, round...",
+      "repo": "kromossomom-debug/decky-switch2-dashboard",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Switch 2 Dashboard"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-armada-trackpad",
+      "name": "Touch Trackpad",
+      "description": "Use the touchscreen as Steam Deck trackpads, with settings per game. Needs armada-trackpad-daemon.",
+      "repo": "nikitautiu/decky-armada-trackpad",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Touch Trackpad"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "copydeck",
+      "name": "CopyDeck",
+      "description": "Copy games between drives instead of move. Use 'Copy To' from the game menu or select multiple in the plugin panel.",
+      "repo": "geecaleb/CopyDeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["CopyDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-launch-manager",
+      "name": "Launch Manager",
+      "description": "Add ROM launch options (ROM profiles), assign launch .sh scripts, add game links, or clear launch options for any Steam or non-Steam...",
+      "repo": "JDLKMR/Decky-Launch-Manager",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["Launch Manager"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-sideloader",
+      "name": "Sideloader",
+      "description": "List zip-installed Decky plugins, bind GitHub repos, check releases, and switch versions.",
+      "repo": "ZacharyQin/decky-sideloader",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Sideloader"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deck-animations",
+      "name": "Deck Animations",
+      "description": "Boot, suspend and screensaver videos in one place: steamdeckrepo.com, GIPHY, generated classics and your own files, with rotation,...",
+      "repo": "K1tsune12/deck-animations",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Deck Animations"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "booty",
+      "name": "Booty",
+      "description": "Switch to another OS from the power menu or Quick Access, and set up a second OS without leaving Game Mode.",
+      "repo": "Tman600/Booty",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Booty"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-xodus-chat",
+      "name": "XBOX Chat",
+      "description": "Read and send Xbox messages through Xodus Nexus without leaving the game.",
+      "repo": "burghr/decky-xodus-chat",
+      "category": "Mod Managers",
+      "detect": { "type": "decky-plugin", "names": ["XBOX Chat"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "legion-go2-leds",
+      "name": "Legion Go 2 LEDs",
+      "description": "Joystick RGB and power-button LED for the Legion Go 2 on SteamOS. Tested on SteamOS 3.9.",
+      "repo": "WilliamG007/legion-go2-leds",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Legion Go 2 LEDs"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "cliplink-decky",
+      "name": "ClipLink",
+      "description": "Copy text between your Steam Deck and your Windows PC over the local network.",
+      "repo": "JayPrates/cliplink-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["ClipLink"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-pinyin",
+      "name": "Decky Pinyin",
+      "description": "Offline Chinese OCR, pinyin, English translation and Mandarin speech on L4/L5.",
+      "repo": "xmfan/decky-pinyin",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Pinyin"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckdrop-decky",
+      "name": "DeckDrop",
+      "description": "Receive files from your Windows PC over the local network. Every transfer asks for approval first.",
+      "repo": "JayPrates/deckdrop-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckDrop"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-eclipse",
+      "name": "Decky Eclipse",
+      "description": "Steam Deck용 ECLIPSE 최적화 모드 58개 자동 다운로드·설치·백업·복구 Decky 플러그인 (한국어)",
+      "repo": "sunim87/decky-eclipse",
+      "category": "Mod Managers",
+      "detect": { "type": "decky-plugin", "names": ["Decky Eclipse"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-codex",
+      "name": "Decky Codex",
+      "description": "Codex-Chat, Diagnose und freigegebene Aktionen direkt im Gaming-Modus.",
+      "repo": "Kevni92/decky-codex",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Codex"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "tuning-advisor",
+      "name": "Tuning Advisor",
+      "description": "Recommends game settings for your device and tools. Never changes anything.",
+      "repo": "breakmylegs/tuning-advisor",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Tuning Advisor"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "sabnzbd-monitor",
+      "name": "SABnzbd Monitor",
+      "description": "Monitor and control SABnzbd from the Quick Access Menu.",
+      "repo": "breakmylegs/sabnzbd-monitor",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SABnzbd Monitor"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "qbittorrent-monitor",
+      "name": "qBittorrent Monitor",
+      "description": "Monitor and control qBittorrent from the Quick Access Menu.",
+      "repo": "breakmylegs/qbittorrent-monitor",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["qBittorrent Monitor"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ps-xmb",
+      "name": "PS XMB",
+      "description": "Gives the Steam Deck home screen a PlayStation look: pick PS2, PS3 (vertical XMB column), PS4, PS5 or Steam Deck, each with its own...",
+      "repo": "ProjectsConsoles/PS-XMB",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["PS XMB"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "nothing-ear-control-decky",
+      "name": "Nothing Ear Control",
+      "description": "Battery, noise control, EQ, bass, low latency and find-my-earbuds for Nothing and CMF earbuds.",
+      "repo": "JayPrates/nothing-ear-control-decky",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Nothing Ear Control"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "psdeck",
+      "name": "PSDeck",
+      "description": "PS Vita-inspired Home and LiveArea interface for Steam Deck Gaming Mode.",
+      "repo": "chmodmasx/PSDeck",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["PSDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "diablo-loot-filter-decky-plugin",
+      "name": "Diablo Loot Filters Preview",
+      "description": "Browse public loot filters, generate from Maxroll builds, and copy codes into Diablo IV in gamescope.",
+      "repo": "shaifvier/Diablo-Loot-Filter-Decky-plugin",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Diablo Loot Filters Preview"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-brightness",
+      "name": "亮度下限",
+      "description": "Steam Deck OLED brightness floor plugin for Decky. Standalone installable ZIP releases.",
+      "repo": "wx40217/decky-brightness",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["亮度下限"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "perigee",
+      "name": "Perigee",
+      "description": "Mirrors the app libraries of paired Moonshine hosts into Steam as non-Steam shortcuts that launch Moonlight.",
+      "repo": "lutyjj/perigee",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Perigee"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-translator-ru",
+      "name": "Decky Translator RU",
+      "description": "Fork of Decky Translator for Russian: Yandex, GigaChat, GigaChat+, offline models. RU interface, works from Russia",
+      "repo": "konst2/Decky-Translator-RU",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Translator RU"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-agent-remote",
+      "name": "Agent Remote",
+      "description": "Talk to DeepSeek Harness (DSH) from Steam Deck Gaming Mode.",
+      "repo": "kongdayan/decky-agent-remote",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Agent Remote"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deck-jisho",
+      "name": "Decky Jisho",
+      "description": "Decky Plugin to Recognize Japanese Characters",
+      "repo": "IktaS/deck-jisho",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Jisho"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]

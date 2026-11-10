@@ -45,3 +45,7 @@ Four places name the warning IDs, and DeckyHub in people's hands reads `stats.js
 - **Renaming or dropping** one breaks installed DeckyHub's badge for it. Add the new ID first, release the plugin, and only drop the old one once that release is out. `tests/test_docs.py` fails if the registry stops sending an ID the plugin's default branch still knows, and if the catalog doesn't explain every ID.
 
 Run `python -m unittest discover -s tests` and look at the catalog locally (copy a freshly built `stats.json` beside `docs/index.html` and point `STATS_URL` at it in a scratch copy, never in the committed file).
+
+## Independent ZIP audit
+
+The virus-scan workflow publishes DeckyHub’s independent audit under `audit` in `scans.json` and the channel summaries in `plugins.json`. It is separate from the community audit and never executes plugin code. Version 2 adds narrow sensitive-file, persistence and privilege heuristics; source ZIP comparison against the exact release tag; and installed-package OSV checks plus native binary inventory. Each subcheck has its own status and bounded findings. Generated or unidentified files and unavailable data do not count as clean; tag source may have changed since release and a match does not prove provenance. Package names and versions are sent to OSV. Old audits are backfilled and network checks are budgeted per run. Preserve hash matching, old ClamAV/YARA results and the existing community warnings. Never equate complete with safe.
