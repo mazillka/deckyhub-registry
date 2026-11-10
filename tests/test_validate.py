@@ -103,6 +103,26 @@ class AiFilesTests(unittest.TestCase):
         self.assertEqual(validate.ai_files({"root": None, "dotGithub": None}), [])
         self.assertEqual(validate.ai_files({}), [])
 
+    def test_recent_commit_coauthor_trailers_identify_claude_and_codex(self):
+        result = {"recentHistory": {"target": {"history": {"nodes": [
+            {"message": "Feature\n\nCo-authored-by: Claude Sonnet 5.5 <noreply@anthropic.com>", "url": "https://github.com/o/a/commit/1"},
+            {"message": "Fix\n\nCo-authored-by: OpenAI Codex <123+codex@users.noreply.github.com>", "url": "https://github.com/o/a/commit/2"},
+        ]}}}}
+        self.assertEqual(validate.ai_files(result), [
+            "Commit co-author: Claude (https://github.com/o/a/commit/1)",
+            "Commit co-author: Codex (https://github.com/o/a/commit/2)",
+        ])
+
+    def test_mentions_and_ordinary_coauthors_do_not_count_and_missing_history_is_safe(self):
+        result = {"recentHistory": {"target": {"history": {"nodes": [
+            {"message": "Claude helped here, but no trailer", "url": "u"},
+            {"message": "Co-authored-by: Claude Monet <claude.monet@example.com>", "url": "u"},
+            {"message": "Co-authored-by: Codex Smith <codex.smith@example.com>", "url": "u"},
+            {"message": "Co-authored-by: Claude <claude.staff@anthropic.com>", "url": "u"},
+        ]}}}}
+        self.assertEqual(validate.ai_files(result), [])
+        self.assertEqual(validate.ai_files({"recentHistory": None}), [])
+
 
 class RangedFileTests(unittest.TestCase):
     def setUp(self):

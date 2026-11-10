@@ -64,6 +64,17 @@ WARNINGS = {
 # Installable releases per repo in releases.json: what a version picker offers.
 KEEP = 5
 
+# Retain a verified AI co-author signal after it falls outside validate.py's bounded
+# recent commit window. Values are the source commit URLs shown as evidence in the catalog.
+CURATED_AI_EVIDENCE = {
+    "mubaraknumann/unifideck": ["Commit co-author: Claude (https://github.com/mubaraknumann/unifideck/commit/76556441e52d3e66d6b931e02bd9cbeecc50e716)"],
+}
+
+
+def merge_ai_evidence(repo: str, automatic: list[str] | None) -> list[str]:
+    """Combine bounded automatic evidence with durable, reviewed repo evidence."""
+    return sorted(set(automatic or []) | set(CURATED_AI_EVIDENCE.get(repo.casefold(), [])))
+
 # Not a registry entry, but DeckyHub checks its own releases too.
 EXTRA_ENTRIES = [{"repo": "mazillka/deckyhub-plugin", "asset": {"include": ["deckyhub-"], "exclude": []}}]
 def slim(release: dict) -> dict:
@@ -127,8 +138,8 @@ def plugin_stats(entry: dict, releases: list[dict], stars, manifest=lambda asset
     }
     if fork:
         stats["fork"] = fork
-    if ai:
-        stats["ai"] = ai
+    if evidence := merge_ai_evidence(entry["repo"], ai):
+        stats["ai"] = evidence
     if audits:
         if warnings := warnings_of(entry, shown, audits):
             stats["warnings"] = warnings

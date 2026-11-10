@@ -334,6 +334,7 @@ def releases_query(repo: str, first: int, after: str | None = None) -> str:
     return (f"repository(owner: {json.dumps(owner)}, name: {json.dumps(name)}) {{ nameWithOwner name description isArchived isFork stargazerCount "
             f"root: object(expression: \"HEAD:\") {{ {TREE} }} dotGithub: object(expression: \"HEAD:.github\") {{ {TREE} }} "
             f"readme: object(expression: \"HEAD:README.md\") {{ ... on Blob {{ text }} }} readmeLower: object(expression: \"HEAD:readme.md\") {{ ... on Blob {{ text }} }} "
+            f"recentHistory: defaultBranchRef {{ target {{ ... on Commit {{ history(first: 30) {{ nodes {{ message url }} }} }} }} }} "
             f"parent {{ nameWithOwner isArchived isTemplate releases(first: 1, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ nodes {{ publishedAt }} }} }} "
             f"releases(first: {first}{cursor}, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ pageInfo {{ hasNextPage endCursor }} nodes {{ {RELEASE_FIELDS} }} }} }}")
 
@@ -351,8 +352,30 @@ def ai_files(result: dict) -> list[str]:
     'README: "<phrase>"' when its README says it's made with AI (ai_readme)."""
     entries = lambda tree: [entry["name"] for entry in ((tree or {}).get("entries") or [])]  # noqa: E731
     readme = ai_readme(((result.get("readme") or result.get("readmeLower")) or {}).get("text"))
-    return sorted([name for name in entries(result.get("root")) if name.casefold() in AI_FILES]
-                  + [f".github/{name}" for name in entries(result.get("dotGithub")) if name.casefold() in AI_GITHUB_FILES]) + ([f'README: "{readme}"'] if readme else [])
+    files = ([name for name in entries(result.get("root")) if name.casefold() in AI_FILES]
+             + [f".github/{name}" for name in entries(result.get("dotGithub")) if name.casefold() in AI_GITHUB_FILES])
+    evidence = files + ([f'README: "{readme}"'] if readme else [])
+    history = ((result.get("recentHistory") or {}).get("target") or {}).get("history") or {}
+    seen_tools = set()
+    for commit in history.get("nodes") or []:
+        message = commit.get("message") or ""
+        for line in message.splitlines():
+            trailer = re.fullmatch(r"\s*Co-authored-by:\s*(.*?)\s*<([^<>]+)>\s*", line, re.IGNORECASE)
+            if not trailer:
+                continue
+            identity, email = trailer.group(1).casefold(), trailer.group(2).casefold()
+            tool = None
+            if (re.fullmatch(r"claude(?:\s+(?:code|(?:haiku|sonnet|opus)\s+\d+(?:\.\d+)*))?", identity)
+                    and email in {"noreply@anthropic.com", "noreply@claude.ai"}):
+                tool = "Claude"
+            elif (re.fullmatch(r"(?:openai\s+)?codex", identity)
+                    and (email == "noreply@openai.com" or email.endswith("@users.noreply.github.com"))):
+                tool = "Codex"
+            if tool and tool not in seen_tools:
+                url = commit.get("url")
+                evidence.append(f"Commit co-author: {tool}" + (f" ({url})" if url else ""))
+                seen_tools.add(tool)
+    return sorted(set(evidence))
 
 
 def fetch_github(repos: list[str], every_release: bool = False) -> dict[str, dict]:
