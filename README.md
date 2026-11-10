@@ -669,6 +669,8 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | 亮度下限 | Utilities | [wx40217/decky-brightness](https://github.com/wx40217/decky-brightness) |
 | Perigee | Game Libraries | [lutyjj/perigee](https://github.com/lutyjj/perigee) |
 | Decky Translator RU | Utilities | [konst2/Decky-Translator-RU](https://github.com/konst2/Decky-Translator-RU) |
+| Agent Remote | Customization | [kongdayan/decky-agent-remote](https://github.com/kongdayan/decky-agent-remote) |
+| Decky Jisho | Utilities | [IktaS/deck-jisho](https://github.com/IktaS/deck-jisho) |
 
 ## Where the plugins come from
 
