@@ -244,7 +244,7 @@
       "repo": "ValentineBSAA/TitleDeck",
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["TitleDeck"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source", "organized-screenshots"] }
     },
     {
       "id": "game-theme-music",
@@ -578,7 +578,7 @@
       "repo": "Alyenax/GabeCubeAura",
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["GabeCubeAura"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source", "gabecubeaura.zip"] }
     },
     {
       "id": "ambideck",
@@ -5489,6 +5489,24 @@
       "repo": "konst2/Decky-Translator-RU",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decky Translator RU"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-agent-remote",
+      "name": "Agent Remote",
+      "description": "Talk to DeepSeek Harness (DSH) from Steam Deck Gaming Mode.",
+      "repo": "kongdayan/decky-agent-remote",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Agent Remote"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deck-jisho",
+      "name": "Decky Jisho",
+      "description": "Decky Plugin to Recognize Japanese Characters",
+      "repo": "IktaS/deck-jisho",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Jisho"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
