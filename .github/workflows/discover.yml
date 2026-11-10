@@ -1,13 +1,13 @@
 name: Discover
 
-# Daily: scripts/discover.py adds plugins from Decky Plugins Explorer, Decky Extended
+# Every three hours: scripts/discover.py adds plugins from Decky Plugins Explorer, Decky Extended
 # Plugins and our own GitHub search that pass validate.py's checks, and this opens a
 # pull request against develop with them for review. Never merges. Skips the run while
 # an earlier discover PR is still open.
 on:
   workflow_dispatch:
   schedule:
-    - cron: "41 6 * * *"
+    - cron: "41 */3 * * *"
 
 permissions:
   contents: write
