@@ -5463,6 +5463,33 @@
       "category": "Controllers",
       "detect": { "type": "decky-plugin", "names": ["Diablo Loot Filters Preview"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-brightness",
+      "name": "亮度下限",
+      "description": "Steam Deck OLED brightness floor plugin for Decky. Standalone installable ZIP releases.",
+      "repo": "wx40217/decky-brightness",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["亮度下限"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "perigee",
+      "name": "Perigee",
+      "description": "Mirrors the app libraries of paired Moonshine hosts into Steam as non-Steam shortcuts that launch Moonlight.",
+      "repo": "lutyjj/perigee",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Perigee"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-translator-ru",
+      "name": "Decky Translator RU",
+      "description": "Fork of Decky Translator for Russian: Yandex, GigaChat, GigaChat+, offline models. RU interface, works from Russia",
+      "repo": "konst2/Decky-Translator-RU",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Translator RU"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }

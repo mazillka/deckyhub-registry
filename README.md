@@ -666,6 +666,9 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | Nothing Ear Control | Performance | [JayPrates/nothing-ear-control-decky](https://github.com/JayPrates/nothing-ear-control-decky) |
 | PSDeck | Customization | [chmodmasx/PSDeck](https://github.com/chmodmasx/PSDeck) |
 | Diablo Loot Filters Preview | Controllers | [shaifvier/Diablo-Loot-Filter-Decky-plugin](https://github.com/shaifvier/Diablo-Loot-Filter-Decky-plugin) |
+| 亮度下限 | Utilities | [wx40217/decky-brightness](https://github.com/wx40217/decky-brightness) |
+| Perigee | Game Libraries | [lutyjj/perigee](https://github.com/lutyjj/perigee) |
+| Decky Translator RU | Utilities | [konst2/Decky-Translator-RU](https://github.com/konst2/Decky-Translator-RU) |
 
 ## Where the plugins come from
 
