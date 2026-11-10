@@ -639,6 +639,7 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | SteamGridDB | Game Libraries | [K1tsune12/decky-steamgriddb-kitsune](https://github.com/K1tsune12/decky-steamgriddb-kitsune) |
 | V-Deck | Utilities | [GoldDGaro/V-Deck](https://github.com/GoldDGaro/V-Deck) |
 | Wake on LAN | Utilities | [Picardas/Decky-WoL](https://github.com/Picardas/Decky-WoL) |
+| DeckyGCM | Utilities | [Qiming-Liu/Decky-Game-Cheats-Manager](https://github.com/Qiming-Liu/Decky-Game-Cheats-Manager) |
 
 ## Where the plugins come from
 

@@ -5220,6 +5220,15 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Wake on LAN"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckygcm",
+      "name": "DeckyGCM",
+      "description": "Searches and downloads game trainers, sideloads them with games, and manages launch options.",
+      "repo": "Qiming-Liu/Decky-Game-Cheats-Manager",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckyGCM"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
