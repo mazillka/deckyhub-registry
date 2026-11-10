@@ -16,7 +16,7 @@ name: Virus scan
 on:
   push:
     branches: [main, develop]
-    paths: [scripts/virus_scan.py, .github/workflows/virus-scan.yml]
+    paths: [scripts/virus_scan.py, 'scripts/audit_*.py', .github/workflows/virus-scan.yml]
   workflow_dispatch:
   schedule:
     - cron: "41 */3 * * *"

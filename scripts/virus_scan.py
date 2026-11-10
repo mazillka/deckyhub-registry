@@ -17,6 +17,9 @@ scans.json, keyed by the ZIP's download URL:
   report keeps it.
 - engine / signatures: the ClamAV version and signature database version used.
 - scannedAt: when. A report older than RESCAN_DAYS is scanned again with newer signatures.
+- audit: independent bounded static checks, source comparison for the release tag,
+  installed package OSV lookups, and binary inventory. Each part reports its own
+  coverage; no result proves safety. The enclosing sha256 identifies the scanned ZIP.
 - yara: the same fields (but sha256) for YARA's scan of the files inside the ZIP, with
   YARA Forge's core rules (--yara-rules, which the workflow downloads each run). found
   lists the rules that matched (infected); incomplete means YARA couldn't look at some
@@ -45,6 +48,7 @@ none.
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -55,6 +59,9 @@ import zlib
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+from audit_deps import audit_dependencies
+from audit_rules import scan_text
+from audit_source import compare_source
 from build_release_index import EXTRA_ENTRIES
 from validate import load_registry_apps, REGISTRY, matching_assets
 
@@ -77,6 +84,12 @@ LIMITS = "Heuristics.Limits.Exceeded"
 # numbered names, never the ZIP's own paths) and scanned. Past these limits the rest of a
 # ZIP is left out and its report is incomplete. YARA_FILE_SECONDS is yara's own timeout
 # per file; YARA_ZIP_SECONDS stops a whole ZIP's scan.
+AUDIT_MAX_FILES = 10000
+AUDIT_MAX_FILE_BYTES = 2 * 1024**2
+AUDIT_MAX_BYTES = 64 * 1024**2
+AUDIT_MAX_FINDINGS = 200
+# A source archive can be much larger than its release ZIP. Spread backfill over runs.
+AUDIT_NETWORK_LIMIT = 60
 YARA_MAX_FILES = 200000
 YARA_MAX_BYTES = 4 * 1024**3
 YARA_FILE_SECONDS = 60
@@ -142,6 +155,21 @@ def wanted_assets(indexes: list[dict], entries: list[dict]) -> dict[str, dict]:
     return wanted
 
 
+def release_contexts(indexes: list[dict], entries: list[dict]) -> dict[str, dict]:
+    """Identify the repository and exact release tag for each asset, without guessing."""
+    filters = {entry["repo"].casefold(): entry for entry in entries}
+    contexts = {}
+    for index in indexes:
+        for repo, releases in (index.get("releases") or {}).items():
+            entry = filters.get(repo.casefold(), {"asset": {"include": [], "exclude": []}})
+            for release in releases:
+                for asset in matching_assets(entry, release):
+                    url = asset.get("browser_download_url") or ""
+                    if url.startswith("https://"):
+                        contexts.setdefault(url, {"repo": repo, "tag": release.get("tag_name")})
+    return contexts
+
+
 def verdict(report: dict) -> dict:
     return {key: report[key] for key in ("result", "found", "reason", "scannedAt") if report.get(key)}
 
@@ -170,6 +198,8 @@ def plugin_summary(indexes: list[dict], entries: list[dict], files: dict[str, di
                     channels[channel]["clamav"] = verdict(report)
                     if report.get("yara"):
                         channels[channel]["yara"] = verdict(report["yara"])
+                    if report.get("audit"):
+                        channels[channel]["audit"] = report["audit"]
             if channels:
                 plugins[repo.casefold()] = channels
     return plugins
@@ -201,9 +231,25 @@ def plan(wanted: dict[str, dict], old: dict[str, dict], today: datetime) -> tupl
             new.append(url)
             continue
         kept[url] = report
-        if report.get("result") == "incomplete" or (report.get("yara") or {}).get("result") in (None, "error"):
+        if report.get("result") == "incomplete" or (report.get("yara") or {}).get("result") in (None, "error") or (report.get("audit") or {}).get("result") in (None, "error") or (report.get("audit") or {}).get("version") != 2:
             new.append(url)
             continue
+        audit = report.get("audit") or {}
+        source_reason = (audit.get("source") or {}).get("reason") or ""
+        source_reason = source_reason if isinstance(source_reason, str) else ""
+        dependency_issues = (audit.get("dependencies") or {}).get("issues") or []
+        dependency_issues = dependency_issues if isinstance(dependency_issues, list) else []
+        transient = any(source_reason.endswith(name) for name in ("HTTPError", "URLError", "TimeoutError", "OSError")) or any("lookup failed" in issue for issue in dependency_issues if isinstance(issue, str))
+        if transient:
+            try:
+                last_audit = datetime.fromisoformat((audit.get("scannedAt") or "").replace("Z", "+00:00"))
+                if last_audit.tzinfo is None:
+                    last_audit = last_audit.replace(tzinfo=timezone.utc)
+            except (ValueError, TypeError, AttributeError):
+                last_audit = datetime.min.replace(tzinfo=timezone.utc)
+            if last_audit < today - timedelta(days=1):
+                stale.append(url)
+                continue
         if datetime.strptime(report.get("scannedAt") or "1970-01-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc) < today - timedelta(days=RESCAN_DAYS):
             stale.append(url)
     stale.sort(key=lambda url: kept[url].get("scannedAt") or "")
@@ -378,7 +424,65 @@ class Yara:
             return {"result": "clean"}
 
 
-def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=clamav_version, yara=None, keep: dict[str, dict] | None = None, deadline: float | None = None, clock=time.monotonic) -> dict[str, dict]:
+def audit_zip(path: str) -> dict:
+    """Bounded static inspection of ZIP members, without extracting or executing them."""
+    result = {"result": "complete", "root": None, "findings": [], "scannedAt": now(), "version": 2}
+    try:
+        with zipfile.ZipFile(path) as archive:
+            members = [i for i in archive.infolist() if not i.is_dir()]
+            manifests = [i for i in members if i.filename.split("/")[-1] == "plugin.json" and "node_modules" not in i.filename.split("/")[:-1]]
+            if manifests:
+                depth = min(i.filename.count("/") for i in manifests)
+                candidates = [i for i in manifests if i.filename.count("/") == depth]
+            else:
+                candidates = []
+            selected = candidates[0] if len(candidates) == 1 else None
+            total = 0
+            for number, info in enumerate(members):
+                if number >= AUDIT_MAX_FILES or info.file_size > AUDIT_MAX_FILE_BYTES or total + info.file_size > AUDIT_MAX_BYTES or info.flag_bits & 1:
+                    result["result"] = "incomplete"
+                    continue
+                total += info.file_size
+                try:
+                    data = archive.read(info)
+                    if b"\x00" in data:
+                        result["result"] = "incomplete"
+                        continue
+                    content = data.decode("utf-8")
+                except (UnicodeError, RuntimeError, NotImplementedError, zipfile.BadZipFile, zlib.error, EOFError, OSError):
+                    result["result"] = "incomplete"
+                    continue
+                if info is selected:
+                    try:
+                        manifest = json.loads(content)
+                        flags = manifest.get("flags") if isinstance(manifest, dict) else None
+                        if isinstance(flags, list) and all(isinstance(f, str) for f in flags):
+                            result["root"] = "root" in flags
+                    except ValueError:
+                        result["result"] = "incomplete"
+                for finding in scan_text(info.filename, content):
+                    if len(result["findings"]) < AUDIT_MAX_FINDINGS:
+                        result["findings"].append(finding)
+                    else:
+                        result["result"] = "incomplete"
+                for line_number, line in enumerate(content.splitlines(), 1):
+                    stripped = line.strip()
+                    if not stripped or stripped.startswith(("#", "//", "*")):
+                        continue
+                    tls = re.search(r"\brequests\.(?:get|post|put|delete|patch|head|options|request)\s*\([^\n]*\bverify\s*=\s*False\b|\bssl\.CERT_NONE\b|\bcurl\b[^|;\n]*(?:\s-k(?:\s|$)|\s--insecure(?:\s|$))", line)
+                    pipe = re.search(r"\b(?:curl|wget)\b[^|;\n]*\|\s*(?:/bin/|/usr/bin/)?(?:ba)?sh\b", line)
+                    for rule, match in (("no-tls-check", tls), ("runs-downloads", pipe)):
+                        if match:
+                            if len(result["findings"]) < AUDIT_MAX_FINDINGS:
+                                result["findings"].append({"rule": rule, "path": info.filename, "line": line_number})
+                            else:
+                                result["result"] = "incomplete"
+    except (zipfile.BadZipFile, OSError, ValueError):
+        result["result"] = "error"
+    return result
+
+
+def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=clamav_version, yara=None, keep: dict[str, dict] | None = None, deadline: float | None = None, clock=time.monotonic, contexts: dict[str, dict] | None = None) -> dict[str, dict]:
     """A report for every URL in the batches it gets to, from ClamAV and from yara (a
     Yara; None: not set up). Nothing here fails the run: a ZIP that can't be downloaded
     or scanned, or a scanner that can't run at all, gets an error saying why (scanned
@@ -387,6 +491,7 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
     can still publish; the rest have no report yet and come first next run."""
     keep = keep or {}
     reports: dict[str, dict] = {}
+    audit_network_checks = 0
     if not batches:
         return reports
     try:
@@ -399,28 +504,31 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
     def stamped(report: dict, engine: str, signatures: str) -> dict:
         return {**report, **({"engine": engine} if engine else {}), **({"signatures": signatures} if signatures else {}), "scannedAt": now()}
 
-    def record(url: str, clam: dict, found_by_yara: dict, sha256: str | None = None):
+    def record(url: str, clam: dict, found_by_yara: dict, sha256: str | None = None, audit: dict | None = None):
         old = keep.get(url) or {}
+        if sha256 and old.get("sha256") != sha256:
+            old = {}
         old_yara = old.get("yara") or {}
+        old_audit = old.get("audit") or {}
+        if (not audit or audit.get("result") == "error") and old_audit.get("result") in ("complete", "incomplete"):
+            audit = old_audit
+        elif audit and audit.get("version") == 1 and old_audit.get("version") == 2:
+            audit = old_audit  # The same ZIP already has the full checks; don't replace them with a deferral.
         kept_clam = clam["result"] == "error" and old and old.get("result") != "error"
         kept_yara = found_by_yara["result"] == "error" and old_yara and old_yara.get("result") != "error"
-        if kept_clam and kept_yara:
+        if kept_clam and kept_yara and not audit:
             print(f"kept the last report ({clam['reason']}; {found_by_yara['reason']}): {url}")
             return
-        clam = {key: value for key, value in old.items() if key not in ("sha256", "yara")} if kept_clam else stamped(clam, engine, signatures)
+        clam = {key: value for key, value in old.items() if key not in ("sha256", "yara", "audit")} if kept_clam else stamped(clam, engine, signatures)
         found_by_yara = old_yara if kept_yara else stamped(found_by_yara, yara.engine if yara else "", yara.signatures if yara else "")
         sha256 = sha256 or old.get("sha256")
-        reports[url] = {**({"sha256": sha256} if sha256 else {}), **clam, "yara": found_by_yara}
+        reports[url] = {**({"sha256": sha256} if sha256 else {}), **clam, "yara": found_by_yara, **({"audit": audit} if audit else {})}
         print(f"ClamAV {clam['result']}, YARA {found_by_yara['result']}: {url}" + "".join(f" ({part['reason']})" for part in (clam, found_by_yara) if "reason" in part))
 
     for number, batch in enumerate(batches):
         if deadline is not None and clock() > deadline:
             print(f"out of time: {sum(map(len, batches[number:]))} ZIPs left for the next run")
             break
-        if unavailable and yara_unavailable:
-            for url in batch:
-                record(url, {"result": "error", "reason": unavailable}, {"result": "error", "reason": yara_unavailable})
-            continue
         with tempfile.TemporaryDirectory() as folder:
             paths, digests = {}, {}
             for number, url in enumerate(batch):
@@ -448,7 +556,28 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
                         found_by_yara = yara.scan(path)
                     except Exception as error:  # noqa: BLE001
                         found_by_yara = {"result": "error", "reason": f"YARA couldn't run: {error}"}
-                record(url, report_of(found[path]), found_by_yara, digests[url])
+                try:
+                    audit = audit_zip(path)
+                except Exception:  # audit failure must not prevent publication
+                    audit = {"result": "error", "root": None, "findings": [], "scannedAt": now()}
+                if audit["result"] != "error":
+                    context = (contexts or {}).get(url) or {}
+                    # Leave time for the two bounded network checks and publication.
+                    if audit_network_checks >= AUDIT_NETWORK_LIMIT or (deadline is not None and clock() + 40 >= deadline):
+                        audit["version"] = 1  # Retry the deferred checks on a later run.
+                        audit["source"] = {"result": "incomplete", "findings": [], "reason": "Deferred: scan budget reached."}
+                        audit["dependencies"] = {"result": "incomplete", "packages": [], "findings": [], "issues": ["Deferred: scan budget reached."]}
+                    else:
+                        audit_network_checks += 1
+                        try:
+                            audit["source"] = compare_source(path, context.get("repo"), context.get("tag"))
+                        except Exception:  # independent of the other checks
+                            audit["source"] = {"result": "error", "findings": [], "reason": "Source comparison failed."}
+                        try:
+                            audit["dependencies"] = audit_dependencies(path)
+                        except Exception:  # independent of the other checks
+                            audit["dependencies"] = {"result": "error", "packages": [], "findings": [], "issues": ["Dependency check failed."]}
+                record(url, report_of(found[path]), found_by_yara, digests[url], audit)
     return reports
 
 
@@ -472,7 +601,7 @@ def main() -> int:
         yara = Yara(args.yara_rules, Path(folder)) if batches else None
         if yara and yara.unavailable:
             print(f"warning: {yara.unavailable}", file=sys.stderr)
-        files = {**kept, **scan(batches, yara=yara, keep=kept, deadline=time.monotonic() + MAX_RUN_SECONDS)}
+        files = {**kept, **scan(batches, yara=yara, keep=kept, deadline=time.monotonic() + MAX_RUN_SECONDS, contexts=release_contexts(indexes, entries))}
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     # Compact: DeckyHub downloads the whole file for one Manage window.
