@@ -1486,7 +1486,7 @@
     {
       "id": "creamdeck",
       "name": "CreamDeck",
-      "description": "Select an installed Steam game from its library context menu and unlock its DLC (SmokeAPI/CreamAPI/ScreamAPI/Uplay R1&R2/Koaloader),...",
+      "description": "Unlocks DLC for installed Steam games with SmokeAPI or CreamAPI, from the library context menu.",
       "repo": "Qiming-Liu/CreamDeck",
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["CreamDeck"] },
