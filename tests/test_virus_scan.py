@@ -3,6 +3,7 @@ import sys
 import tempfile
 import unittest
 import zipfile
+from unittest import mock
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -39,6 +40,10 @@ class WantedAssetsTests(unittest.TestCase):
         self.assertEqual(list(wanted_assets([index, develop], entries)), ["https://x/a2", "https://x/b2", "https://x/a1"])
         self.assertEqual(wanted_assets([index], entries)["https://x/a2"], {"sha256": "aa", "size": 10})
 
+    def test_source_context_uses_exact_release_tag(self):
+        index = {"releases": {"Owner/Repo": [{"tag_name": "v1.2", "assets": [asset("p.zip", "https://x/p")]}]}}
+        self.assertEqual(virus_scan.release_contexts([index], []), {"https://x/p": {"repo": "Owner/Repo", "tag": "v1.2"}})
+
 
 class ChannelOrderTests(unittest.TestCase):
     def test_stable_and_pre_release_picks_of_every_plugin_come_before_older_releases(self):
@@ -55,6 +60,14 @@ class ChannelOrderTests(unittest.TestCase):
 
 
 class PlanTests(unittest.TestCase):
+    def test_transient_audit_errors_retry_after_a_day_without_starving_new_files(self):
+        wanted = {url: {"sha256": "aa", "size": 1} for url in ("retry", "recent", "new")}
+        audit = {"result": "complete", "version": 2, "scannedAt": "2026-10-31T00:00:00Z", "source": {"result": "error", "reason": "source comparison unavailable: HTTPError"}}
+        base = {"sha256": "aa", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z", "yara": YARA_OK}
+        old = {"retry": {**base, "audit": audit}, "recent": {**base, "audit": {**audit, "scannedAt": "2026-11-01T12:00:00Z"}}}
+        _, todo = plan(wanted, old, TODAY)
+        self.assertEqual(todo, ["new", "retry"])
+
     def test_keeps_fresh_reports_and_rescans_new_changed_failed_and_stale_ones(self):
         wanted = {url: {"sha256": "aa", "size": 1} for url in ("new", "same", "changed", "failed", "partial", "old", "older")}
         wanted["nodigest"] = {"sha256": None, "size": 1}
@@ -68,14 +81,14 @@ class PlanTests(unittest.TestCase):
             "nodigest": {"sha256": "cc", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z"},
             "gone": {"sha256": "aa", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z"},
         }
-        old = {url: {**report, "yara": YARA_OK, "audit": {"result": "complete"}} for url, report in old.items()}
+        old = {url: {**report, "yara": YARA_OK, "audit": {"result": "complete", "version": 2}} for url, report in old.items()}
         kept, todo = plan(wanted, old, TODAY)
         self.assertEqual(set(kept), {"same", "partial", "old", "older", "nodigest"})
         self.assertEqual(todo, ["new", "changed", "failed", "partial", "older", "old"])
 
     def test_a_report_yara_hasnt_scanned_or_couldnt_is_scanned_again_and_kept_meanwhile(self):
         wanted = {url: {"sha256": "aa", "size": 1} for url in ("clam-only", "yara-failed", "yara-partial", "both")}
-        clean = {"sha256": "aa", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z", "audit": {"result": "complete"}}
+        clean = {"sha256": "aa", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z", "audit": {"result": "complete", "version": 2}}
         old = {
             "clam-only": clean,
             "yara-failed": {**clean, "yara": {"result": "error", "reason": "x"}},
@@ -276,10 +289,10 @@ class IndependentAuditTests(unittest.TestCase):
 
     def test_backfill_incomplete_and_changed_digest(self):
         clean = {"sha256": "aa", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z", "yara": YARA_OK}
-        wanted = {k: {"sha256": "aa", "size": 1} for k in ("missing", "partial")}
-        kept, todo = plan(wanted, {"missing": clean, "partial": {**clean, "audit": {"result": "incomplete"}}}, TODAY)
-        self.assertEqual(todo, ["missing"])
-        self.assertEqual(len(kept), 2)
+        wanted = {k: {"sha256": "aa", "size": 1} for k in ("missing", "old-version", "partial")}
+        kept, todo = plan(wanted, {"missing": clean, "old-version": {**clean, "audit": {"result": "complete"}}, "partial": {**clean, "audit": {"result": "incomplete", "version": 2}}}, TODAY)
+        self.assertEqual(todo, ["missing", "old-version"])
+        self.assertEqual(len(kept), 3)
         path = self.make_zip({"plugin.json": '{"flags":[]}'})
         def fetch(url, target):
             shutil.copyfile(path, target)
@@ -297,6 +310,54 @@ class IndependentAuditTests(unittest.TestCase):
         self.assertTrue(reports["https://x/plugin.zip"]["audit"]["root"])
         self.assertEqual(reports["https://x/plugin.zip"]["audit"]["result"], "complete")
         self.assertEqual(reports["https://x/plugin.zip"]["result"], "error")
+
+    def test_full_audit_uses_release_context_and_preserves_separate_results(self):
+        path = self.make_zip({"plugin.json": '{"flags":[]}', "main.py": 'open("/etc/shadow")'})
+        def fetch(url, target):
+            shutil.copyfile(path, target)
+            return "digest"
+        source = {"result": "incomplete", "findings": [{"rule": "source_path_missing", "path": "main.py"}]}
+        deps = {"result": "incomplete", "packages": [], "findings": [], "issues": ["not all code identifiable"]}
+        with mock.patch.object(virus_scan, "compare_source", return_value=source) as compare, mock.patch.object(virus_scan, "audit_dependencies", return_value=deps):
+            report = scan([["https://x/plugin.zip"]], fetch=fetch, version=lambda: ("ClamAV", ""), contexts={"https://x/plugin.zip": {"repo": "o/p", "tag": "v1"}})["https://x/plugin.zip"]
+        compare.assert_called_once()
+        self.assertEqual(compare.call_args.args[1:], ("o/p", "v1"))
+        self.assertEqual(report["audit"]["source"], source)
+        self.assertEqual(report["audit"]["dependencies"], deps)
+        self.assertEqual(report["audit"]["findings"][0]["rule"], "sensitive_file_read")
+
+    def test_time_budget_defers_network_checks_for_retry(self):
+        path = self.make_zip({"plugin.json": '{"flags":[]}'})
+        def fetch(url, target):
+            shutil.copyfile(path, target)
+            return "digest"
+        with mock.patch.object(virus_scan, "compare_source", side_effect=AssertionError("should defer")), mock.patch.object(virus_scan, "audit_dependencies", side_effect=AssertionError("should defer")):
+            audit = scan([["u"]], fetch=fetch, version=lambda: ("ClamAV", ""), deadline=50, clock=lambda: 20)["u"]["audit"]
+        self.assertEqual(audit["version"], 1)
+        self.assertEqual(audit["source"]["result"], "incomplete")
+
+    def test_source_failure_does_not_hide_other_audit_results(self):
+        path = self.make_zip({"plugin.json": '{"flags":["root"]}'})
+        def fetch(url, target):
+            shutil.copyfile(path, target)
+            return "digest"
+        deps = {"result": "incomplete", "packages": [], "findings": [], "issues": []}
+        with mock.patch.object(virus_scan, "compare_source", side_effect=OSError("offline")), mock.patch.object(virus_scan, "audit_dependencies", return_value=deps):
+            audit = scan([["u"]], fetch=fetch, version=lambda: ("ClamAV", ""))["u"]["audit"]
+        self.assertTrue(audit["root"])
+        self.assertEqual(audit["source"]["result"], "error")
+        self.assertEqual(audit["dependencies"], deps)
+
+    def test_network_budget_preserves_prior_full_audit_for_unchanged_zip(self):
+        path = self.make_zip({"plugin.json": '{"flags":[]}'})
+        def fetch(url, target):
+            shutil.copyfile(path, target)
+            return "same"
+        old_audit = {"version": 2, "result": "complete", "root": False, "findings": [], "scannedAt": "2026-11-01T00:00:00Z"}
+        old = {"u": {"sha256": "same", "result": "clean", "yara": YARA_OK, "audit": old_audit}}
+        with mock.patch.object(virus_scan, "AUDIT_NETWORK_LIMIT", 0):
+            audit = scan([["u"]], fetch=fetch, version=lambda: ("ClamAV", ""), keep=old)["u"]["audit"]
+        self.assertEqual(audit, old_audit)
 
 
 class BadgeTests(unittest.TestCase):
