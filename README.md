@@ -640,6 +640,7 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | V-Deck | Utilities | [GoldDGaro/V-Deck](https://github.com/GoldDGaro/V-Deck) |
 | Wake on LAN | Utilities | [Picardas/Decky-WoL](https://github.com/Picardas/Decky-WoL) |
 | DeckyGCM | Utilities | [Qiming-Liu/Decky-Game-Cheats-Manager](https://github.com/Qiming-Liu/Decky-Game-Cheats-Manager) |
+| Control Cult | Controllers | [killdano/control-cult-decky](https://github.com/killdano/control-cult-decky) |
 
 ## Where the plugins come from
 
