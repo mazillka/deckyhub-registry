@@ -45,6 +45,7 @@ none.
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -77,6 +78,10 @@ LIMITS = "Heuristics.Limits.Exceeded"
 # numbered names, never the ZIP's own paths) and scanned. Past these limits the rest of a
 # ZIP is left out and its report is incomplete. YARA_FILE_SECONDS is yara's own timeout
 # per file; YARA_ZIP_SECONDS stops a whole ZIP's scan.
+AUDIT_MAX_FILES = 10000
+AUDIT_MAX_FILE_BYTES = 2 * 1024**2
+AUDIT_MAX_BYTES = 64 * 1024**2
+AUDIT_MAX_FINDINGS = 200
 YARA_MAX_FILES = 200000
 YARA_MAX_BYTES = 4 * 1024**3
 YARA_FILE_SECONDS = 60
@@ -170,6 +175,8 @@ def plugin_summary(indexes: list[dict], entries: list[dict], files: dict[str, di
                     channels[channel]["clamav"] = verdict(report)
                     if report.get("yara"):
                         channels[channel]["yara"] = verdict(report["yara"])
+                    if report.get("audit"):
+                        channels[channel]["audit"] = report["audit"]
             if channels:
                 plugins[repo.casefold()] = channels
     return plugins
@@ -201,7 +208,7 @@ def plan(wanted: dict[str, dict], old: dict[str, dict], today: datetime) -> tupl
             new.append(url)
             continue
         kept[url] = report
-        if report.get("result") == "incomplete" or (report.get("yara") or {}).get("result") in (None, "error"):
+        if report.get("result") == "incomplete" or (report.get("yara") or {}).get("result") in (None, "error") or (report.get("audit") or {}).get("result") in (None, "error"):
             new.append(url)
             continue
         if datetime.strptime(report.get("scannedAt") or "1970-01-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc) < today - timedelta(days=RESCAN_DAYS):
@@ -378,6 +385,59 @@ class Yara:
             return {"result": "clean"}
 
 
+def audit_zip(path: str) -> dict:
+    """Bounded static inspection of ZIP members, without extracting or executing them."""
+    result = {"result": "complete", "root": None, "findings": [], "scannedAt": now()}
+    try:
+        with zipfile.ZipFile(path) as archive:
+            members = [i for i in archive.infolist() if not i.is_dir()]
+            manifests = [i for i in members if i.filename.split("/")[-1] == "plugin.json" and "node_modules" not in i.filename.split("/")[:-1]]
+            if manifests:
+                depth = min(i.filename.count("/") for i in manifests)
+                candidates = [i for i in manifests if i.filename.count("/") == depth]
+            else:
+                candidates = []
+            selected = candidates[0] if len(candidates) == 1 else None
+            total = 0
+            for number, info in enumerate(members):
+                if number >= AUDIT_MAX_FILES or info.file_size > AUDIT_MAX_FILE_BYTES or total + info.file_size > AUDIT_MAX_BYTES or info.flag_bits & 1:
+                    result["result"] = "incomplete"
+                    continue
+                total += info.file_size
+                try:
+                    data = archive.read(info)
+                    if b"\x00" in data:
+                        result["result"] = "incomplete"
+                        continue
+                    content = data.decode("utf-8")
+                except (UnicodeError, RuntimeError, NotImplementedError, zipfile.BadZipFile, zlib.error, EOFError, OSError):
+                    result["result"] = "incomplete"
+                    continue
+                if info is selected:
+                    try:
+                        manifest = json.loads(content)
+                        flags = manifest.get("flags") if isinstance(manifest, dict) else None
+                        if isinstance(flags, list) and all(isinstance(f, str) for f in flags):
+                            result["root"] = "root" in flags
+                    except ValueError:
+                        result["result"] = "incomplete"
+                for line_number, line in enumerate(content.splitlines(), 1):
+                    stripped = line.strip()
+                    if not stripped or stripped.startswith(("#", "//", "*")):
+                        continue
+                    tls = re.search(r"\brequests\.(?:get|post|put|delete|patch|head|options|request)\s*\([^\n]*\bverify\s*=\s*False\b|\bssl\.CERT_NONE\b|\bcurl\b[^|;\n]*(?:\s-k(?:\s|$)|\s--insecure(?:\s|$))", line)
+                    pipe = re.search(r"\b(?:curl|wget)\b[^|;\n]*\|\s*(?:/bin/|/usr/bin/)?(?:ba)?sh\b", line)
+                    for rule, match in (("no-tls-check", tls), ("runs-downloads", pipe)):
+                        if match:
+                            if len(result["findings"]) < AUDIT_MAX_FINDINGS:
+                                result["findings"].append({"rule": rule, "path": info.filename, "line": line_number})
+                            else:
+                                result["result"] = "incomplete"
+    except (zipfile.BadZipFile, OSError, ValueError):
+        result["result"] = "error"
+    return result
+
+
 def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=clamav_version, yara=None, keep: dict[str, dict] | None = None, deadline: float | None = None, clock=time.monotonic) -> dict[str, dict]:
     """A report for every URL in the batches it gets to, from ClamAV and from yara (a
     Yara; None: not set up). Nothing here fails the run: a ZIP that can't be downloaded
@@ -399,28 +459,29 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
     def stamped(report: dict, engine: str, signatures: str) -> dict:
         return {**report, **({"engine": engine} if engine else {}), **({"signatures": signatures} if signatures else {}), "scannedAt": now()}
 
-    def record(url: str, clam: dict, found_by_yara: dict, sha256: str | None = None):
+    def record(url: str, clam: dict, found_by_yara: dict, sha256: str | None = None, audit: dict | None = None):
         old = keep.get(url) or {}
+        if sha256 and old.get("sha256") != sha256:
+            old = {}
         old_yara = old.get("yara") or {}
+        old_audit = old.get("audit") or {}
+        if (not audit or audit.get("result") == "error") and old_audit.get("result") in ("complete", "incomplete"):
+            audit = old_audit
         kept_clam = clam["result"] == "error" and old and old.get("result") != "error"
         kept_yara = found_by_yara["result"] == "error" and old_yara and old_yara.get("result") != "error"
-        if kept_clam and kept_yara:
+        if kept_clam and kept_yara and not audit:
             print(f"kept the last report ({clam['reason']}; {found_by_yara['reason']}): {url}")
             return
-        clam = {key: value for key, value in old.items() if key not in ("sha256", "yara")} if kept_clam else stamped(clam, engine, signatures)
+        clam = {key: value for key, value in old.items() if key not in ("sha256", "yara", "audit")} if kept_clam else stamped(clam, engine, signatures)
         found_by_yara = old_yara if kept_yara else stamped(found_by_yara, yara.engine if yara else "", yara.signatures if yara else "")
         sha256 = sha256 or old.get("sha256")
-        reports[url] = {**({"sha256": sha256} if sha256 else {}), **clam, "yara": found_by_yara}
+        reports[url] = {**({"sha256": sha256} if sha256 else {}), **clam, "yara": found_by_yara, **({"audit": audit} if audit else {})}
         print(f"ClamAV {clam['result']}, YARA {found_by_yara['result']}: {url}" + "".join(f" ({part['reason']})" for part in (clam, found_by_yara) if "reason" in part))
 
     for number, batch in enumerate(batches):
         if deadline is not None and clock() > deadline:
             print(f"out of time: {sum(map(len, batches[number:]))} ZIPs left for the next run")
             break
-        if unavailable and yara_unavailable:
-            for url in batch:
-                record(url, {"result": "error", "reason": unavailable}, {"result": "error", "reason": yara_unavailable})
-            continue
         with tempfile.TemporaryDirectory() as folder:
             paths, digests = {}, {}
             for number, url in enumerate(batch):
@@ -448,7 +509,11 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
                         found_by_yara = yara.scan(path)
                     except Exception as error:  # noqa: BLE001
                         found_by_yara = {"result": "error", "reason": f"YARA couldn't run: {error}"}
-                record(url, report_of(found[path]), found_by_yara, digests[url])
+                try:
+                    audit = audit_zip(path)
+                except Exception:  # audit failure must not prevent publication
+                    audit = {"result": "error", "root": None, "findings": [], "scannedAt": now()}
+                record(url, report_of(found[path]), found_by_yara, digests[url], audit)
     return reports
 
 

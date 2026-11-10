@@ -45,3 +45,7 @@ Four places name the warning IDs, and DeckyHub in people's hands reads `stats.js
 - **Renaming or dropping** one breaks installed DeckyHub's badge for it. Add the new ID first, release the plugin, and only drop the old one once that release is out. `tests/test_docs.py` fails if the registry stops sending an ID the plugin's default branch still knows, and if the catalog doesn't explain every ID.
 
 Run `python -m unittest discover -s tests` and look at the catalog locally (copy a freshly built `stats.json` beside `docs/index.html` and point `STATS_URL` at it in a scratch copy, never in the committed file).
+
+## Independent ZIP audit
+
+The virus-scan workflow also publishes DeckyHub’s own limited static audit under `audit` in `scans.json` and each channel of `plugins.json`. It is independent of the community audit above and does not replace its warnings. It checks the chosen manifest’s root flag and narrowly defined TLS-disable and download-to-shell patterns without executing plugin code. Findings have rule, ZIP path and line only. `complete` means the bounded checks ran, not that the plugin is safe; `incomplete` and `error` are not clean verdicts. The containing report identifies the scanned ZIP by SHA-256.

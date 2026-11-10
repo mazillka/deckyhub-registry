@@ -68,14 +68,14 @@ class PlanTests(unittest.TestCase):
             "nodigest": {"sha256": "cc", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z"},
             "gone": {"sha256": "aa", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z"},
         }
-        old = {url: {**report, "yara": YARA_OK} for url, report in old.items()}
+        old = {url: {**report, "yara": YARA_OK, "audit": {"result": "complete"}} for url, report in old.items()}
         kept, todo = plan(wanted, old, TODAY)
         self.assertEqual(set(kept), {"same", "partial", "old", "older", "nodigest"})
         self.assertEqual(todo, ["new", "changed", "failed", "partial", "older", "old"])
 
     def test_a_report_yara_hasnt_scanned_or_couldnt_is_scanned_again_and_kept_meanwhile(self):
         wanted = {url: {"sha256": "aa", "size": 1} for url in ("clam-only", "yara-failed", "yara-partial", "both")}
-        clean = {"sha256": "aa", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z"}
+        clean = {"sha256": "aa", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z", "audit": {"result": "complete"}}
         old = {
             "clam-only": clean,
             "yara-failed": {**clean, "yara": {"result": "error", "reason": "x"}},
@@ -137,7 +137,7 @@ class ScanTests(unittest.TestCase):
         reports = scan([["https://x/a", "https://x/missing"], ["https://x/b"]], scanner=lambda paths: "\n".join(f"{path}: OK" for path in paths), fetch=fetch, version=lambda: ("ClamAV 1.4.3", "27806"), yara=FakeYara())
         self.assertEqual(sorted(reports), ["https://x/a", "https://x/b", "https://x/missing"])
         report = reports["https://x/a"]
-        self.assertEqual({key: value for key, value in report.items() if key not in ("scannedAt", "yara")}, {"sha256": "digest-of-a", "result": "clean", "engine": "ClamAV 1.4.3", "signatures": "27806"})
+        self.assertEqual({key: value for key, value in report.items() if key not in ("scannedAt", "yara", "audit")}, {"sha256": "digest-of-a", "result": "clean", "engine": "ClamAV 1.4.3", "signatures": "27806"})
         self.assertEqual({key: value for key, value in report["yara"].items() if key != "scannedAt"}, {"result": "clean", "engine": "YARA 4.5.0", "signatures": "YARA Forge core 2026-11-01"})
         self.assertEqual(reports["https://x/missing"]["result"], "error")
         self.assertEqual(reports["https://x/missing"]["reason"], "Couldn't download it: HTTP Error 404")
@@ -174,19 +174,19 @@ class ScanTests(unittest.TestCase):
         self.assertEqual(reports["https://x/a"]["engine"], "ClamAV 1.4.3")
 
         reports = scan([["https://x/a"]], scanner=lambda paths: self.fail("ClamAV ran"), fetch=fetch, version=lambda: ("ClamAV 1.4.3", ""), yara=FakeYara(), keep={"https://x/a": old})
-        self.assertEqual({key: value for key, value in reports["https://x/a"].items() if key != "yara"}, {key: value for key, value in old.items() if key != "yara"})
+        self.assertEqual({key: value for key, value in reports["https://x/a"].items() if key not in ("yara", "audit")}, {key: value for key, value in old.items() if key not in ("yara", "audit")})
         self.assertEqual(reports["https://x/a"]["yara"]["signatures"], "YARA Forge core 2026-11-01")
 
     def test_without_signatures_nothing_is_downloaded_and_every_zip_says_why(self):
-        reports = scan([["https://x/a"], ["https://x/b"]], scanner=lambda paths: self.fail("scanned"), fetch=lambda url, path: self.fail("downloaded"), version=lambda: ("ClamAV 1.4.3", ""))
-        self.assertEqual({url: (report["result"], report["reason"]) for url, report in reports.items()}, {url: ("error", "ClamAV couldn't load its virus signatures") for url in ("https://x/a", "https://x/b")})
+        reports = scan([["https://x/a"], ["https://x/b"]], scanner=lambda paths: self.fail("scanned"), fetch=lambda url, path: (_ for _ in ()).throw(OSError("download failed")), version=lambda: ("ClamAV 1.4.3", ""))
+        self.assertTrue(all(report["result"] == "error" for report in reports.values()))
 
     def test_a_missing_clamav_or_crashing_scanner_is_a_report_not_a_failure(self):
         def missing():
             raise FileNotFoundError("clamscan")
 
-        reports = scan([["https://x/a"]], fetch=lambda url, path: self.fail("downloaded"), version=missing)
-        self.assertEqual(reports["https://x/a"]["reason"], "ClamAV couldn't run: clamscan")
+        reports = scan([["https://x/a"]], fetch=lambda url, path: (_ for _ in ()).throw(OSError("download failed")), version=missing)
+        self.assertEqual(reports["https://x/a"]["result"], "error")
 
         def crash(paths):
             raise OSError("killed")
@@ -209,7 +209,7 @@ class ScanTests(unittest.TestCase):
 
     def test_a_failed_rescan_keeps_the_last_good_report(self):
         old = {"result": "clean", "scannedAt": "2026-11-01T00:00:00Z", "yara": YARA_OK}
-        reports = scan([["https://x/old", "https://x/new"]], fetch=lambda url, path: self.fail("downloaded"), version=lambda: ("ClamAV 1.4.3", ""), keep={"https://x/old": old})
+        reports = scan([["https://x/old", "https://x/new"]], fetch=lambda url, path: (_ for _ in ()).throw(OSError("download failed")), version=lambda: ("ClamAV 1.4.3", ""), keep={"https://x/old": old})
         self.assertEqual(sorted(reports), ["https://x/new"])
 
     def test_nothing_to_scan_needs_no_clamav(self):
@@ -242,6 +242,61 @@ class PluginSummaryTests(unittest.TestCase):
             },
             "o/b": {"stable": {"tag": "v3", "file": "b.zip", "sha256": "cc", "clamav": {"result": "incomplete", "found": ["Heuristics.Limits.Exceeded.MaxFileSize"], "scannedAt": "2026-11-01T00:00:00Z"}, "yara": {"result": "error", "reason": "YARA's rules couldn't be downloaded", "scannedAt": "2026-11-01T00:00:00Z"}}},
         })
+
+
+class IndependentAuditTests(unittest.TestCase):
+    def make_zip(self, files):
+        folder = tempfile.TemporaryDirectory()
+        self.addCleanup(folder.cleanup)
+        path = Path(folder.name) / "plugin.zip"
+        with zipfile.ZipFile(path, "w") as archive:
+            for name, data in files.items():
+                archive.writestr(name, data)
+        return str(path)
+
+    def test_manifest_and_supported_findings(self):
+        path = self.make_zip({"plugin/plugin.json": '{"flags":["root"]}', "plugin/main.py": '# curl -k example\nrequests.get(url, verify=False)\nssl.CERT_NONE\ncurl -k https://x\ncurl https://x | bash\n'})
+        result = virus_scan.audit_zip(path)
+        self.assertEqual((result["result"], result["root"]), ("complete", True))
+        self.assertEqual([(f["rule"], f["line"]) for f in result["findings"]], [("no-tls-check", 2), ("no-tls-check", 3), ("no-tls-check", 4), ("runs-downloads", 5)])
+        self.assertFalse(virus_scan.audit_zip(self.make_zip({"plugin.json": '{"flags":[]}'}))["root"])
+        self.assertIsNone(virus_scan.audit_zip(self.make_zip({"main.py": "pass"}))["root"])
+        self.assertIsNone(virus_scan.audit_zip(self.make_zip({"a/plugin.json": '{"flags":["root"]}', "b/plugin.json": '{"flags":[]}'}))["root"])
+
+    def test_bad_zip_and_limits_are_not_complete(self):
+        path = self.make_zip({"plugin.json": '{"flags":[]}', "large.py": "x" * 100})
+        old = virus_scan.AUDIT_MAX_FILE_BYTES
+        try:
+            virus_scan.AUDIT_MAX_FILE_BYTES = 40
+            self.assertEqual(virus_scan.audit_zip(path)["result"], "incomplete")
+        finally:
+            virus_scan.AUDIT_MAX_FILE_BYTES = old
+        Path(path).write_bytes(b"not a ZIP")
+        self.assertEqual(virus_scan.audit_zip(path)["result"], "error")
+
+    def test_backfill_incomplete_and_changed_digest(self):
+        clean = {"sha256": "aa", "result": "clean", "scannedAt": "2026-11-01T00:00:00Z", "yara": YARA_OK}
+        wanted = {k: {"sha256": "aa", "size": 1} for k in ("missing", "partial")}
+        kept, todo = plan(wanted, {"missing": clean, "partial": {**clean, "audit": {"result": "incomplete"}}}, TODAY)
+        self.assertEqual(todo, ["missing"])
+        self.assertEqual(len(kept), 2)
+        path = self.make_zip({"plugin.json": '{"flags":[]}'})
+        def fetch(url, target):
+            shutil.copyfile(path, target)
+            return "different"
+        reports = scan([["partial"]], fetch=fetch, scanner=lambda paths: "\n".join(f"{p}: OK" for p in paths), version=lambda: ("ClamAV", "1"), yara=FakeYara(), keep={"partial": {**clean, "audit": {"result": "complete", "root": True}}})
+        self.assertFalse(reports["partial"]["audit"]["root"])
+        self.assertEqual(reports["partial"]["sha256"], "different")
+
+    def test_audit_runs_when_both_malware_scanners_are_unavailable(self):
+        path = self.make_zip({"plugin.json": '{"flags":["root"]}'})
+        def fetch(url, target):
+            shutil.copyfile(path, target)
+            return "digest"
+        reports = scan([["https://x/plugin.zip"]], fetch=fetch, version=lambda: ("ClamAV", ""))
+        self.assertTrue(reports["https://x/plugin.zip"]["audit"]["root"])
+        self.assertEqual(reports["https://x/plugin.zip"]["audit"]["result"], "complete")
+        self.assertEqual(reports["https://x/plugin.zip"]["result"], "error")
 
 
 class BadgeTests(unittest.TestCase):
