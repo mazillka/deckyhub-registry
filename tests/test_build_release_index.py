@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from build_release_index import KEEP, audit_index, build, fork_of, plugin_stats  # noqa: E402
+from build_release_index import KEEP, audit_index, build, fork_of, merge_ai_evidence, plugin_stats  # noqa: E402
 from validate import rest_shape  # noqa: E402
 
 
@@ -21,6 +21,12 @@ def no_stats(entry, releases):
 
 
 class BuildReleaseIndexTests(unittest.TestCase):
+    def test_curated_ai_evidence_survives_and_merges_without_duplicates(self):
+        url = "https://github.com/mubaraknumann/unifideck/commit/76556441e52d3e66d6b931e02bd9cbeecc50e716"
+        evidence = f"Commit co-author: Claude ({url})"
+        self.assertEqual(merge_ai_evidence("MubarakNumann/Unifideck", [evidence, "AGENTS.md"]), ["AGENTS.md", evidence])
+        self.assertEqual(merge_ai_evidence("other/repo", None), [])
+
     def test_index_keys_repos_lowercase_drops_drafts_and_failed_lookups(self):
         releases = {"O/A": [release("v2", 2, draft=True), release("v1", 1, [("a.zip", 5)])]}
 
