@@ -21,8 +21,11 @@ on:
   schedule:
     - cron: "41 */3 * * *"
 
+# The scan job opens ZIPs from hundreds of other people's repositories, so it gets a
+# read-only token and leaves none on disk; only the publish job, which never touches a
+# ZIP, can write.
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: virus-scan
@@ -34,6 +37,8 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       # Never fails the run: without ClamAV or its signatures, virus_scan.py gives each ZIP
       # it would have scanned an error report saying why, and tries again next run.
       - name: Install ClamAV and today's signatures
@@ -65,6 +70,24 @@ jobs:
           done
           git fetch -q --depth 1 origin virus-scans && git show FETCH_HEAD:scans.json > "$RUNNER_TEMP/in/scans.json" || true
       - run: python3 scripts/virus_scan.py "$RUNNER_TEMP/out" --old "$RUNNER_TEMP/in/scans.json" --index "$RUNNER_TEMP/in/release-index.json" --index "$RUNNER_TEMP/in/release-index-develop.json" --yara-rules "$RUNNER_TEMP/yara-forge/packages/core/yara-rules-core.yar"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reports
+          path: ${{ runner.temp }}/out
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: reports
+          path: ${{ runner.temp }}/out
       # One orphan commit, force-pushed, so the branch never grows a history.
       - run: |
           git checkout --orphan virus-scans
