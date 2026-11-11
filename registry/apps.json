@@ -5559,6 +5559,15 @@
       "category": "Performance",
       "detect": { "type": "decky-plugin", "names": ["AVR Control"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-web-games",
+      "name": "Decky Web Games",
+      "description": "Decky Web Games: Pokebonk Online and Azeroth Survivors with native gamepad controls and automatic Steam library artwork.",
+      "repo": "sunim87/decky-web-games",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Decky Web Games"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
