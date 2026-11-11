@@ -276,12 +276,40 @@ BATCH = 10
 # Files and folders that set a repo up for an AI coding assistant (Claude Code, Codex and
 # other AGENTS.md readers, Gemini, Cursor, Windsurf, Cline, Roo, Aider, Kiro, Copilot):
 # at the repo's root, or in .github. Lowercase; matched case-insensitively.
-AI_FILES = {"claude.md", "agents.md", "agent.md", "gemini.md", ".claude", ".codex", ".gemini", ".cursor", ".cursorrules", ".windsurf", ".windsurfrules", ".clinerules", ".roo", ".roomodes", ".aider.conf.yml", ".kiro"}
-AI_GITHUB_FILES = {"copilot-instructions.md"}
+AI_FILES = {"claude.md", "claude.local.md", "agents.md", "agents.override.md", "agent.md", "gemini.md", ".claude", ".claude-plugin", ".mcp.json", ".codex", ".gemini",
+            ".cursor", ".cursorrules", ".cursorignore", ".windsurf", ".windsurfrules", ".clinerules", ".roo", ".roomodes", ".kilocode", ".kiro", ".junie", ".continue",
+            ".augment", ".amazonq", ".opencode", "opencode.json", ".trae"}
+# Aider's settings, ignore list and chat logs (.aider.conf.yml, .aiderignore, .aider.chat.history.md).
+AI_FILE_PREFIXES = (".aider",)
+# In .github: Copilot's instructions, and its per-path instructions, prompts, chat modes and agents.
+AI_GITHUB_FILES = {"copilot-instructions.md", "instructions", "prompts", "chatmodes", "agents"}
+# How many of the default branch's newest commits are read for AI authors and co-authors.
+HISTORY = 100
+# AI tools as commit authors or co-authors: (tool, how the name starts, the whole email), both
+# lowercase. The email is what tells a tool from a person who happens to be called Amp or Cursor.
+GITHUB_BOT = r"(?:\d+\+)?%s@users\.noreply\.github\.com"
+AI_IDENTITIES = [(tool, re.compile(names), re.compile(emails)) for tool, names, emails in (
+    ("Claude", r"claude\b", r"noreply@anthropic\.com|noreply@claude\.ai|" + GITHUB_BOT % r"claude\[bot\]"),
+    ("Codex", r"(?:openai\s+)?codex\b|chatgpt-codex-connector\[bot\]", r"noreply@openai\.com|" + GITHUB_BOT % r"(?:codex|chatgpt-codex-connector\[bot\])"),
+    ("GitHub Copilot", r"(?:github\s+)?copilot\b|copilot-swe-agent\[bot\]", GITHUB_BOT % r"(?:copilot|copilot-swe-agent\[bot\])"),
+    ("Cursor", r"cursor\b|cursoragent\b", r"cursoragent@cursor\.com"),
+    ("Aider", r"aider\b", r"[\w.+-]+@aider\.chat"),
+    ("Devin", r"devin\b|devin-ai-integration\[bot\]", GITHUB_BOT % r"devin-ai-integration\[bot\]"),
+    ("Jules", r"google-labs-jules\[bot\]|jules\b", GITHUB_BOT % r"google-labs-jules\[bot\]"),
+    ("Amp", r"amp\b", r"amp@ampcode\.com"),
+)]
+# The line a tool adds to the commits it writes, when it leaves no co-author trailer.
+AI_COMMIT_NOTES = [
+    ("Claude", re.compile(r"Generated with \[?Claude Code\b", re.IGNORECASE)),
+    ("Aider", re.compile(r"^aider: ", re.MULTILINE)),
+]
 # README wording that says the plugin itself is made with AI. Not "AI-generated" alone: a
 # plugin can make AI images. A match right after a negation ("not vibe-coded") doesn't count.
-AI_TOOLS = r"(?:ai|a\.i\.|claude(?: code)?|chat ?gpt|gpt-?\d\S*|copilot|gemini|cursor|codex|llms?|an? llm|an? ai(?: assistant| agent| tools?)?|ai (?:assistants?|agents?|tools?))"
+AI_TOOLS = r"(?:ai|a\.i\.|claude(?: code)?|chat ?gpt|gpt-?\d\S*|copilot|gemini|cursor|codex|windsurf|aider|cline|llms?|an? llm|an? ai(?: assistant| agent| tools?)?|ai (?:assistants?|agents?|tools?))"
 AI_README = re.compile("|".join([
+    r"\bai[- ]assisted\s+(?:development|coding|programming)\b",
+    r"\b(?:co-?written|co-?authored|pair[- ]programmed)\s+(?:by|with)\s+" + AI_TOOLS + r"(?![\w-])",
+    r"\bgenerated with \[?claude code\b",
     r"\bvibe[- ]?cod(?:ed|ing)\b",
     r"\b100\s*%\s*(?:ai|vibe)\b",
     r"\bai[- ](?:generated|written|assisted|made)\s+(?:code|plugin|project)\b",
@@ -343,11 +371,15 @@ def rest_shape(node: dict) -> dict:
 def releases_query(repo: str, first: int, after: str | None = None) -> str:
     owner, name = repo.split("/")
     cursor = f", after: {json.dumps(after)}" if after else ""
+    # What ai_files() reads. Asked of the repo and of the repo it was forked from: a fork of
+    # an AI-made project is AI-made too, even after it deleted the files or rewrote the README.
+    ai_signs = (f"root: object(expression: \"HEAD:\") {{ {TREE} }} dotGithub: object(expression: \"HEAD:.github\") {{ {TREE} }} "
+                f"readme: object(expression: \"HEAD:README.md\") {{ ... on Blob {{ text }} }} readmeLower: object(expression: \"HEAD:readme.md\") {{ ... on Blob {{ text }} }} "
+                f"readmeTitle: object(expression: \"HEAD:Readme.md\") {{ ... on Blob {{ text }} }} "
+                f"recentHistory: defaultBranchRef {{ target {{ ... on Commit {{ history(first: {HISTORY}) {{ nodes {{ message url author {{ name email }} }} }} }} }} }} ")
     return (f"repository(owner: {json.dumps(owner)}, name: {json.dumps(name)}) {{ nameWithOwner name description isArchived isFork stargazerCount "
-            f"root: object(expression: \"HEAD:\") {{ {TREE} }} dotGithub: object(expression: \"HEAD:.github\") {{ {TREE} }} "
-            f"readme: object(expression: \"HEAD:README.md\") {{ ... on Blob {{ text }} }} readmeLower: object(expression: \"HEAD:readme.md\") {{ ... on Blob {{ text }} }} "
-            f"recentHistory: defaultBranchRef {{ target {{ ... on Commit {{ history(first: 30) {{ nodes {{ message url }} }} }} }} }} "
-            f"parent {{ nameWithOwner isArchived isTemplate releases(first: 1, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ nodes {{ publishedAt }} }} }} "
+            f"{ai_signs}"
+            f"parent {{ nameWithOwner isArchived isTemplate {ai_signs}releases(first: 1, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ nodes {{ publishedAt }} }} }} "
             f"releases(first: {first}{cursor}, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ pageInfo {{ hasNextPage endCursor }} nodes {{ {RELEASE_FIELDS} }} }} }}")
 
 
@@ -359,38 +391,48 @@ def ai_readme(text: str | None) -> str | None:
     return None
 
 
+def ai_identity(name: str | None, email: str | None) -> str | None:
+    """The AI tool (AI_IDENTITIES) a commit author or co-author is, or None for a person."""
+    name, email = (name or "").strip().casefold(), (email or "").strip().casefold()
+    return next((tool for tool, names, emails in AI_IDENTITIES if names.match(name) and emails.fullmatch(email)), None)
+
+
 def ai_files(result: dict) -> list[str]:
-    """The AI-assistant files (AI_FILES) on the repo's default branch, as named there, and
-    'README: "<phrase>"' when its README says it's made with AI (ai_readme)."""
+    """The signs a repo is developed with AI help: the AI-assistant files (AI_FILES) on its
+    default branch, as named there; 'README: "<phrase>"' when its README says it's made with
+    AI (ai_readme); and, once per tool, the newest of its last HISTORY commits an AI tool
+    wrote ('Commit author'), co-wrote ('Commit co-author') or signed ('Commit note')."""
     entries = lambda tree: [entry["name"] for entry in ((tree or {}).get("entries") or [])]  # noqa: E731
-    readme = ai_readme(((result.get("readme") or result.get("readmeLower")) or {}).get("text"))
-    files = ([name for name in entries(result.get("root")) if name.casefold() in AI_FILES]
+    readme = ai_readme(((result.get("readme") or result.get("readmeLower") or result.get("readmeTitle")) or {}).get("text"))
+    files = ([name for name in entries(result.get("root")) if name.casefold() in AI_FILES or name.casefold().startswith(AI_FILE_PREFIXES)]
              + [f".github/{name}" for name in entries(result.get("dotGithub")) if name.casefold() in AI_GITHUB_FILES])
     evidence = files + ([f'README: "{readme}"'] if readme else [])
     history = ((result.get("recentHistory") or {}).get("target") or {}).get("history") or {}
     seen_tools = set()
     for commit in history.get("nodes") or []:
         message = commit.get("message") or ""
+        author = commit.get("author") or {}
+        # The first sign each commit gives: who wrote it, a co-author trailer, then a tool's own note.
+        signs = [("Commit author", ai_identity(author.get("name"), author.get("email")))]
         for line in message.splitlines():
-            trailer = re.fullmatch(r"\s*Co-authored-by:\s*(.*?)\s*<([^<>]+)>\s*", line, re.IGNORECASE)
-            if not trailer:
-                continue
-            identity, email = trailer.group(1).casefold(), trailer.group(2).casefold()
-            tool = None
-            if (re.fullmatch(r"claude(?:\s+(?:code|(?:haiku|sonnet|opus)\s+\d+(?:\.\d+)*))?", identity)
-                    and email in {"noreply@anthropic.com", "noreply@claude.ai"}):
-                tool = "Claude"
-            elif (re.fullmatch(r"(?:openai\s+)?codex", identity)
-                    and (email == "noreply@openai.com" or re.fullmatch(r"(?:\d+\+)?codex@users\.noreply\.github\.com", email))):
-                tool = "Codex"
-            elif (identity in {"copilot", "github copilot", "copilot-swe-agent[bot]"}
-                    and re.fullmatch(r"(?:\d+\+)?(?:copilot|copilot-swe-agent\[bot\])@users\.noreply\.github\.com", email)):
-                tool = "GitHub Copilot"
+            if trailer := re.fullmatch(r"\s*Co-authored-by:\s*(.*?)\s*<([^<>]+)>\s*", line, re.IGNORECASE):
+                signs.append(("Commit co-author", ai_identity(trailer.group(1), trailer.group(2))))
+        signs += [("Commit note", tool) for tool, note in AI_COMMIT_NOTES if note.search(message)]
+        for kind, tool in signs:
             if tool and tool not in seen_tools:
                 url = commit.get("url")
-                evidence.append(f"Commit co-author: {tool}" + (f" ({url})" if url else ""))
+                evidence.append(f"{kind}: {tool}" + (f" ({url})" if url else ""))
                 seen_tools.add(tool)
     return sorted(set(evidence))
+
+
+def inherited_ai(own: list[str] | None, source: str | None, source_ai: list[str] | None) -> list[str]:
+    """A repo's AI evidence plus that of the project it was formed from (its fork parent, or
+    the entry's upstream), each of those marked 'From owner/name: ...'. One the repo shows
+    itself (a CLAUDE.md the fork kept) isn't repeated.
+    shortcut: one level up only; follow the parent's own parent when a fork of a fork needs it."""
+    own = list(own or [])
+    return own + [f"From {source}: {item}" for item in source_ai or [] if source and item not in own]
 
 
 def fetch_github(repos: list[str], every_release: bool = False) -> dict[str, dict]:
@@ -433,7 +475,9 @@ def fetch_github(repos: list[str], every_release: bool = False) -> dict[str, dic
                 # A fork of a template (Decky's plugin template) is a new plugin, not a copy of one.
                 "fork": result["isFork"] and not (result["parent"] or {}).get("isTemplate"),
                 # The repo it was forked from: its name, whether it's archived and its newest release date.
+                # ai: the same signs of AI help as above, found in that repo.
                 "parent": result["parent"] and {"full_name": result["parent"]["nameWithOwner"], "archived": result["parent"]["isArchived"],
+                                                "ai": ai_files(result["parent"]),
                                                 "released": next((node["publishedAt"] for node in result["parent"]["releases"]["nodes"]), None)},
                 "releases": [rest_shape(node) for node in releases],
             }
