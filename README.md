@@ -678,6 +678,7 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | Decky Tartarus | Utilities | [Mtsbws/decky-tartarus](https://github.com/Mtsbws/decky-tartarus) |
 | Round Corners | Utilities | [Vivoxti/DeckyRoundCorners](https://github.com/Vivoxti/DeckyRoundCorners) |
 | AVR Control | Performance | [bnm12/decky-avr-control](https://github.com/bnm12/decky-avr-control) |
+| Decky Web Games | Controllers | [sunim87/decky-web-games](https://github.com/sunim87/decky-web-games) |
 
 ## Where the plugins come from
 
