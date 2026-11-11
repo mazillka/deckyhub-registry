@@ -5514,6 +5514,51 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Display Switch"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-ps5-bazzite-updater",
+      "name": "PS5 Updates",
+      "description": "Checks PS5 Bazzite Deck releases, shows the notes, and installs an update then powers off.",
+      "repo": "cmartinespinosa/decky-ps5-bazzite-updater",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["PS5 Updates"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-store-shortcut",
+      "name": "Store Shortcut",
+      "description": "Open a library game's Steam store page from its context menu, or with L3/R3 while its capsule is focused.",
+      "repo": "TassaDarK-MGJ/decky-store-shortcut",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Store Shortcut"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-tartarus",
+      "name": "Decky Tartarus",
+      "description": "Remap a Razer Tartarus Pro with adjustable actuation, a secondary function per key, Hypershift, per-game profiles and lighting.",
+      "repo": "Mtsbws/decky-tartarus",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Tartarus"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyroundcorners",
+      "name": "Round Corners",
+      "description": "Adjustable black rounded display corners in Gaming Mode.",
+      "repo": "Vivoxti/DeckyRoundCorners",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Round Corners"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-avr-control",
+      "name": "AVR Control",
+      "description": "Quick Access volume and mute for network receivers; power and listening modes where supported.",
+      "repo": "bnm12/decky-avr-control",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["AVR Control"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
