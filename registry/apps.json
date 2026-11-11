@@ -5496,6 +5496,24 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decky Jisho"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "wowdeck",
+      "name": "WoWDeck",
+      "description": "Manage World of Warcraft addons: install, update and remove addons from your Deck.",
+      "repo": "sigboe/wowdeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["WoWDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-display-switch",
+      "name": "Display Switch",
+      "description": "Switch Game Mode between a laptop's built-in screen and a TV, projector or monitor.",
+      "repo": "Albino-blueWhale/decky-display-switch",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Display Switch"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }

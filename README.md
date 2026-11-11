@@ -671,6 +671,8 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | Decky Translator RU | Utilities | [konst2/Decky-Translator-RU](https://github.com/konst2/Decky-Translator-RU) |
 | Agent Remote | Customization | [kongdayan/decky-agent-remote](https://github.com/kongdayan/decky-agent-remote) |
 | Decky Jisho | Utilities | [IktaS/deck-jisho](https://github.com/IktaS/deck-jisho) |
+| WoWDeck | Utilities | [sigboe/wowdeck](https://github.com/sigboe/wowdeck) |
+| Display Switch | Utilities | [Albino-blueWhale/decky-display-switch](https://github.com/Albino-blueWhale/decky-display-switch) |
 
 ## Where the plugins come from
 
