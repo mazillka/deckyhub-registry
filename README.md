@@ -673,6 +673,11 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | Decky Jisho | Utilities | [IktaS/deck-jisho](https://github.com/IktaS/deck-jisho) |
 | WoWDeck | Utilities | [sigboe/wowdeck](https://github.com/sigboe/wowdeck) |
 | Display Switch | Utilities | [Albino-blueWhale/decky-display-switch](https://github.com/Albino-blueWhale/decky-display-switch) |
+| PS5 Updates | Performance | [cmartinespinosa/decky-ps5-bazzite-updater](https://github.com/cmartinespinosa/decky-ps5-bazzite-updater) |
+| Store Shortcut | Game Libraries | [TassaDarK-MGJ/decky-store-shortcut](https://github.com/TassaDarK-MGJ/decky-store-shortcut) |
+| Decky Tartarus | Utilities | [Mtsbws/decky-tartarus](https://github.com/Mtsbws/decky-tartarus) |
+| Round Corners | Utilities | [Vivoxti/DeckyRoundCorners](https://github.com/Vivoxti/DeckyRoundCorners) |
+| AVR Control | Performance | [bnm12/decky-avr-control](https://github.com/bnm12/decky-avr-control) |
 
 ## Where the plugins come from
 
