@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from build_release_index import KEEP, audit_index, build, fork_of, keep_old_warnings, merge_ai_evidence, plugin_stats  # noqa: E402
+from build_release_index import KEEP, ai_evidence, audit_index, build, fork_of, keep_old_warnings, merge_ai_evidence, plugin_stats  # noqa: E402
 from validate import rest_shape  # noqa: E402
 
 
@@ -89,6 +89,21 @@ class BuildReleaseIndexTests(unittest.TestCase):
         self.assertEqual(fork_of({"fork": True, "parent": {"full_name": "orig/a"}}), "orig/a")
         self.assertIsNone(fork_of({"fork": False, "parent": None}))
         self.assertIsNone(fork_of({"fork": True, "parent": None}))
+
+    def test_a_project_formed_from_an_ai_made_one_inherits_its_evidence(self):
+        nothing = lambda name: None  # noqa: E731
+        parent = {"full_name": "Orig/A", "ai": ["CLAUDE.md", "AGENTS.md"]}
+        # A fork that deleted the files is still marked; one it kept isn't listed twice.
+        self.assertEqual(ai_evidence(entry(), {"fork": True, "ai": [], "parent": parent}, nothing), ["From Orig/A: CLAUDE.md", "From Orig/A: AGENTS.md"])
+        self.assertEqual(ai_evidence(entry(), {"fork": True, "ai": ["CLAUDE.md"], "parent": parent}, nothing), ["CLAUDE.md", "From Orig/A: AGENTS.md"])
+        # Not a fork (or a copy of a template, which fork is False for): only its own.
+        self.assertEqual(ai_evidence(entry(), {"fork": False, "ai": ["CLAUDE.md"], "parent": parent}, nothing), ["CLAUDE.md"])
+        self.assertEqual(ai_evidence(entry(), {"fork": False, "ai": [], "parent": None}, nothing), [])
+        # The entry's upstream wins over GitHub's parent, and is looked up when it isn't that parent.
+        derived = {**entry(), "upstream": "up/stream"}
+        self.assertEqual(ai_evidence(derived, {"fork": True, "ai": [], "parent": parent}, {"up/stream": ["GEMINI.md"]}.get), ["From up/stream: GEMINI.md"])
+        self.assertEqual(ai_evidence({**entry(), "upstream": "orig/a"}, {"fork": False, "ai": [], "parent": parent}, nothing), ["From orig/a: CLAUDE.md", "From orig/a: AGENTS.md"])
+        self.assertEqual(ai_evidence(derived, {"fork": False, "ai": [], "parent": None}, nothing), [])
 
     def test_stats_tell_no_root_from_unknown(self):
         history = [release("v1", 1, [("plugin.zip", 1)])]

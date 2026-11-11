@@ -16,7 +16,8 @@ It also writes stats.json for the catalog page, per plugin:
 - root: whether that release's plugin.json asks Decky to run it as root.
 - fork: the owner/name a repo was forked from, for repos that are forks (missing otherwise):
   the entry's upstream when it has one, else the parent GitHub knows of.
-- ai: the AI coding assistant files (CLAUDE.md, AGENTS.md, .cursorrules... see AI_FILES in
+- ai: signs the plugin is developed with AI help; each one of the project it was formed from
+  (its upstream, else the repo it's a GitHub fork of) starts "From owner/name: ". They are: the AI coding assistant files (CLAUDE.md, AGENTS.md, .cursorrules... see AI_FILES in
   validate.py) on the repo's default branch, plus 'README: "<phrase>"' when its README
   says it's made with AI (AI_README), a sign it's developed with AI help. Missing
   when there are none; no files isn't proof no AI was used.
@@ -45,7 +46,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from validate import load_registry_apps, REGISTRY, channel_releases, fetch, fetch_github, installable_releases, matching_assets, plugin_version, zip_plugin_files
+from validate import load_registry_apps, REGISTRY, channel_releases, fetch, fetch_github, inherited_ai, installable_releases, matching_assets, plugin_version, zip_plugin_files
 
 AUDIT_URL = "https://decky-extended-plugins.beallio.com/audit.json"
 # The audit's rule ID prefixes worth a warning on a card, like Runs as root. Routine ones
@@ -207,6 +208,17 @@ def fork_of(repo: dict) -> str | None:
     return (repo.get("parent") or {}).get("full_name") if repo.get("fork") else None
 
 
+def ai_evidence(entry: dict, repo: dict, known) -> list[str]:
+    """The repo's own signs of AI help plus those of the project it was formed from: the
+    entry's upstream when it has one, else the repo GitHub says it was forked from (never
+    a template). known(owner/name): that project's evidence when it was fetched as a repo
+    of its own, else None."""
+    source = entry.get("upstream") or fork_of(repo)
+    parent = repo.get("parent") or {}
+    forked_from_it = source and (parent.get("full_name") or "").casefold() == source.casefold()
+    return inherited_ai(repo.get("ai"), source, parent.get("ai") if forked_from_it else source and known(source))
+
+
 def main() -> int:
     apps = load_registry_apps(REGISTRY)
     entries = apps + EXTRA_ENTRIES
@@ -215,13 +227,17 @@ def main() -> int:
         # Something's wrong on GitHub's side: keep the published index rather than replace it with a thin one.
         print(f"error: only {len(github)} of {len(entries)} repos answered", file=sys.stderr)
         return 1
+    # An upstream the registry doesn't list (and the repo isn't a GitHub fork of) is looked up for its AI evidence alone.
+    unlisted = sorted({entry["upstream"] for entry in entries if entry.get("upstream") and entry["upstream"].casefold() not in github})
+    upstreams = best_effort(fetch_github, unlisted) or {} if unlisted else {}
+    known_ai = lambda name: (github.get(name.casefold()) or upstreams.get(name.casefold()) or {}).get("ai")  # noqa: E731
     # The audit is someone else's site: without it the plugins keep their last published
     # warnings (keep_old_warnings below). An empty answer counts as none: it has thousands of records.
     audits = best_effort(lambda url: audit_index(json.loads(fetch(url, auth=False))), AUDIT_URL) or None
     # One read per ZIP: the shown release's feeds both root (stats) and pluginVersion.
     files = functools.lru_cache(maxsize=None)(lambda url, size: zip_plugin_files({"browser_download_url": url, "size": size}))
     read = lambda asset: files(asset["browser_download_url"], asset["size"])  # noqa: E731
-    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], manifest=lambda asset: read(asset)[0], audits=audits, fork=entry.get("upstream") or fork_of(github[entry["repo"].casefold()]), ai=github[entry["repo"].casefold()].get("ai")), version=lambda asset: plugin_version(*read(asset)))
+    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], manifest=lambda asset: read(asset)[0], audits=audits, fork=entry.get("upstream") or fork_of(github[entry["repo"].casefold()]), ai=ai_evidence(entry, github[entry["repo"].casefold()], known_ai)), version=lambda asset: plugin_version(*read(asset)))
     if audits is None and len(sys.argv) > 2:
         try:
             keep_old_warnings(index["stats"], json.loads(Path(sys.argv[2]).read_text(encoding="utf-8")).get("plugins") or {})

@@ -112,6 +112,40 @@ class AiFilesTests(unittest.TestCase):
         for text in ["Not vibe-coded!", "No AI was used, nor built with AI.", "Turns your screenshots into AI-generated wallpapers.", "Built with React and aiohttp.", "Uses the Gemini API.", "Made by aidan", None]:
             self.assertIsNone(validate.ai_readme(text), text)
 
+    def test_more_assistants_files_and_readme_wording_count(self):
+        result = {"root": {"entries": [{"name": name} for name in (".mcp.json", ".aiderignore", ".junie", "opencode.json", "src", ".airc")]},
+                  "dotGithub": {"entries": [{"name": "instructions"}, {"name": "workflows"}]},
+                  "readmeTitle": {"text": "Pair-programmed with Claude Code."}}
+        self.assertEqual(validate.ai_files(result), [".aiderignore", ".github/instructions", ".junie", ".mcp.json", 'README: "Pair-programmed with Claude Code"', "opencode.json"])
+        for text in ["AI-assisted development.", "Co-written with ChatGPT", "🤖 Generated with [Claude Code](https://claude.com/claude-code)", "Built with Windsurf."]:
+            self.assertIsNotNone(validate.ai_readme(text), text)
+        for text in ["Translation assisted by AI models.", "AI-assisted upscaling for games.", "Co-authored by Devin Smith"]:
+            self.assertIsNone(validate.ai_readme(text), text)
+
+    def test_ai_tools_as_commit_authors_and_in_commit_notes(self):
+        def commit(number, message="Fix", name="Dev", email="dev@example.com"):
+            return {"message": message, "url": f"https://github.com/o/a/commit/{number}", "author": {"name": name, "email": email}}
+
+        result = {"recentHistory": {"target": {"history": {"nodes": [
+            commit(1, name="copilot-swe-agent[bot]", email="198982749+Copilot@users.noreply.github.com"),
+            commit(2, "Feature\n\nCo-authored-by: Cursor Agent <cursoragent@cursor.com>"),
+            commit(3, "Feature\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)"),
+            commit(4, "Feature\n\nCo-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"),
+            commit(5, name="google-labs-jules[bot]", email="161369871+google-labs-jules[bot]@users.noreply.github.com"),
+            commit(6, "aider: tidy imports", name="Dev (aider)"),
+            commit(7, "Feature\n\nCo-authored-by: aider (gpt-4o) <aider@aider.chat>"),
+            # People: a tool's name with someone's own address, and a tool only mentioned.
+            commit(8, "Thanks Devin\n\nCo-authored-by: Devin Smith <devin@example.com>", name="Amp", email="amp@example.com"),
+            commit(9, "Add Cursor theme and Claude Code docs"),
+        ]}}}}
+        self.assertEqual(validate.ai_files(result), [
+            "Commit author: GitHub Copilot (https://github.com/o/a/commit/1)",
+            "Commit author: Jules (https://github.com/o/a/commit/5)",
+            "Commit co-author: Cursor (https://github.com/o/a/commit/2)",
+            "Commit note: Aider (https://github.com/o/a/commit/6)",
+            "Commit note: Claude (https://github.com/o/a/commit/3)",
+        ])
+
     def test_a_repo_without_them_or_without_a_tree_has_none(self):
         self.assertEqual(validate.ai_files({"root": {"entries": [{"name": "README.md"}]}, "dotGithub": None}), [])
         self.assertEqual(validate.ai_files({"root": None, "dotGithub": None}), [])
