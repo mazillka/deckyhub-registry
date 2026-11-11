@@ -49,8 +49,11 @@ jobs:
             for file in releases.json stats.json; do git show "FETCH_HEAD:$file" > "$RUNNER_TEMP/index/$file"; done
             echo "copied=true" >> "$GITHUB_OUTPUT"
           fi
+      # The stats.json published last: its warnings stand in when the audit can't be read
+      # (build_release_index.py), and the audit issue below compares against it.
+      - run: git fetch -q --depth 1 origin "$TARGET" && git show FETCH_HEAD:stats.json > "$RUNNER_TEMP/old-stats.json" || echo '{}' > "$RUNNER_TEMP/old-stats.json"
       - if: steps.same.outputs.copied != 'true'
-        run: python3 scripts/build_release_index.py "$RUNNER_TEMP/index"
+        run: python3 scripts/build_release_index.py "$RUNNER_TEMP/index" "$RUNNER_TEMP/old-stats.json"
         env:
           GITHUB_TOKEN: ${{ github.token }}
       # One rolling "Audit warnings" issue (scripts/audit_alerts.py), edited in place: what
@@ -60,7 +63,6 @@ jobs:
       - if: matrix.branch == 'main'
         continue-on-error: true
         run: |
-          git fetch -q --depth 1 origin release-index && git show FETCH_HEAD:stats.json > "$RUNNER_TEMP/old-stats.json" || echo '{}' > "$RUNNER_TEMP/old-stats.json"
           action=$(python3 scripts/audit_alerts.py "$RUNNER_TEMP/old-stats.json" "$RUNNER_TEMP/index/stats.json" "$RUNNER_TEMP/alerts.md")
           title=$(python3 -c 'import sys; sys.path.insert(0, "scripts"); from audit_alerts import ISSUE_TITLE; print(ISSUE_TITLE)')
           read -r number state < <(gh issue list --state all --limit 200 --json number,title,state --jq "map(select(.title == \"$title\")) | sort_by(.number) | last | \"\(.number) \(.state)\"" || true)

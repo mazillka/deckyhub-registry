@@ -1,6 +1,6 @@
 """Write every listed repo's recent releases to one JSON file for DeckyHub.
 
-    GITHUB_TOKEN=$(gh auth token) python scripts/build_release_index.py OUT_DIR
+    GITHUB_TOKEN=$(gh auth token) python scripts/build_release_index.py OUT_DIR [OLD_STATS_JSON]
 
 Without a token DeckyHub may make 60 GitHub API calls an hour, and it needs one per
 listed repo, so a big list runs out on a single page load. The release-index workflow
@@ -23,6 +23,7 @@ It also writes stats.json for the catalog page, per plugin:
 - warnings / prereleaseWarnings: what Decky Extended Plugins' audit found in that release
   (and in a newer pre-release, if any) that's worth warning about (see WARNINGS). Matched
   by the ZIP's sha256, else by tag. Missing when there's nothing to warn about.
+  When the audit can't be read, they're copied from OLD_STATS_JSON (the stats.json published last).
 
 Each channel's newest release in releases.json (the one DeckyHub's card compares with)
 also gets pluginVersion: the version its ZIP installs as (plugin.json's, else
@@ -106,13 +107,28 @@ def audit_index(data: dict) -> dict:
     the newest wins."""
     index = {}
     for record in sorted(data.get("releases", []), key=lambda record: record.get("audited_at") or ""):
-        found = {warning for rule in record.get("rule_ids") or [] for prefix, warning in WARNINGS.items() if rule.startswith(prefix)}
-        verdict = (["blocked"] if record["classification"] == "BLOCK" else []) + sorted(found)
-        repo = record["repository"].removeprefix("https://github.com/").casefold()
-        index[(repo, record["tag"])] = verdict
-        if record.get("current_artifact_sha256"):
-            index[record["current_artifact_sha256"]] = verdict
+        # The audit is someone else's file: a record of another shape is left out, not fatal.
+        try:
+            found = {warning for rule in record.get("rule_ids") or [] for prefix, warning in WARNINGS.items() if rule.startswith(prefix)}
+            verdict = (["blocked"] if record["classification"] == "BLOCK" else []) + sorted(found)
+            repo = record["repository"].removeprefix("https://github.com/").casefold()
+            index[(repo, record["tag"])] = verdict
+            if record.get("current_artifact_sha256"):
+                index[record["current_artifact_sha256"]] = verdict
+        except (KeyError, TypeError, AttributeError) as error:
+            print(f"warning: audit record skipped: {error!r}", file=sys.stderr)
     return index
+
+
+def keep_old_warnings(stats: dict, old: dict) -> None:
+    """For a run that couldn't read the audit: each plugin keeps the warnings the last
+    published stats.json had, rather than looking clean until the audit is back. They may
+    be one release behind; that beats dropping a "blocked"."""
+    for repo, stat in stats.items():
+        previous = old.get(repo)
+        for key in ("warnings", "prereleaseWarnings"):
+            if isinstance(previous, dict) and isinstance(previous.get(key), list):
+                stat[key] = previous[key]
 
 
 def warnings_of(entry: dict, release: dict | None, audits: dict) -> list[str]:
@@ -199,12 +215,18 @@ def main() -> int:
         # Something's wrong on GitHub's side: keep the published index rather than replace it with a thin one.
         print(f"error: only {len(github)} of {len(entries)} repos answered", file=sys.stderr)
         return 1
-    # The audit is someone else's site: without it the index just goes out without verdicts.
-    audits = audit_index(best_effort(lambda url: json.loads(fetch(url, auth=False)), AUDIT_URL) or {})
+    # The audit is someone else's site: without it the plugins keep their last published
+    # warnings (keep_old_warnings below). An empty answer counts as none: it has thousands of records.
+    audits = best_effort(lambda url: audit_index(json.loads(fetch(url, auth=False))), AUDIT_URL) or None
     # One read per ZIP: the shown release's feeds both root (stats) and pluginVersion.
     files = functools.lru_cache(maxsize=None)(lambda url, size: zip_plugin_files({"browser_download_url": url, "size": size}))
     read = lambda asset: files(asset["browser_download_url"], asset["size"])  # noqa: E731
     index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], manifest=lambda asset: read(asset)[0], audits=audits, fork=entry.get("upstream") or fork_of(github[entry["repo"].casefold()]), ai=github[entry["repo"].casefold()].get("ai")), version=lambda asset: plugin_version(*read(asset)))
+    if audits is None and len(sys.argv) > 2:
+        try:
+            keep_old_warnings(index["stats"], json.loads(Path(sys.argv[2]).read_text(encoding="utf-8")).get("plugins") or {})
+        except (OSError, ValueError, AttributeError) as error:
+            print(f"warning: no earlier stats to keep warnings from: {error}", file=sys.stderr)
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     # DeckyHub reads releases; the catalog page reads the much smaller stats file.

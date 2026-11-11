@@ -71,6 +71,20 @@ class PluginVersionTests(unittest.TestCase):
         self.assertEqual(validate.plugin_version({"version": "1.0"}, {"version": "2.0"}), "1.0")
         self.assertIsNone(validate.plugin_version(None, {}))
 
+    def test_an_oversized_plugin_json_is_refused_unread_and_an_oversized_package_json_is_skipped(self):
+        def files(plugin, package):
+            data = io.BytesIO()
+            with zipfile.ZipFile(data, "w", zipfile.ZIP_DEFLATED) as archive:
+                archive.writestr("A/plugin.json", plugin)
+                archive.writestr("A/package.json", package)
+            with mock.patch.object(validate, "RangedFile", lambda url, size: io.BytesIO(data.getvalue())):
+                return validate.zip_plugin_files({"browser_download_url": "https://x/a.zip", "size": 1})
+
+        bomb = " " * (validate.MAX_MANIFEST_BYTES + 1)
+        with self.assertRaises(ValueError):
+            files(bomb, "{}")
+        self.assertEqual(files('{"name": "A"}', bomb), ({"name": "A"}, {}))
+
     def test_a_tag_naming_another_version_number_is_a_mismatch(self):
         for tag, version in [("v0.45", "0.4.5"), ("v1.0.9", "1.0.8"), ("v0.2.0", "0.0.1")]:
             self.assertTrue(validate.version_mismatch(tag, version), tag)

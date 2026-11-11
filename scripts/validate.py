@@ -159,6 +159,18 @@ def zip_plugin_files(asset: dict) -> tuple[dict | None, dict]:
         return _read_zip_plugin_files(asset)
 
 
+# A real plugin.json or package.json is a few KB. zipfile reads no more than the size the
+# ZIP states, so refusing a bigger one stops a ZIP bomb from using up the runner's memory.
+MAX_MANIFEST_BYTES = 1024 * 1024
+
+
+def _read_json(archive: zipfile.ZipFile, name: str):
+    """Raises KeyError when the ZIP has no such file, ValueError when it's too big or not JSON."""
+    if archive.getinfo(name).file_size > MAX_MANIFEST_BYTES:
+        raise ValueError(f"{name} in the ZIP is larger than {MAX_MANIFEST_BYTES} bytes")
+    return json.loads(archive.read(name))
+
+
 def _read_zip_plugin_files(asset: dict) -> tuple[dict | None, dict]:
     with zipfile.ZipFile(RangedFile(asset["browser_download_url"], asset["size"])) as archive:
         manifests = []
@@ -174,10 +186,10 @@ def _read_zip_plugin_files(asset: dict) -> tuple[dict | None, dict]:
             names = ", ".join(repr(entry.filename) for entry in candidates)
             raise ValueError(f"ambiguous plugin.json manifests in ZIP: {names}")
         try:
-            package = json.loads(archive.read(candidates[0].filename.removesuffix("plugin.json") + "package.json"))
+            package = _read_json(archive, candidates[0].filename.removesuffix("plugin.json") + "package.json")
         except (KeyError, ValueError):
             package = {}
-        return json.loads(archive.read(candidates[0])), package if isinstance(package, dict) else {}
+        return _read_json(archive, candidates[0].filename), package if isinstance(package, dict) else {}
 
 
 def zip_plugin_manifest(asset: dict) -> dict | None:

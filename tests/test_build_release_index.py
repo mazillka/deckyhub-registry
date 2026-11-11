@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from build_release_index import KEEP, audit_index, build, fork_of, merge_ai_evidence, plugin_stats  # noqa: E402
+from build_release_index import KEEP, audit_index, build, fork_of, keep_old_warnings, merge_ai_evidence, plugin_stats  # noqa: E402
 from validate import rest_shape  # noqa: E402
 
 
@@ -117,6 +117,15 @@ class BuildReleaseIndexTests(unittest.TestCase):
         self.assertEqual(stats["warnings"], ["private-data", "vulnerable"])
         self.assertEqual(stats["prereleaseWarnings"], ["blocked", "not-in-source"])
         self.assertNotIn("warnings", plugin_stats(entry(), [release("v9", 9, [("plugin.zip", 1)])], stars=lambda repo: 0, manifest=lambda asset: {}, audits=audits))
+
+    def test_an_audit_record_of_another_shape_is_skipped(self):
+        good = {"repository": "https://github.com/o/a", "tag": "v1", "classification": "BLOCK"}
+        self.assertEqual(audit_index({"releases": [{"tag": "v0"}, {"repository": None, "tag": "v0", "classification": "PASS"}, good]}), {("o/a", "v1"): ["blocked"]})
+
+    def test_without_the_audit_plugins_keep_their_published_warnings(self):
+        stats = {"o/a": {"downloads": 1}, "o/b": {"downloads": 2}, "o/new": {"downloads": 3}}
+        keep_old_warnings(stats, {"o/a": {"warnings": ["blocked"], "prereleaseWarnings": ["obfuscated"], "downloads": 0}, "o/b": {"warnings": "odd"}, "o/gone": {"warnings": ["blocked"]}})
+        self.assertEqual(stats, {"o/a": {"downloads": 1, "warnings": ["blocked"], "prereleaseWarnings": ["obfuscated"]}, "o/b": {"downloads": 2}, "o/new": {"downloads": 3}})
 
     def test_graphql_releases_take_the_rest_shape(self):
         node = {"tagName": "v1", "name": "One", "isDraft": False, "isPrerelease": True, "publishedAt": "2026-01-01T00:00:00Z", "url": "u", "description": "notes",
