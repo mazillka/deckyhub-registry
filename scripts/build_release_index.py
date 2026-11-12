@@ -21,6 +21,9 @@ It also writes stats.json for the catalog page, per plugin:
   validate.py) on the repo's default branch, plus 'README: "<phrase>"' when its README
   says it's made with AI (AI_README), a sign it's developed with AI help. Missing
   when there are none; no files isn't proof no AI was used.
+- store: {downloads} when the Decky store (plugins.deckbrew.xyz and its testing store) lists a plugin
+  of that name (detect names, then display name; the store names no repository). Those are Decky's
+  installs, a different count from GitHub's downloads. Missing when it isn't listed or the store can't be read.
 - warnings / prereleaseWarnings: what Decky Extended Plugins' audit found in that release
   (and in a newer pre-release, if any) that's worth warning about (see WARNINGS). Matched
   by the ZIP's sha256, else by tag. Missing when there's nothing to warn about.
@@ -76,6 +79,30 @@ CURATED_AI_EVIDENCE = {
 def merge_ai_evidence(repo: str, automatic: list[str] | None) -> list[str]:
     """Combine bounded automatic evidence with durable, reviewed repo evidence."""
     return sorted(set(automatic or []) | set(CURATED_AI_EVIDENCE.get(repo.casefold(), [])))
+
+# The Decky store's own download counts (GitHub's count the ZIPs DeckyHub and others fetch; the store counts what Decky installs).
+STORE_URLS = ("https://plugins.deckbrew.xyz/plugins", "https://testing.deckbrew.xyz/plugins")
+
+
+def store_downloads(lists: list[list[dict]]) -> dict[str, int]:
+    """Downloads per store plugin name (lowercase), the larger of the stores that list it."""
+    found: dict[str, int] = {}
+    for plugins in lists:
+        for plugin in plugins:
+            if isinstance(plugin, dict) and isinstance(plugin.get("name"), str):
+                downloads = plugin.get("downloads")
+                found[plugin["name"].casefold()] = max(found.get(plugin["name"].casefold(), 0), downloads if isinstance(downloads, int) else 0)
+    return found
+
+
+def store_entry(entry: dict, found: dict[str, int]) -> dict | None:
+    """The store listing of a registry entry: the store doesn't say which repository a plugin
+    came from, so it is matched by name (its detect names, then its display name); {downloads}, or None."""
+    for name in [*entry.get("detect", {}).get("names", []), entry.get("name", "")]:
+        if name and name.casefold() in found:
+            return {"downloads": found[name.casefold()]}
+    return None
+
 
 # Not a registry entry, but DeckyHub checks its own releases too.
 EXTRA_ENTRIES = [{"repo": "mazillka/deckyhub-plugin", "asset": {"include": ["deckyhub-"], "exclude": []}}]
@@ -142,7 +169,7 @@ def warnings_of(entry: dict, release: dict | None, audits: dict) -> list[str]:
     return audits.get((entry["repo"].casefold(), release.get("tag_name"))) or []
 
 
-def plugin_stats(entry: dict, releases: list[dict], stars, manifest=lambda asset: zip_plugin_files(asset)[0], audits: dict | None = None, fork: str | None = None, ai: list[str] | None = None) -> dict:
+def plugin_stats(entry: dict, releases: list[dict], stars, manifest=lambda asset: zip_plugin_files(asset)[0], audits: dict | None = None, fork: str | None = None, ai: list[str] | None = None, store: dict | None = None) -> dict:
     channels = channel_releases(entry, releases)
     shown = channels["stable"] or channels["prerelease"]
     assets = matching_assets(entry, shown) if shown else []
@@ -155,6 +182,8 @@ def plugin_stats(entry: dict, releases: list[dict], stars, manifest=lambda asset
     }
     if fork:
         stats["fork"] = fork
+    if store:
+        stats["store"] = store
     if evidence := merge_ai_evidence(entry["repo"], ai):
         stats["ai"] = evidence
     if audits:
@@ -234,10 +263,12 @@ def main() -> int:
     # The audit is someone else's site: without it the plugins keep their last published
     # warnings (keep_old_warnings below). An empty answer counts as none: it has thousands of records.
     audits = best_effort(lambda url: audit_index(json.loads(fetch(url, auth=False))), AUDIT_URL) or None
+    # The Decky store is someone else's site: without it the plugins just show no store badge.
+    in_store = best_effort(lambda: store_downloads([json.loads(fetch(url, auth=False)) for url in STORE_URLS])) or {}
     # One read per ZIP: the shown release's feeds both root (stats) and pluginVersion.
     files = functools.lru_cache(maxsize=None)(lambda url, size: zip_plugin_files({"browser_download_url": url, "size": size}))
     read = lambda asset: files(asset["browser_download_url"], asset["size"])  # noqa: E731
-    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], manifest=lambda asset: read(asset)[0], audits=audits, fork=entry.get("upstream") or fork_of(github[entry["repo"].casefold()]), ai=ai_evidence(entry, github[entry["repo"].casefold()], known_ai)), version=lambda asset: plugin_version(*read(asset)))
+    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], manifest=lambda asset: read(asset)[0], audits=audits, fork=entry.get("upstream") or fork_of(github[entry["repo"].casefold()]), ai=ai_evidence(entry, github[entry["repo"].casefold()], known_ai), store=store_entry(entry, in_store)), version=lambda asset: plugin_version(*read(asset)))
     if audits is None and len(sys.argv) > 2:
         try:
             keep_old_warnings(index["stats"], json.loads(Path(sys.argv[2]).read_text(encoding="utf-8")).get("plugins") or {})

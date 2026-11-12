@@ -122,6 +122,17 @@ class AiFilesTests(unittest.TestCase):
         for text in ["Translation assisted by AI models.", "AI-assisted upscaling for games.", "Co-authored by Devin Smith"]:
             self.assertIsNone(validate.ai_readme(text), text)
 
+    def test_an_ai_disclaimer_saying_ai_was_used_to_make_it_counts(self):
+        for text in ["## AI disclaimer\nAI was used in the making of this project.", "Claude has been used for the development of this plugin.", "LLMs were heavily used to write most of it."]:
+            self.assertIsNotNone(validate.ai_readme(text), text)
+        for text in ["No AI was used in the making of this.", "AI was never used in development.", "AI is used to create wallpapers.", "Gemini is used for the images."]:
+            self.assertIsNone(validate.ai_readme(text), text)
+
+    def test_store_flag_must_be_true(self):
+        app = {"id": "a", "repo": "o/a", "detect": {"names": ["A"]}}
+        self.assertEqual(validate.static_errors([{**app, "store": True}]), [])
+        self.assertTrue(validate.static_errors([{**app, "store": "yes"}]))
+
     def test_ai_tools_as_commit_authors_and_in_commit_notes(self):
         def commit(number, message="Fix", name="Dev", email="dev@example.com"):
             return {"message": message, "url": f"https://github.com/o/a/commit/{number}", "author": {"name": name, "email": email}}

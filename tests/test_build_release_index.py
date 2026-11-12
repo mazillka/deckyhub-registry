@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from build_release_index import KEEP, ai_evidence, audit_index, build, fork_of, keep_old_warnings, merge_ai_evidence, plugin_stats  # noqa: E402
+from build_release_index import KEEP, ai_evidence, audit_index, build, fork_of, keep_old_warnings, merge_ai_evidence, plugin_stats, store_downloads, store_entry  # noqa: E402
 from validate import rest_shape  # noqa: E402
 
 
@@ -76,6 +76,13 @@ class BuildReleaseIndexTests(unittest.TestCase):
         self.assertEqual(stats, {"downloads": 10 * 25 + 1, "stars": 42, "updated": "2026-01-25T00:00:00Z", "root": True})
         # The stable release's ZIP is the one read, not the newer pre-release's.
         self.assertEqual(len(seen), 1)
+
+    def test_stats_carry_the_decky_stores_downloads_matched_by_name(self):
+        found = store_downloads([[{"name": "Decky Framegen", "downloads": 5}, {"name": "Other", "downloads": 1}], [{"name": "decky framegen", "downloads": 9}, {"name": "x"}]])
+        self.assertEqual(found, {"decky framegen": 9, "other": 1, "x": 0})
+        entry = {"name": "Framegen", "detect": {"names": ["Decky-Framegen", "Decky Framegen"]}}
+        self.assertEqual(store_entry(entry, found), {"downloads": 9})
+        self.assertIsNone(store_entry({"name": "Nope", "detect": {"names": []}}, found))
 
     def test_stats_name_what_a_fork_was_forked_from(self):
         history = [release("v1", 1, [("plugin.zip", 1)])]

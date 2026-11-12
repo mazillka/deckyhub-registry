@@ -23,6 +23,7 @@ body:
         - It duplicates another listed plugin
         - It looks unsafe or malicious
         - I'm the author and want it removed
+        - I'm the author and want it listed but sent to the Decky store instead of GitHub
         - Something else
     validations:
       required: true
