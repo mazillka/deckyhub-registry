@@ -5568,6 +5568,15 @@
       "category": "Controllers",
       "detect": { "type": "decky-plugin", "names": ["Decky Web Games"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "frostdeck",
+      "name": "FrostDeck",
+      "description": "Install Battle.net under Proton, launch Blizzard games straight from Steam with artwork, and manage World of Warcraft addons...",
+      "repo": "cconroy11/FrostDeck",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["FrostDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
