@@ -36,7 +36,7 @@ would otherwise look like an update forever, because DeckyHub compares the insta
 plugin's own version with the tag.
 
 releases.json keeps, per repo, only the KEEP newest releases DeckyHub can install (with
-the entry's plugin ZIP), plus the newest stable one when it's older, so the default
+the entry's plugin ZIP), plus the 3 newest stable and 3 newest pre-releases when older, so the default
 Stable channel always finds it. DeckyHub skips the others anyway; leaving them out keeps
 the file it downloads small.
 
@@ -68,6 +68,7 @@ WARNINGS = {
 
 # Installable releases per repo in releases.json: what a version picker offers.
 KEEP = 5
+KEEP_PER_CHANNEL = 3
 
 # Retain a verified AI co-author signal after it falls outside validate.py's bounded
 # recent commit window. Values are the source commit URLs shown as evidence in the catalog.
@@ -195,11 +196,13 @@ def plugin_stats(entry: dict, releases: list[dict], stars, manifest=lambda asset
 
 
 def kept_releases(entry: dict, releases: list[dict]) -> list[dict]:
-    """The KEEP newest installable releases, plus the newest stable one if it's older."""
+    """The KEEP newest installable releases, plus the 3 newest of each channel if older."""
     installable = installable_releases(entry, releases)
     kept = installable[:KEEP]
-    stable = next((release for release in installable if not release.get("prerelease")), None)
-    return kept + [stable] if stable and stable not in kept else kept
+    # Also the newest KEEP_PER_CHANNEL stable and pre-releases, so each has scans to show.
+    for pre in (False, True):
+        kept += [release for release in [item for item in installable if bool(item.get("prerelease")) == pre][:KEEP_PER_CHANNEL] if release not in kept]
+    return sorted(kept, key=lambda release: installable.index(release))
 
 
 def build(entries: list[dict], fetch, stats, version=lambda asset: None) -> dict:

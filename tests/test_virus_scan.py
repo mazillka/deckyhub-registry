@@ -252,8 +252,14 @@ class PluginSummaryTests(unittest.TestCase):
                 "stable": {"tag": "v1", "file": "a1.zip", "sha256": "aa", "clamav": {"result": "clean", "scannedAt": "2026-11-01T00:00:00Z"}, "yara": {"result": "infected", "found": ["Linux_Test"], "scannedAt": "2026-11-01T00:00:00Z"}},
                 # Not scanned yet: no verdicts, the index's digest still names the file.
                 "prerelease": {"tag": "v2-rc", "file": "a2.zip", "sha256": "bb"},
+                # The newest 3 stable then the newest 3 pre-releases, each with its own report.
+                "releases": [
+                    {"tag": "v1", "file": "a1.zip", "sha256": "aa", "clamav": {"result": "clean", "scannedAt": "2026-11-01T00:00:00Z"}, "yara": {"result": "infected", "found": ["Linux_Test"], "scannedAt": "2026-11-01T00:00:00Z"}, "prerelease": False},
+                    {"tag": "v2-rc", "file": "a2.zip", "sha256": "bb", "prerelease": True},
+                ],
             },
-            "o/b": {"stable": {"tag": "v3", "file": "b.zip", "sha256": "cc", "clamav": {"result": "incomplete", "found": ["Heuristics.Limits.Exceeded.MaxFileSize"], "scannedAt": "2026-11-01T00:00:00Z"}, "yara": {"result": "error", "reason": "YARA's rules couldn't be downloaded", "scannedAt": "2026-11-01T00:00:00Z"}}},
+            "o/b": {"stable": {"tag": "v3", "file": "b.zip", "sha256": "cc", "clamav": {"result": "incomplete", "found": ["Heuristics.Limits.Exceeded.MaxFileSize"], "scannedAt": "2026-11-01T00:00:00Z"}, "yara": {"result": "error", "reason": "YARA's rules couldn't be downloaded", "scannedAt": "2026-11-01T00:00:00Z"}},
+                    "releases": [{"tag": "v3", "file": "b.zip", "sha256": "cc", "clamav": {"result": "incomplete", "found": ["Heuristics.Limits.Exceeded.MaxFileSize"], "scannedAt": "2026-11-01T00:00:00Z"}, "yara": {"result": "error", "reason": "YARA's rules couldn't be downloaded", "scannedAt": "2026-11-01T00:00:00Z"}, "prerelease": False}]},
         })
 
 
