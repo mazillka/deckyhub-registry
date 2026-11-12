@@ -5586,6 +5586,15 @@
       "category": "Controllers",
       "detect": { "type": "decky-plugin", "names": ["DualSense Wired"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamanyaspectratiomods",
+      "name": "AnyAspectRatio",
+      "description": "Applies aspect-ratio and ultrawide fixes to supported games on SteamOS in one tap.",
+      "repo": "TLin-Y/SteamAnyAspectRatioMods",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["AnyAspectRatio"] },
+      "asset": { "include": [".zip"], "exclude": ["source", "Offline"] }
     }
   ]
 }
