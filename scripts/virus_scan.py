@@ -34,7 +34,8 @@ the newest stable release; prerelease: the newest release, only when it's anothe
 with its tag, file name, sha256, and ClamAV's and YARA's verdicts (result, found,
 reason, scannedAt). A ZIP not scanned yet has no verdicts. "releases" lists the same
 for the KEPT_SCANS newest stable and the KEPT_SCANS newest pre-releases (each with
-prerelease: true/false), newest first within each kind.
+prerelease: true/false), newest first within each kind. Its "audit" objects are cut by
+brief_audit (the first AUDIT_LIST_CAP entries of each list, "omitted" counting the rest); scans.json has them whole.
 
 OUT_DIR/badges/<owner>/<name>/clamav.json and yara.json are shields.io endpoint badges
 (https://shields.io/badges/endpoint-badge) for the ZIP the plugin's Stable channel installs
@@ -176,6 +177,30 @@ def verdict(report: dict) -> dict:
     return {key: report[key] for key in ("result", "found", "reason", "scannedAt") if report.get(key)}
 
 
+AUDIT_LIST_CAP = 20  # entries of each audit list kept in plugins.json (DeckyHub's report window shows 20 too); scans.json keeps them all
+
+
+def brief_audit(audit: dict) -> dict:
+    """The audit for plugins.json: same shape, but each list (findings, packages, binaries, issues; also inside
+    source and dependencies) is cut to AUDIT_LIST_CAP entries, and "omitted" says how many it left out. Only the
+    catalog and the browser extension read that file, and neither reads the audit's lists."""
+    omitted = {}
+
+    def cut(part: dict, path: str) -> dict:
+        out = {}
+        for key, value in part.items():
+            if isinstance(value, list) and len(value) > AUDIT_LIST_CAP:
+                omitted[f"{path}{key}"] = len(value) - AUDIT_LIST_CAP
+                value = value[:AUDIT_LIST_CAP]
+            elif isinstance(value, dict):
+                value = cut(value, f"{path}{key}.")
+            out[key] = value
+        return out
+
+    brief = cut(audit, "")
+    return {**brief, "omitted": omitted} if omitted else brief
+
+
 KEPT_SCANS = 3  # newest stable and newest pre-releases per plugin listed in plugins.json's "releases"
 
 
@@ -203,7 +228,7 @@ def plugin_summary(indexes: list[dict], entries: list[dict], files: dict[str, di
                     if report.get("yara"):
                         found["yara"] = verdict(report["yara"])
                     if report.get("audit"):
-                        found["audit"] = report["audit"]
+                        found["audit"] = brief_audit(report["audit"])
                 return url, found
 
             channels, urls = {}, {}

@@ -44,6 +44,7 @@ Releases and stars come from GitHub's GraphQL API (fetch_github in validate.py).
 """
 import functools
 import json
+import re
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -69,6 +70,10 @@ WARNINGS = {
 # Installable releases per repo in releases.json: what a version picker offers.
 KEEP = 5
 KEEP_PER_CHANNEL = 3
+# Release notes (body) of every kept release but each channel's newest are cut to this many characters
+# plus "…". DeckyHub shows notes of the one it offers as an update (card, details window), and an older
+# version's notes only when asked for in the version picker; most notes are far shorter (median ~340).
+OLD_NOTES_LIMIT = 1000
 
 # Retain a verified AI co-author signal after it falls outside validate.py's bounded
 # recent commit window. Values are the source commit URLs shown as evidence in the catalog.
@@ -107,7 +112,14 @@ def store_entry(entry: dict, found: dict[str, int]) -> dict | None:
 
 # Not a registry entry, but DeckyHub checks its own releases too.
 EXTRA_ENTRIES = [{"repo": "mazillka/deckyhub-plugin", "asset": {"include": ["deckyhub-"], "exclude": []}}]
-def slim(release: dict) -> dict:
+def trim_notes(body, limit: int = OLD_NOTES_LIMIT):
+    """body cut at the last whitespace before limit (so no word is halved) and marked with "…"; shorter or non-text bodies are left alone."""
+    if not isinstance(body, str) or len(body) <= limit:
+        return body
+    return re.sub(r"\s+\S*$", "", body[:limit]) + "…"
+
+
+def slim(release: dict, full_notes: bool = True) -> dict:
     """The fields DeckyHub reads from GitHub's releases list (fetchReleases in its utils.ts)."""
     return {
         "tag_name": release.get("tag_name"),
@@ -116,7 +128,7 @@ def slim(release: dict) -> dict:
         "prerelease": release.get("prerelease", False),
         "published_at": release.get("published_at"),
         "html_url": release.get("html_url"),
-        "body": release.get("body"),
+        "body": release.get("body") if full_notes else trim_notes(release.get("body")),
         "assets": [{key: asset.get(key) for key in ("name", "browser_download_url", "size", "digest")} for asset in release.get("assets", [])],
     }
 
@@ -217,8 +229,8 @@ def build(entries: list[dict], fetch, stats, version=lambda asset: None) -> dict
             print(f"warning: {entry['repo']}: {error}", file=sys.stderr)
             return None
         kept = kept_releases(entry, releases)
-        slimmed = [slim(release) for release in kept]
         newest = [release for release in channel_releases(entry, releases).values() if release]
+        slimmed = [slim(release, full_notes=any(release is other for other in newest)) for release in kept]
         for release, item in zip(kept, slimmed):
             if any(release is other for other in newest) and (found := best_effort(version, matching_assets(entry, release)[0])):
                 item["pluginVersion"] = found
