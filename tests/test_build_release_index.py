@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from build_release_index import KEEP, ai_evidence, audit_index, build, fork_of, keep_old_warnings, merge_ai_evidence, plugin_stats, store_downloads, store_entry  # noqa: E402
+from build_release_index import KEEP, OLD_NOTES_LIMIT, trim_notes, ai_evidence, audit_index, build, fork_of, keep_old_warnings, merge_ai_evidence, plugin_stats, store_downloads, store_entry  # noqa: E402
 from validate import rest_shape  # noqa: E402
 
 
@@ -21,6 +21,20 @@ def no_stats(entry, releases):
 
 
 class BuildReleaseIndexTests(unittest.TestCase):
+    def test_old_release_notes_are_cut_at_a_word_with_an_ellipsis_but_the_newest_of_each_channel_keeps_them(self):
+        long = "word " * 1000
+        self.assertEqual(trim_notes("short"), "short")
+        self.assertIsNone(trim_notes(None))
+        cut = trim_notes(long)
+        self.assertTrue(cut.endswith("word…") and len(cut) <= OLD_NOTES_LIMIT + 1)
+        self.assertEqual(len(trim_notes("x" * 5000)), OLD_NOTES_LIMIT + 1)  # no whitespace to cut at
+        releases = [{**release(f"v{day}", day, [("a.zip", 0)], prerelease=day == 4), "body": long} for day in (4, 3, 2, 1)]
+        index = build([entry()], lambda repo: releases, no_stats)
+        bodies = {item["tag_name"]: item["body"] for item in index["releases"]["o/a"]}
+        self.assertEqual(bodies["v4"], long)  # newest pre-release (newest overall)
+        self.assertEqual(bodies["v3"], long)  # newest stable
+        self.assertTrue(bodies["v2"].endswith("…") and bodies["v1"].endswith("…"))
+
     def test_curated_ai_evidence_survives_and_merges_without_duplicates(self):
         url = "https://github.com/mubaraknumann/unifideck/commit/76556441e52d3e66d6b931e02bd9cbeecc50e716"
         evidence = f"Commit co-author: Claude ({url})"

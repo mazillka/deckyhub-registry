@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import virus_scan  # noqa: E402
-from virus_scan import Yara, badges, budget, channel_assets, parse_clamscan, parse_yara, plan, plugin_summary, report_of, rules_version, scan, unpack, wanted_assets  # noqa: E402
+from virus_scan import AUDIT_LIST_CAP, Yara, brief_audit, badges, budget, channel_assets, parse_clamscan, parse_yara, plan, plugin_summary, report_of, rules_version, scan, unpack, wanted_assets  # noqa: E402
 
 TODAY = datetime(2026, 11, 2, tzinfo=timezone.utc)
 YARA_OK = {"result": "clean", "scannedAt": "2026-11-01T00:00:00Z"}
@@ -261,6 +261,20 @@ class PluginSummaryTests(unittest.TestCase):
             "o/b": {"stable": {"tag": "v3", "file": "b.zip", "sha256": "cc", "clamav": {"result": "incomplete", "found": ["Heuristics.Limits.Exceeded.MaxFileSize"], "scannedAt": "2026-11-01T00:00:00Z"}, "yara": {"result": "error", "reason": "YARA's rules couldn't be downloaded", "scannedAt": "2026-11-01T00:00:00Z"}},
                     "releases": [{"tag": "v3", "file": "b.zip", "sha256": "cc", "clamav": {"result": "incomplete", "found": ["Heuristics.Limits.Exceeded.MaxFileSize"], "scannedAt": "2026-11-01T00:00:00Z"}, "yara": {"result": "error", "reason": "YARA's rules couldn't be downloaded", "scannedAt": "2026-11-01T00:00:00Z"}, "prerelease": False}]},
         })
+
+
+class BriefAuditTests(unittest.TestCase):
+    def test_long_lists_are_cut_everywhere_and_counted_and_short_audits_are_untouched(self):
+        short = {"result": "complete", "root": False, "findings": [{"rule": "x"}], "dependencies": {"packages": [], "issues": ["a"]}}
+        self.assertEqual(brief_audit(short), short)
+        n = AUDIT_LIST_CAP + 5
+        long = {"result": "incomplete", "findings": list(range(n)), "source": {"result": "error", "findings": list(range(n))}, "dependencies": {"packages": list(range(n)), "binaries": [], "result": "complete"}}
+        brief = brief_audit(long)
+        self.assertEqual(brief["findings"], list(range(AUDIT_LIST_CAP)))
+        self.assertEqual(brief["source"]["findings"], list(range(AUDIT_LIST_CAP)))
+        self.assertEqual(brief["dependencies"], {"packages": list(range(AUDIT_LIST_CAP)), "binaries": [], "result": "complete"})
+        self.assertEqual(brief["omitted"], {"findings": 5, "source.findings": 5, "dependencies.packages": 5})
+        self.assertEqual(len(long["findings"]), n)  # the input (scans.json's report) is not changed
 
 
 class IndependentAuditTests(unittest.TestCase):
