@@ -681,6 +681,7 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | AVR Control | Performance | [bnm12/decky-avr-control](https://github.com/bnm12/decky-avr-control) |
 | Decky Web Games | Controllers | [sunim87/decky-web-games](https://github.com/sunim87/decky-web-games) |
 | FrostDeck | Launch Options | [cconroy11/FrostDeck](https://github.com/cconroy11/FrostDeck) |
+| DualSense Wired | Controllers | [mrFunkill/decky-dualsense-wired](https://github.com/mrFunkill/decky-dualsense-wired) |
 
 ## Where the plugins come from
 
