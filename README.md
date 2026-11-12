@@ -42,6 +42,7 @@ The same job writes `stats.json` for the [catalog](https://deckyhub.com/plugins/
 
 - **Downloads:** all-time, summed over the plugin's ZIPs (the entry's `asset` filter) across every release. GitHub counts every download of a file, whether from DeckyHub, Decky, a browser or a script, so these are downloads, not installs.
 - **Stars:** the repository's GitHub stars.
+- **In the Decky store:** the [Decky store](https://plugins.deckbrew.xyz/plugins) (and its testing store) lists a plugin of that name, with the store's own download count. The store names no repository, so the match is by plugin name and can be wrong for two plugins that share one. Those are installs through Decky, a different number from GitHub's **Downloads**, which is why the catalog labels the other one **GitHub downloads**. If the store can't be read, the badge is just left out.
 - **Last updated:** when the release DeckyHub shows came out; over a year ago reads **No release in a year**.
 - **Fork:** the repository is a fork; the catalog says of what. Discovery lists a fork only while it's the active one: its original is archived, gone, or hasn't released since.
 - **Runs as root:** that release's `plugin.json` has `"root"` in its `flags`, so Decky Loader runs the plugin's backend as the `root` user. It can then read and change anything on the Deck: system files, other plugins, your data. Plenty of plugins need that for real reasons (fan and power control, drivers, VPNs, system settings), so it isn't a red flag by itself, but a bug or a malicious update can do far more harm.
@@ -733,6 +734,7 @@ Open a pull request against `develop` that adds one entry to [`registry/apps.jso
 | `asset.include` / `asset.exclude` | Words that pick exactly one release ZIP. |
 | `releaseTagInclude` | Optional: only releases whose tag contains this, for repos that publish other releases too. |
 | `upstream` | Optional: the `owner/name` of the project this plugin was forked from, for a fork GitHub doesn't mark as one (the code was copied, not forked with the **Fork** button). It gets the **Fork** badge, linking to that project, like a GitHub fork. Older DeckyHub releases ignore it. |
+| `store` | Optional, `true`: the author distributes the plugin through the Decky store, so DeckyHub keeps the entry (it still shows in Discover and is recognised once installed) but offers no GitHub download. Its page says to install it from the Decky store. Its GitHub releases aren't checked. Older DeckyHub releases ignore the key and keep offering the ZIP. |
 | `knownIssues` | Optional: known problems with the plugin itself (a release tag that doesn't match its version, a Decky Loader bug it hits...), listed in its **Manage** window: `[{"title": "...", "url": "https://..."}]`, each linking to its report. Remove one once it's fixed. Shown by DeckyHub releases after 3.2.2; older ones ignore it. |
 
 Every released DeckyHub reads this file, so keep changes additive. A change older versions can't read must bump `schemaVersion` (they reject it and keep their cached list) rather than reshape version 1.
@@ -751,6 +753,10 @@ CI runs on every pull request, on pushes to `main` and `develop`, and weekly bec
   ```
 - **Website:** everything is on deckyhub.com, built by mazillka/deckyhub-plugin: the [plugins](https://deckyhub.com/plugins/), [how to contribute](https://deckyhub.com/contribute/) and the [registry editor](https://deckyhub.com/contribute/editor.html). registry.deckyhub.com only redirects there, so old links keep working: [`scripts/build_site.py`](scripts/build_site.py) writes a redirect for each old page, plugin and category, deployed by the [pages workflow](.github/workflows/pages.yml) from `main`.
 - **Tests:** `python -m unittest discover -s tests` covers the scripts, and also checks that `apps.json` stays under the 512 KB DeckyHub 3.0.0 and older accept, that the catalog page's script parses, and that `stats.json` keeps every field and warning the DeckyHub people run reads (against deckyhub-plugin's `main`, which CI checks out).
+
+## Taking a plugin off DeckyHub, or sending it to the Decky store
+
+The plugin's author (or any maintainer) can ask for either with a [removal request](https://github.com/mazillka/deckyhub-registry/issues/new?template=remove_plugin.yml): **remove** it, so DeckyHub stops listing it, or **keep it listed but send people to the Decky store** (the entry gets `"store": true` and DeckyHub offers no GitHub download). Use the second when a plugin has an old GitHub release you don't want installed any more but people still look for it.
 
 ## Your own registry
 
