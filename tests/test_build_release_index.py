@@ -48,9 +48,9 @@ class BuildReleaseIndexTests(unittest.TestCase):
         history = [release(f"v{day}-beta", day, [("plugin.zip", 1)], prerelease=True) for day in range(10, 10 + KEEP + 3)]
         history += [release("v9-windows", 9, [("Setup.exe", 1)]), release("v8", 8, [("plugin.zip", 1)]), release("v7", 7, [("plugin.zip", 1)])]
         tags = [item["tag_name"] for item in build([entry()], lambda repo: history, no_stats)["releases"]["o/a"]]
-        # The KEEP newest with the plugin ZIP (all pre-releases here), then the newest
-        # stable one so the Stable channel still finds it; no ZIP-less or older ones.
-        self.assertEqual(tags, [f"v{day}-beta" for day in range(9 + KEEP + 3, 9 + 3, -1)] + ["v8"])
+        # The KEEP newest with the plugin ZIP (all pre-releases here), then the 3 newest
+        # stable ones so the Stable channel and its scans stay; no ZIP-less or older ones.
+        self.assertEqual(tags, [f"v{day}-beta" for day in range(9 + KEEP + 3, 9 + 3, -1)] + ["v8", "v7"])
         stable = [release(f"v{day}", day, [("plugin.zip", 1)]) for day in range(1, KEEP + 4)]
         self.assertEqual(len(build([entry()], lambda repo: stable, no_stats)["releases"]["o/a"]), KEEP)
         # Nothing installable: an empty list, which DeckyHub reads as "no release" without asking GitHub.

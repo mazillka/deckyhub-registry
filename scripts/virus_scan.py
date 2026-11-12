@@ -32,7 +32,9 @@ OUT_DIR/plugins.json is the same reports per plugin, for the registry's catalog 
 (docs/index.html): keyed by lowercase owner/name, the ZIP each channel installs (stable:
 the newest stable release; prerelease: the newest release, only when it's another ZIP),
 with its tag, file name, sha256, and ClamAV's and YARA's verdicts (result, found,
-reason, scannedAt). A ZIP not scanned yet has no verdicts.
+reason, scannedAt). A ZIP not scanned yet has no verdicts. "releases" lists the same
+for the KEPT_SCANS newest stable and the KEPT_SCANS newest pre-releases (each with
+prerelease: true/false), newest first within each kind.
 
 OUT_DIR/badges/<owner>/<name>/clamav.json and yara.json are shields.io endpoint badges
 (https://shields.io/badges/endpoint-badge) for the ZIP the plugin's Stable channel installs
@@ -174,6 +176,9 @@ def verdict(report: dict) -> dict:
     return {key: report[key] for key in ("result", "found", "reason", "scannedAt") if report.get(key)}
 
 
+KEPT_SCANS = 3  # newest stable and newest pre-releases per plugin listed in plugins.json's "releases"
+
+
 def plugin_summary(indexes: list[dict], entries: list[dict], files: dict[str, dict]) -> dict[str, dict]:
     """Per repo, the ZIP each channel installs and what the scanners made of it (see the
     docstring above). The first index that lists a repo wins, as in DeckyHub."""
@@ -185,21 +190,37 @@ def plugin_summary(indexes: list[dict], entries: list[dict], files: dict[str, di
                 continue
             entry = filters.get(repo.casefold(), {"asset": {"include": [], "exclude": []}})
             stable = next((release for release in releases if not release.get("prerelease")), None)
-            channels, urls = {}, {}
-            for channel, release in (("stable", stable), ("prerelease", releases[0])):
+            def record(release):
                 assets = [asset for asset in matching_assets(entry, release) if str(asset.get("browser_download_url") or "").startswith("https://")] if release else []
-                if not assets or assets[0]["browser_download_url"] in urls.values():
-                    continue
-                url = urls[channel] = assets[0]["browser_download_url"]
+                if not assets:
+                    return None, None
+                url = assets[0]["browser_download_url"]
                 report = files.get(url) or {}
                 sha256 = report.get("sha256") or (assets[0].get("digest") or "").removeprefix("sha256:")
-                channels[channel] = {"tag": release.get("tag_name") or "", "file": assets[0].get("name") or "", **({"sha256": sha256} if sha256 else {})}
+                found = {"tag": release.get("tag_name") or "", "file": assets[0].get("name") or "", **({"sha256": sha256} if sha256 else {})}
                 if report:
-                    channels[channel]["clamav"] = verdict(report)
+                    found["clamav"] = verdict(report)
                     if report.get("yara"):
-                        channels[channel]["yara"] = verdict(report["yara"])
+                        found["yara"] = verdict(report["yara"])
                     if report.get("audit"):
-                        channels[channel]["audit"] = report["audit"]
+                        found["audit"] = report["audit"]
+                return url, found
+
+            channels, urls = {}, {}
+            for channel, release in (("stable", stable), ("prerelease", releases[0])):
+                url, found = record(release)
+                if url and url not in urls.values():
+                    urls[channel] = url
+                    channels[channel] = found
+            # The newest KEPT_SCANS stable and pre-releases, each with its own report (additive: older readers ignore "releases").
+            history = []
+            for pre in (False, True):
+                for release in [item for item in releases if bool(item.get("prerelease")) == pre][:KEPT_SCANS]:
+                    _, found = record(release)
+                    if found:
+                        history.append({**found, "prerelease": pre})
+            if history:
+                channels["releases"] = history
             if channels:
                 plugins[repo.casefold()] = channels
     return plugins
