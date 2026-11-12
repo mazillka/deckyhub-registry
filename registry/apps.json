@@ -5595,6 +5595,15 @@
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["AnyAspectRatio"] },
       "asset": { "include": [".zip"], "exclude": ["source", "Offline"] }
+    },
+    {
+      "id": "decky-heroic",
+      "name": "Heroic Library",
+      "description": "Browse and launch your Heroic Games Launcher library (GOG + Epic) from the Quick Access menu.",
+      "repo": "fmenezes/decky-heroic",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Heroic Library"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }

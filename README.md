@@ -683,6 +683,7 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | FrostDeck | Launch Options | [cconroy11/FrostDeck](https://github.com/cconroy11/FrostDeck) |
 | DualSense Wired | Controllers | [mrFunkill/decky-dualsense-wired](https://github.com/mrFunkill/decky-dualsense-wired) |
 | AnyAspectRatio | Customization | [TLin-Y/SteamAnyAspectRatioMods](https://github.com/TLin-Y/SteamAnyAspectRatioMods) |
+| Heroic Library | Game Libraries | [fmenezes/decky-heroic](https://github.com/fmenezes/decky-heroic) |
 
 ## Where the plugins come from
 
