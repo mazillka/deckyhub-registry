@@ -104,9 +104,14 @@ jobs:
       # A new release would otherwise wait for virus-scan's own schedule (every 3 hours, and
       # GitHub skips scheduled runs when it's busy: 5 hours passed once), and DeckyHub's
       # Manage window would say its newest version isn't scanned yet all that time. A run
-      # with nothing new to scan takes under a minute; runs queue (virus-scan's concurrency).
+      # with nothing new to scan takes under a minute. virus-scan's concurrency keeps one pending
+# run and cancels any older pending one, so skip the dispatch when a run is already waiting:
+# it hasn't started, so it will read the index pushed above.
       - if: steps.push.outputs.changed == 'true'
         continue-on-error: true
-        run: gh workflow run virus-scan.yml --ref main --repo "$GITHUB_REPOSITORY"
+        run: |
+          waiting=$(gh run list --workflow virus-scan.yml --status pending --json databaseId --jq length --repo "$GITHUB_REPOSITORY")
+          [[ "$waiting" == 0 ]] || { echo "A virus scan is already waiting; it will pick this up."; exit 0; }
+          gh workflow run virus-scan.yml --ref main --repo "$GITHUB_REPOSITORY"
         env:
           GH_TOKEN: ${{ github.token }}
