@@ -5577,6 +5577,15 @@
       "category": "Launch Options",
       "detect": { "type": "decky-plugin", "names": ["FrostDeck"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-dualsense-wired",
+      "name": "DualSense Wired",
+      "description": "Makes a Bluetooth DualSense work like a wired one, with controller speaker, HD haptics and adaptive triggers in Proton games.",
+      "repo": "mrFunkill/decky-dualsense-wired",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["DualSense Wired"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
