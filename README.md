@@ -684,6 +684,7 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | DualSense Wired | Controllers | [mrFunkill/decky-dualsense-wired](https://github.com/mrFunkill/decky-dualsense-wired) |
 | AnyAspectRatio | Customization | [TLin-Y/SteamAnyAspectRatioMods](https://github.com/TLin-Y/SteamAnyAspectRatioMods) |
 | Heroic Library | Game Libraries | [fmenezes/decky-heroic](https://github.com/fmenezes/decky-heroic) |
+| GameArtwork | Game Libraries | [mops1k/decky-gameartwork](https://github.com/mops1k/decky-gameartwork) |
 
 ## Where the plugins come from
 
