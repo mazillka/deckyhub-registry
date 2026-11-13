@@ -685,6 +685,8 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | AnyAspectRatio | Customization | [TLin-Y/SteamAnyAspectRatioMods](https://github.com/TLin-Y/SteamAnyAspectRatioMods) |
 | Heroic Library | Game Libraries | [fmenezes/decky-heroic](https://github.com/fmenezes/decky-heroic) |
 | GameArtwork | Game Libraries | [mops1k/decky-gameartwork](https://github.com/mops1k/decky-gameartwork) |
+| DeckyLS | Frame Generation | [Rayekkk/DeckyLS](https://github.com/Rayekkk/DeckyLS) |
+| Remote Control | Utilities | [White-Goblin/deckyRemoteControl](https://github.com/White-Goblin/deckyRemoteControl) |
 
 ## Where the plugins come from
 
