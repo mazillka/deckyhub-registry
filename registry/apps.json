@@ -5613,6 +5613,24 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["GameArtwork"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyls",
+      "name": "DeckyLS",
+      "description": "Lossless Scaling frame generation for the game you are playing: one menu, no launch options.",
+      "repo": "Rayekkk/DeckyLS",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["DeckyLS"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyremotecontrol",
+      "name": "Remote Control",
+      "description": "Use a phone or tablet as a touchpad and keyboard for your SteamOS device. Scan a QR code; no app needed.",
+      "repo": "White-Goblin/deckyRemoteControl",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Remote Control"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
