@@ -5604,6 +5604,15 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["Heroic Library"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-gameartwork",
+      "name": "GameArtwork",
+      "description": "One search for game artwork across SteamGridDB, Steam, Epic Games Store, GOG, IGDB and VNDB — right in Gaming Mode.",
+      "repo": "mops1k/decky-gameartwork",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["GameArtwork"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
