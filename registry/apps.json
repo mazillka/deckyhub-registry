@@ -5631,6 +5631,33 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Remote Control"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "remove-decky-warnings",
+      "name": "Remove Decky Warnings",
+      "description": "Removes Decky Loader's third-party plugin install warning and custom plugin store warning.",
+      "repo": "JDLKMR/Remove-Decky-Warnings",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Remove Decky Warnings"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "lyrenne-decky",
+      "name": "Lyrenne",
+      "description": "YouTube Music in Game Mode: play, search, browse your library and read synced lyrics while you game.",
+      "repo": "Doctordefector/Lyrenne-Decky",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Lyrenne"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-oled-tint",
+      "name": "OLED Tint",
+      "description": "Fixes the Odin 2 Portal OLED's green, too-bright darks at low brightness: dims in the shader above the panel's bad band (floor dimming),...",
+      "repo": "murdii34/decky-oled-tint",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["OLED Tint"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
