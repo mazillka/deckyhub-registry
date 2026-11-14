@@ -687,6 +687,9 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | GameArtwork | Game Libraries | [mops1k/decky-gameartwork](https://github.com/mops1k/decky-gameartwork) |
 | DeckyLS | Frame Generation | [Rayekkk/DeckyLS](https://github.com/Rayekkk/DeckyLS) |
 | Remote Control | Utilities | [White-Goblin/deckyRemoteControl](https://github.com/White-Goblin/deckyRemoteControl) |
+| Remove Decky Warnings | Utilities | [JDLKMR/Remove-Decky-Warnings](https://github.com/JDLKMR/Remove-Decky-Warnings) |
+| Lyrenne | Game Libraries | [Doctordefector/Lyrenne-Decky](https://github.com/Doctordefector/Lyrenne-Decky) |
+| OLED Tint | Customization | [murdii34/decky-oled-tint](https://github.com/murdii34/decky-oled-tint) |
 
 ## Where the plugins come from
 
