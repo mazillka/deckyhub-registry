@@ -5658,6 +5658,24 @@
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["OLED Tint"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "origami",
+      "name": "ORIGAMI",
+      "description": "A plugin that brings settings and fixes for the ROG Xbox Ally X / ROG Ally consoles on Bazzite and SteamOS to Steam's quick access menu:...",
+      "repo": "lexdrev/origami",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["ORIGAMI"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "glarsses",
+      "name": "glARsses",
+      "description": "GlARsses: free smooth follow, anchored and head-locked virtual screen for AR glasses, with size/distance, tilt, presets and per-game...",
+      "repo": "roodzofatoz/glarsses",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["glARsses"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
