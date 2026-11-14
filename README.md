@@ -690,6 +690,8 @@ The [VirusTotal backfill](.github/workflows/virustotal-scan.yml) runs daily: it 
 | Remove Decky Warnings | Utilities | [JDLKMR/Remove-Decky-Warnings](https://github.com/JDLKMR/Remove-Decky-Warnings) |
 | Lyrenne | Game Libraries | [Doctordefector/Lyrenne-Decky](https://github.com/Doctordefector/Lyrenne-Decky) |
 | OLED Tint | Customization | [murdii34/decky-oled-tint](https://github.com/murdii34/decky-oled-tint) |
+| ORIGAMI | Controllers | [lexdrev/origami](https://github.com/lexdrev/origami) |
+| glARsses | Utilities | [roodzofatoz/glarsses](https://github.com/roodzofatoz/glarsses) |
 
 ## Where the plugins come from
 
