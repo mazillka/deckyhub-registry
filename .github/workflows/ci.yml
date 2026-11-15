@@ -23,10 +23,6 @@ jobs:
         with:
           repository: mazillka/deckyhub-plugin
           path: deckyhub-plugin
-          # develop, not the default branch, until 3.4.0 is on main: its schema test already lists `store` (an optional key
-          # that released DeckyHub ignores, since parse_registry keeps every other key as it is). Back to the default
-          # branch (delete this line) once the plugin's stable release has shipped.
-          ref: develop
       # DeckyHub's own parser and v1 schema test, run against this repository's file.
       - run: python3 -m unittest tests.test_registry_schema
         working-directory: deckyhub-plugin
