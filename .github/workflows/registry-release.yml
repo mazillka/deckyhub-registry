@@ -53,7 +53,18 @@ jobs:
           if [ "$GITHUB_REF_NAME" = main ]; then
             gh release create "registry-$day-$GITHUB_RUN_NUMBER" registry/apps.json --target "$GITHUB_SHA" --latest \
               --title "Registry $day" --notes-file "$notes"
+            echo "ANNOUNCE_TAG=registry-$day-$GITHUB_RUN_NUMBER" >> "$GITHUB_ENV"
+            echo "ANNOUNCE_DAY=$day" >> "$GITHUB_ENV"
           else
             gh release create "registry-$day-$GITHUB_RUN_NUMBER-develop" registry/apps.json --target "$GITHUB_SHA" --prerelease --latest=false \
               --title "Registry $day (develop)" --notes-file "$notes"
           fi
+      # A stable release is announced on Telegram when the TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID secrets exist
+      # (a bot from @BotFather, added as an administrator of the channel). Without them the step only prints the message.
+      # A release with no plugin changes is not announced. Never holds up the release.
+      - if: github.ref_name == 'main'
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python3 scripts/telegram_post.py "$RUNNER_TEMP/notes.md" "https://github.com/$GITHUB_REPOSITORY/releases/tag/$ANNOUNCE_TAG" "$ANNOUNCE_DAY"
