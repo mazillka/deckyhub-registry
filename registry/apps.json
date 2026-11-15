@@ -5740,6 +5740,16 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Plex Audiobooks"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckwarden",
+      "name": "DeckWarden",
+      "description": "Access your self-hosted Vaultwarden (or any Bitwarden-compatible) vault in Gaming Mode: browse and search login items, show credentials and TOTP codes, and paste them into games.",
+      "repo": "nithou/deckwarden",
+      "category": "Utilities",
+      "upstream": "Teppichseite/DeckPass",
+      "detect": { "type": "decky-plugin", "names": ["DeckWarden"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }

@@ -711,6 +711,7 @@ python scripts/build_decky_store.py releases.json out/store
 | GlucoDeck | Utilities | [JDLKMR/Decky-GlucoDeck](https://github.com/JDLKMR/Decky-GlucoDeck) |
 | Next Unlock | Game Libraries | [vlmaier/next-unlock](https://github.com/vlmaier/next-unlock) |
 | Plex Audiobooks | Utilities | [indyjamesb/decky-plex-audiobooks](https://github.com/indyjamesb/decky-plex-audiobooks) |
+| DeckWarden | Utilities | [nithou/deckwarden](https://github.com/nithou/deckwarden) |
 
 ## Where the plugins come from
 
