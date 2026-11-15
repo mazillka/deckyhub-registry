@@ -64,7 +64,7 @@
       "repo": "Wurielle/decky-launch-options",
       "category": "Launch Options",
       "detect": { "type": "decky-plugin", "names": ["Launch Options"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": ["decky-launch-options.zip"], "exclude": ["source"] }
     },
     {
       "id": "decky-nonsteam-badges",
