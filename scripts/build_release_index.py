@@ -21,6 +21,8 @@ It also writes stats.json for the catalog page, per plugin:
   validate.py) on the repo's default branch, plus 'README: "<phrase>"' when its README
   says it's made with AI (AI_README), a sign it's developed with AI help. Missing
   when there are none; no files isn't proof no AI was used.
+- rust: true when the repo ships Rust code (a Cargo.toml or rust-toolchain file at its root, or a Cargo.toml in backend/). Missing
+  otherwise; it says what the plugin is written in, nothing about its quality or safety.
 - store: {downloads} when either Decky store lists a plugin of that name (detect names, then display
   name; the store names no repository). This keeps the larger of the two store counts, as before.
   Optional activity: {downloads, updates}, summed across the main and testing stores when either
@@ -260,7 +262,7 @@ def warnings_of(entry: dict, release: dict | None, audits: dict) -> list[str]:
     return audits.get((entry["repo"].casefold(), release.get("tag_name"))) or []
 
 
-def plugin_stats(entry: dict, releases: list[dict], stars, manifest=lambda asset: zip_plugin_files(asset)[0], audits: dict | None = None, fork: str | None = None, ai: list[str] | None = None, store: dict | None = None, rating: dict | None = None) -> dict:
+def plugin_stats(entry: dict, releases: list[dict], stars, manifest=lambda asset: zip_plugin_files(asset)[0], audits: dict | None = None, fork: str | None = None, ai: list[str] | None = None, store: dict | None = None, rating: dict | None = None, rust: bool = False) -> dict:
     channels = channel_releases(entry, releases)
     shown = channels["stable"] or channels["prerelease"]
     assets = matching_assets(entry, shown) if shown else []
@@ -273,6 +275,8 @@ def plugin_stats(entry: dict, releases: list[dict], stars, manifest=lambda asset
     }
     if fork:
         stats["fork"] = fork
+    if rust:
+        stats["rust"] = True
     if store:
         stats["store"] = store
     if rating:
@@ -369,7 +373,7 @@ def main() -> int:
     # One read per ZIP: the shown release's feeds both root (stats) and pluginVersion.
     files = functools.lru_cache(maxsize=None)(lambda url, size: zip_plugin_files({"browser_download_url": url, "size": size}))
     read = lambda asset: files(asset["browser_download_url"], asset["size"])  # noqa: E731
-    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], manifest=lambda asset: read(asset)[0], audits=audits, fork=entry.get("upstream") or fork_of(github[entry["repo"].casefold()]), ai=ai_evidence(entry, github[entry["repo"].casefold()], known_ai), store=store_entry(entry, in_store, in_store_activity), rating=rating_entry(ratings or {}, entry["repo"])), version=lambda asset: plugin_version(*read(asset)))
+    index = build(entries, lambda repo: github[repo.casefold()]["releases"], lambda entry, releases: plugin_stats(entry, releases, lambda repo: github[repo.casefold()]["stars"], manifest=lambda asset: read(asset)[0], audits=audits, fork=entry.get("upstream") or fork_of(github[entry["repo"].casefold()]), ai=ai_evidence(entry, github[entry["repo"].casefold()], known_ai), store=store_entry(entry, in_store, in_store_activity), rating=rating_entry(ratings or {}, entry["repo"]), rust=bool(github[entry["repo"].casefold()].get("rust"))), version=lambda asset: plugin_version(*read(asset)))
     if (audits is None or (ratings is None and RATINGS_URL)) and len(sys.argv) > 2:
         try:
             old = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8")).get("plugins") or {}

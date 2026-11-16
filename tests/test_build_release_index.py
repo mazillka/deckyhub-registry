@@ -160,6 +160,11 @@ class BuildReleaseIndexTests(unittest.TestCase):
         self.assertIsNone(fork_of({"fork": False, "parent": None}))
         self.assertIsNone(fork_of({"fork": True, "parent": None}))
 
+    def test_stats_say_rust_only_for_a_rust_backend(self):
+        history = [release("v1", 1, [("plugin.zip", 5)])]
+        self.assertIs(plugin_stats(entry(), history, stars=lambda repo: 0, manifest=lambda asset: {}, rust=True)["rust"], True)
+        self.assertNotIn("rust", plugin_stats(entry(), history, stars=lambda repo: 0, manifest=lambda asset: {}))
+
     def test_a_project_formed_from_an_ai_made_one_inherits_its_evidence(self):
         nothing = lambda name: None  # noqa: E731
         parent = {"full_name": "Orig/A", "ai": ["CLAUDE.md", "AGENTS.md"]}

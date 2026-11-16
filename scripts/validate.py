@@ -425,6 +425,8 @@ def releases_query(repo: str, first: int, after: str | None = None) -> str:
                 f"readmeTitle: object(expression: \"HEAD:Readme.md\") {{ ... on Blob {{ text }} }} "
                 f"recentHistory: defaultBranchRef {{ target {{ ... on Commit {{ history(first: {HISTORY}) {{ nodes {{ message url author {{ name email }} }} }} }} }} }} ")
     return (f"repository(owner: {json.dumps(owner)}, name: {json.dumps(name)}) {{ nameWithOwner name description isArchived isFork stargazerCount "
+            # backend: where a Decky plugin keeps Rust code (rust_backend reads it with the root).
+            f"backend: object(expression: \"HEAD:backend\") {{ {TREE} }} "
             f"{ai_signs}"
             f"parent {{ nameWithOwner isArchived isTemplate {ai_signs}releases(first: 1, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ nodes {{ publishedAt }} }} }} "
             f"releases(first: {first}{cursor}, orderBy: {{field: CREATED_AT, direction: DESC}}) {{ pageInfo {{ hasNextPage endCursor }} nodes {{ {RELEASE_FIELDS} }} }} }}")
@@ -442,6 +444,13 @@ def ai_identity(name: str | None, email: str | None) -> str | None:
     """The AI tool (AI_IDENTITIES) a commit author or co-author is, or None for a person."""
     name, email = (name or "").strip().casefold(), (email or "").strip().casefold()
     return next((tool for tool, names, emails in AI_IDENTITIES if names.match(name) and emails.fullmatch(email)), None)
+
+
+def rust_backend(result: dict) -> bool:
+    """Whether the repo ships Rust code: a Cargo.toml (or rust-toolchain file) at its root, or a Cargo.toml in backend/."""
+    entries = lambda tree: {entry["name"] for entry in ((tree or {}).get("entries") or [])}  # noqa: E731
+    root = entries(result.get("root"))
+    return bool(root & {"Cargo.toml", "rust-toolchain", "rust-toolchain.toml"}) or "Cargo.toml" in entries(result.get("backend"))
 
 
 def ai_files(result: dict) -> list[str]:
@@ -519,6 +528,7 @@ def fetch_github(repos: list[str], every_release: bool = False) -> dict[str, dic
                 # AI-assistant files on the default branch (see AI_FILES) and AI wording in
                 # its README (AI_README): [] when none.
                 "ai": ai_files(result),
+                "rust": rust_backend(result),
                 # A fork of a template (Decky's plugin template) is a new plugin, not a copy of one.
                 "fork": result["isFork"] and not (result["parent"] or {}).get("isTemplate"),
                 # The repo it was forked from: its name, whether it's archived and its newest release date.

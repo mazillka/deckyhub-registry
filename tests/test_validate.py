@@ -127,6 +127,14 @@ class AiFilesTests(unittest.TestCase):
         }
         self.assertEqual(validate.ai_files(result), [".cursorrules", ".github/copilot-instructions.md", "CLAUDE.md", "agents.MD"])
 
+    def test_rust_backend_is_a_cargo_toml_at_the_root_or_in_backend(self):
+        tree = lambda *names: {"entries": [{"name": name} for name in names]}  # noqa: E731
+        self.assertTrue(validate.rust_backend({"root": tree("main.py", "Cargo.toml")}))
+        self.assertTrue(validate.rust_backend({"root": tree("main.py"), "backend": tree("Cargo.toml", "src")}))
+        self.assertTrue(validate.rust_backend({"root": tree("main.py", "rust-toolchain.toml")}))
+        self.assertFalse(validate.rust_backend({"root": tree("main.py"), "backend": tree("main.rs")}))
+        self.assertFalse(validate.rust_backend({}))
+
     def test_a_readme_saying_it_is_made_with_ai_counts(self):
         result = {"root": {"entries": [{"name": "CLAUDE.md"}]}, "readme": {"text": "# GameVault\n\nThis plugin was vibe-coded with Claude."}}
         self.assertEqual(validate.ai_files(result), ["CLAUDE.md", 'README: "vibe-coded"'])
