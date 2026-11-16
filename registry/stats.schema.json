@@ -52,6 +52,7 @@
           }
         },
         "ai": { "type": "array", "items": { "type": "string" } },
+        "rust": { "const": true, "description": "The repo ships Rust code; written only when true." },
         "warnings": { "$ref": "#/$defs/warnings" },
         "prereleaseWarnings": { "$ref": "#/$defs/warnings" }
       }
