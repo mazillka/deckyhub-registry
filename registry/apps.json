@@ -2543,15 +2543,6 @@
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
-      "id": "decky-navidrome-player",
-      "name": "Navidrome Player",
-      "description": "Stream and cache your Navidrome library, with shuffle, volume and offline downloads.",
-      "repo": "abduznik/decky-navidrome-player",
-      "category": "Game Libraries",
-      "detect": { "type": "decky-plugin", "names": ["Navidrome Player"] },
-      "asset": { "include": ["x86_64"], "exclude": ["source"] }
-    },
-    {
       "id": "decky-kettle-framegen",
       "name": "Kettle Frame Generation",
       "description": "Per-game frame generation with the kettle-framegen Vulkan layer: install it, turn it on per game, and change its settings live.",
@@ -2720,15 +2711,6 @@
       "repo": "viktor-malieichyk/yasgm",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["YASGM"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
-      "id": "romm-armada",
-      "name": "RomM Armada",
-      "description": "Download your RomM library to this handheld and keep its saves in sync, Arm64 first.",
-      "repo": "abduznik/romm-armada",
-      "category": "Game Libraries",
-      "detect": { "type": "decky-plugin", "names": ["RomM Armada"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {

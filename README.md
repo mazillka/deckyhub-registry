@@ -357,7 +357,6 @@ python scripts/build_decky_store.py releases.json out/store
 | Rocknix LED Control | Game Libraries | [javierfurus/rocknix-led-control](https://github.com/javierfurus/rocknix-led-control) |
 | Decky Cloud Reader | Utilities | [quietgear/decky-cloud-reader](https://github.com/quietgear/decky-cloud-reader) |
 | Deck as Capture Card | Utilities | [SnakeTheDev/decky-capture](https://github.com/SnakeTheDev/decky-capture) |
-| Navidrome Player | Game Libraries | [abduznik/decky-navidrome-player](https://github.com/abduznik/decky-navidrome-player) |
 | Kettle Frame Generation | Frame Generation | [arunoruto/decky-kettle-framegen](https://github.com/arunoruto/decky-kettle-framegen) |
 | Renpy Installer | Utilities | [jasmeralia/decky-renpy-installer](https://github.com/jasmeralia/decky-renpy-installer) |
 | Immich Uploader | Utilities | [Seruschl/immich-uploader-deck](https://github.com/Seruschl/immich-uploader-deck) |
@@ -377,7 +376,6 @@ python scripts/build_decky_store.py releases.json out/store
 | DeckyNews | Utilities | [th3pajay/DeckyNews](https://github.com/th3pajay/DeckyNews) |
 | VPN & Wake-on-LAN | Utilities | [TochaRude/VPN-WoL-Decky](https://github.com/TochaRude/VPN-WoL-Decky) |
 | YASGM | Utilities | [viktor-malieichyk/yasgm](https://github.com/viktor-malieichyk/yasgm) |
-| RomM Armada | Game Libraries | [abduznik/romm-armada](https://github.com/abduznik/romm-armada) |
 | Travelling Deck | Utilities | [cernoh/travelling-deck](https://github.com/cernoh/travelling-deck) |
 | RustDeck | Utilities | [Hintay/decky-rustdeck](https://github.com/Hintay/decky-rustdeck) |
 | SteamDB Button | Utilities | [kedMertens/steamdbDeckyButton](https://github.com/kedMertens/steamdbDeckyButton) |
