@@ -652,7 +652,6 @@ python scripts/build_decky_store.py releases.json out/store
 | V-Deck | Utilities | [GoldDGaro/V-Deck](https://github.com/GoldDGaro/V-Deck) |
 | Wake on LAN | Utilities | [Picardas/Decky-WoL](https://github.com/Picardas/Decky-WoL) |
 | Control Cult | Controllers | [killdano/control-cult-decky](https://github.com/killdano/control-cult-decky) |
-| Playhub Metadata | Game Libraries | [LoZazaMastro/Playhub-Metadata](https://github.com/LoZazaMastro/Playhub-Metadata) |
 | Wine Cellar | Launch Options | [FlashyReese/decky-wine-cellar](https://github.com/FlashyReese/decky-wine-cellar) |
 | Animated Screensaver | Game Libraries | [Alyenax/Decky-Animated-Screensaver](https://github.com/Alyenax/Decky-Animated-Screensaver) |
 | Deck Doctor | Launch Options | [Forlarin/deck-doctor](https://github.com/Forlarin/deck-doctor) |

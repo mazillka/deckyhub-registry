@@ -5211,15 +5211,6 @@
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
-      "id": "playhub-metadata",
-      "name": "Playhub Metadata",
-      "description": "Add clean game metadata, Steam activity news, RetroAchievements, RPCS3 (PS3) trophies and optional Xbox achievements to non-Steam games...",
-      "repo": "LoZazaMastro/Playhub-Metadata",
-      "category": "Game Libraries",
-      "detect": { "type": "decky-plugin", "names": ["Playhub Metadata"] },
-      "asset": { "include": ["installer"], "exclude": ["source"] }
-    },
-    {
       "id": "decky-wine-cellar",
       "name": "Wine Cellar",
       "description": "A decky plugin to manage Steam Play compatibility tools",
