@@ -718,6 +718,13 @@ python scripts/build_decky_store.py releases.json out/store
 | Eden Settings | Game Libraries | [simkin/decky-eden-settings](https://github.com/simkin/decky-eden-settings) |
 | Ally System Control | Utilities | [adrigm/rog-ally-x20-decky](https://github.com/adrigm/rog-ally-x20-decky) |
 | N.E.C.A | Controllers | [cediqqu/decky-neca](https://github.com/cediqqu/decky-neca) |
+| DeckyReshade | Launch Options | [Rayekkk/DeckyReshade](https://github.com/Rayekkk/DeckyReshade) |
+| Custom Games | Frame Generation | [sardonyxwt/decky-custom-games](https://github.com/sardonyxwt/decky-custom-games) |
+| UU加速器 | Utilities | [ArmadaOS-Freedom/decky-uu-accelerator](https://github.com/ArmadaOS-Freedom/decky-uu-accelerator) |
+| Floater | Utilities | [jancard/decky-floater](https://github.com/jancard/decky-floater) |
+| Xbox Wireless | Controllers | [humzakh/Decky-Xbox-Wireless](https://github.com/humzakh/Decky-Xbox-Wireless) |
+| SpoofDPI Armada | Utilities | [Dimaman/zapret2-armada](https://github.com/Dimaman/zapret2-armada) |
+| LeGO Suite | Performance | [IoannesC/Lego-Suite](https://github.com/IoannesC/Lego-Suite) |
 
 ## Where the plugins come from
 

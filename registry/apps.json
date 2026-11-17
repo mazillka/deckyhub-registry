@@ -5805,6 +5805,69 @@
       "category": "Controllers",
       "detect": { "type": "decky-plugin", "names": ["N.E.C.A"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyreshade",
+      "name": "DeckyReshade",
+      "description": "ReShade for Steam games under Proton: per-game setup, shader packages and automatic ReShade updates.",
+      "repo": "Rayekkk/DeckyReshade",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["DeckyReshade"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-custom-games",
+      "name": "Custom Games",
+      "description": "Finds games outside Steam (folders, Anker Launcher), adds them with upscaled artwork and fills their library pages with the real game's...",
+      "repo": "sardonyxwt/decky-custom-games",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["Custom Games"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-uu-accelerator",
+      "name": "UU加速器",
+      "description": "面向 ArmadaOS 和 ArmadaOS Freedom 的第三方 UU 加速器 Decky 插件，通过 FEX 运行官方 Steam Deck 核心，支持核心安装、手机扫码绑定与加速状态查看。",
+      "repo": "ArmadaOS-Freedom/decky-uu-accelerator",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["UU加速器"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-floater",
+      "name": "Floater",
+      "description": "Picture in Picture for Game Mode: keep a video or app playing in a corner while you use another app.",
+      "repo": "jancard/decky-floater",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Floater"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-xbox-wireless",
+      "name": "Xbox Wireless",
+      "description": "Pair and monitor Xbox wireless controllers using the xone driver: connected devices, battery levels, pairing and guide-button LED.",
+      "repo": "humzakh/Decky-Xbox-Wireless",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Xbox Wireless"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "zapret2-armada",
+      "name": "SpoofDPI Armada",
+      "description": "Local DPI bypass and optional Hysteria2 VPN for Armada OS",
+      "repo": "Dimaman/zapret2-armada",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SpoofDPI Armada"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "lego-suite",
+      "name": "LeGO Suite",
+      "description": "TDP, fan, battery, RGB and controller remapper suite for the Lenovo Legion Go.",
+      "repo": "IoannesC/Lego-Suite",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["LeGO Suite"] },
+      "asset": { "include": ["LeGO-Suite-Plugin", ".zip"], "exclude": ["source"] }
     }
   ]
 }
