@@ -5859,6 +5859,15 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["SpoofDPI Armada"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "lego-suite",
+      "name": "LeGO Suite",
+      "description": "TDP, fan, battery, RGB and controller remapper suite for the Lenovo Legion Go.",
+      "repo": "IoannesC/Lego-Suite",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["LeGO Suite"] },
+      "asset": { "include": ["LeGO-Suite-Plugin", ".zip"], "exclude": ["source"] }
     }
   ]
 }
