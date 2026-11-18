@@ -726,6 +726,8 @@ python scripts/build_decky_store.py releases.json out/store
 | SpoofDPI Armada | Utilities | [Dimaman/zapret2-armada](https://github.com/Dimaman/zapret2-armada) |
 | LeGO Suite | Performance | [IoannesC/Lego-Suite](https://github.com/IoannesC/Lego-Suite) |
 | LSFG Frame Generation (Armada) | Frame Generation | [IA0011/armada-lsfg-vk](https://github.com/IA0011/armada-lsfg-vk) |
+| Legion Decky | Performance | [onullusoy/legion-decky](https://github.com/onullusoy/legion-decky) |
+| Legion Music Decky | Utilities | [onullusoy/legion-music-decky](https://github.com/onullusoy/legion-music-decky) |
 
 ## Where the plugins come from
 
