@@ -5868,6 +5868,33 @@
       "category": "Performance",
       "detect": { "type": "decky-plugin", "names": ["LeGO Suite"] },
       "asset": { "include": ["LeGO-Suite-Plugin", ".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "armada-lsfg-vk",
+      "name": "LSFG Frame Generation (Armada)",
+      "description": "Enable LSFG-VK frame generation on Armada OS/Fedora ARM64 with FEX Vulkan thunks.",
+      "repo": "IA0011/armada-lsfg-vk",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["LSFG Frame Generation (Armada)"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "legion-decky",
+      "name": "Legion Decky",
+      "description": "Fan, lighting, battery limit and controller tools for the Lenovo Legion Go on Bazzite.",
+      "repo": "onullusoy/legion-decky",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Legion Decky"] },
+      "asset": { "include": ["LegionDecky"], "exclude": ["source"] }
+    },
+    {
+      "id": "legion-music-decky",
+      "name": "Legion Music Decky",
+      "description": "Music player controls and a full-screen Music Room for the Lenovo Legion Go on Bazzite.",
+      "repo": "onullusoy/legion-music-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Legion Music Decky"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
