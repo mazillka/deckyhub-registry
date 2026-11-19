@@ -5568,7 +5568,7 @@
       "repo": "TLin-Y/SteamAnyAspectRatioMods",
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["AnyAspectRatio"] },
-      "asset": { "include": [".zip"], "exclude": ["source", "Offline"] }
+      "asset": { "include": [".zip"], "exclude": ["source", "Offline", "Desktop"] }
     },
     {
       "id": "decky-heroic",
@@ -5895,6 +5895,25 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Legion Music Decky"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-emu-lookup",
+      "name": "Decky Emu Lookup",
+      "description": "Indique sur les pages du store Steam si un jeu existe aussi sur Nintendo Switch / PlayStation 4 (données IGDB).",
+      "repo": "src893/decky-emu-lookup",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Emu Lookup"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-steamgriddb",
+      "name": "SteamGridDB",
+      "description": "Plugin for Decky Loader to apply and manage custom art assets from within gaming mode.",
+      "repo": "SteamGridDB/decky-steamgriddb",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["SteamGridDB (Decky store)"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
     }
   ]
 }
