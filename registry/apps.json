@@ -5904,6 +5904,16 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decky Emu Lookup"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-steamgriddb",
+      "name": "SteamGridDB",
+      "description": "Plugin for Decky Loader to apply and manage custom art assets from within gaming mode.",
+      "repo": "SteamGridDB/decky-steamgriddb",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["SteamGridDB (Decky store)"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
     }
   ]
 }

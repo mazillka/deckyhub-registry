@@ -729,6 +729,7 @@ python scripts/build_decky_store.py releases.json out/store
 | Legion Decky | Performance | [onullusoy/legion-decky](https://github.com/onullusoy/legion-decky) |
 | Legion Music Decky | Utilities | [onullusoy/legion-music-decky](https://github.com/onullusoy/legion-music-decky) |
 | Decky Emu Lookup | Utilities | [src893/decky-emu-lookup](https://github.com/src893/decky-emu-lookup) |
+| SteamGridDB | Customization | [SteamGridDB/decky-steamgriddb](https://github.com/SteamGridDB/decky-steamgriddb) |
 
 ## Where the plugins come from
 
