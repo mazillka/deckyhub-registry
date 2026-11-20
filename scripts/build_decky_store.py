@@ -54,7 +54,10 @@ PAGE = "https://deckyhub.com/plugins/{}.html"
 def deckyhub_line(entry: dict, stats: dict | None) -> str:
     """The line DeckyHub adds to a description: what its audit found, and where the full report is."""
     warnings = (stats or {}).get("warnings") or []
-    found = f"warnings: {', '.join(warnings)}" if warnings else "no audit warnings" if stats is not None else "audit and scans"
+    if warnings:
+        found = f"warnings: {', '.join(warnings)}"
+    else:
+        found = "no audit warnings" if stats is not None else "audit and scans"
     return f"DeckyHub: {found}. Details: {PAGE.format(entry['id'])}"
 
 

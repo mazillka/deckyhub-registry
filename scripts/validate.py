@@ -394,7 +394,7 @@ def graphql(query: str) -> tuple[dict, set[str]]:
                 wait = max(0, int(error.headers["x-ratelimit-reset"]) - int(time.time())) + 1
             elif error.code == 403:
                 wait = 60
-        except Exception:
+        except Exception:  # retried; the third failure is raised
             if attempt == 3:
                 raise
         time.sleep(min(wait, 600))

@@ -451,7 +451,7 @@ class Yara:
             if compiled.returncode:
                 self.unavailable = f"YARA couldn't compile its rules: {(compiled.stderr or compiled.stdout).strip()[:300]}"
             self.signatures = rules_version(Path(rules))
-        except Exception as error:  # noqa: BLE001
+        except Exception as error:  # noqa: BLE001 - the run goes on without YARA, and says so
             self.unavailable = f"YARA couldn't run: {error}"
 
     def scan(self, zip_path: str) -> dict:
@@ -477,65 +477,97 @@ class Yara:
             return {"result": "clean"}
 
 
+# What the audit flags on a line of a file: a download that skips HTTPS checks, or one piped straight into a shell.
+TLS_CHECK_SKIPPED = re.compile(r"\brequests\.(?:get|post|put|delete|patch|head|options|request)\s*\([^\n]*\bverify\s*=\s*False\b|\bssl\.CERT_NONE\b|\bcurl\b[^|;\n]*(?:\s-k(?:\s|$)|\s--insecure(?:\s|$))")
+DOWNLOAD_PIPED_TO_SHELL = re.compile(r"\b(?:curl|wget)\b[^|;\n]*\|\s*(?:/bin/|/usr/bin/)?(?:ba)?sh\b")
+UNREADABLE_MEMBER = (UnicodeError, RuntimeError, NotImplementedError, zipfile.BadZipFile, zlib.error, EOFError, OSError)
+
+
+def manifest_member(members: list[zipfile.ZipInfo]) -> zipfile.ZipInfo | None:
+    """The plugin.json nearest the top of the archive (not inside node_modules), or None when there is none or
+    several at that depth."""
+    manifests = [i for i in members if i.filename.split("/")[-1] == "plugin.json" and "node_modules" not in i.filename.split("/")[:-1]]
+    if not manifests:
+        return None
+    depth = min(i.filename.count("/") for i in manifests)
+    top = [i for i in manifests if i.filename.count("/") == depth]
+    return top[0] if len(top) == 1 else None
+
+
+def readable_text(archive: zipfile.ZipFile, info: zipfile.ZipInfo) -> str | None:
+    """A member's text, or None when it is binary, not UTF-8 or can't be read."""
+    try:
+        data = archive.read(info)
+        return None if b"\x00" in data else data.decode("utf-8")
+    except UNREADABLE_MEMBER:
+        return None
+
+
+def root_flag(manifest_text: str) -> bool | None:
+    """Whether plugin.json's flags ask for root; None when it has no valid flags. ValueError when it isn't JSON."""
+    manifest = json.loads(manifest_text)
+    flags = manifest.get("flags") if isinstance(manifest, dict) else None
+    if isinstance(flags, list) and all(isinstance(f, str) for f in flags):
+        return "root" in flags
+    return None
+
+
+def risky_lines(filename: str, content: str):
+    """A finding for each line that skips HTTPS checks or pipes a download into a shell (comments are skipped)."""
+    for line_number, line in enumerate(content.splitlines(), 1):
+        stripped = line.strip()
+        if not stripped or stripped.startswith(("#", "//", "*")):
+            continue
+        for rule, pattern in (("no-tls-check", TLS_CHECK_SKIPPED), ("runs-downloads", DOWNLOAD_PIPED_TO_SHELL)):
+            if pattern.search(line):
+                yield {"rule": rule, "path": filename, "line": line_number}
+
+
+def over_audit_budget(number: int, info: zipfile.ZipInfo, total: int) -> bool:
+    """A member the audit won't read: past the file count or byte limits, or encrypted."""
+    return number >= AUDIT_MAX_FILES or info.file_size > AUDIT_MAX_FILE_BYTES or total + info.file_size > AUDIT_MAX_BYTES or bool(info.flag_bits & 1)
+
+
 def audit_zip(path: str) -> dict:
     """Bounded static inspection of ZIP members, without extracting or executing them."""
     result = {"result": "complete", "root": None, "findings": [], "scannedAt": now(), "version": 2}
+
+    def record(finding: dict) -> None:
+        if len(result["findings"]) < AUDIT_MAX_FINDINGS:
+            result["findings"].append(finding)
+        else:
+            result["result"] = "incomplete"
+
     try:
         with zipfile.ZipFile(path) as archive:
             members = [i for i in archive.infolist() if not i.is_dir()]
-            manifests = [i for i in members if i.filename.split("/")[-1] == "plugin.json" and "node_modules" not in i.filename.split("/")[:-1]]
-            if manifests:
-                depth = min(i.filename.count("/") for i in manifests)
-                candidates = [i for i in manifests if i.filename.count("/") == depth]
-            else:
-                candidates = []
-            selected = candidates[0] if len(candidates) == 1 else None
+            manifest = manifest_member(members)
             total = 0
             for number, info in enumerate(members):
-                if number >= AUDIT_MAX_FILES or info.file_size > AUDIT_MAX_FILE_BYTES or total + info.file_size > AUDIT_MAX_BYTES or info.flag_bits & 1:
+                if over_audit_budget(number, info, total):
                     result["result"] = "incomplete"
                     continue
                 total += info.file_size
-                try:
-                    data = archive.read(info)
-                    if b"\x00" in data:
-                        result["result"] = "incomplete"
-                        continue
-                    content = data.decode("utf-8")
-                except (UnicodeError, RuntimeError, NotImplementedError, zipfile.BadZipFile, zlib.error, EOFError, OSError):
+                content = readable_text(archive, info)
+                if content is None:
                     result["result"] = "incomplete"
                     continue
-                if info is selected:
+                if info is manifest:
                     try:
-                        manifest = json.loads(content)
-                        flags = manifest.get("flags") if isinstance(manifest, dict) else None
-                        if isinstance(flags, list) and all(isinstance(f, str) for f in flags):
-                            result["root"] = "root" in flags
+                        root = root_flag(content)
                     except ValueError:
                         result["result"] = "incomplete"
-                for finding in scan_text(info.filename, content):
-                    if len(result["findings"]) < AUDIT_MAX_FINDINGS:
-                        result["findings"].append(finding)
                     else:
-                        result["result"] = "incomplete"
-                for line_number, line in enumerate(content.splitlines(), 1):
-                    stripped = line.strip()
-                    if not stripped or stripped.startswith(("#", "//", "*")):
-                        continue
-                    tls = re.search(r"\brequests\.(?:get|post|put|delete|patch|head|options|request)\s*\([^\n]*\bverify\s*=\s*False\b|\bssl\.CERT_NONE\b|\bcurl\b[^|;\n]*(?:\s-k(?:\s|$)|\s--insecure(?:\s|$))", line)
-                    pipe = re.search(r"\b(?:curl|wget)\b[^|;\n]*\|\s*(?:/bin/|/usr/bin/)?(?:ba)?sh\b", line)
-                    for rule, match in (("no-tls-check", tls), ("runs-downloads", pipe)):
-                        if match:
-                            if len(result["findings"]) < AUDIT_MAX_FINDINGS:
-                                result["findings"].append({"rule": rule, "path": info.filename, "line": line_number})
-                            else:
-                                result["result"] = "incomplete"
+                        if root is not None:
+                            result["root"] = root
+                for finding in (*scan_text(info.filename, content), *risky_lines(info.filename, content)):
+                    record(finding)
     except (zipfile.BadZipFile, OSError, ValueError):
         result["result"] = "error"
     return result
 
 
-def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=clamav_version, yara=None, keep: dict[str, dict] | None = None, deadline: float | None = None, clock=time.monotonic, contexts: dict[str, dict] | None = None) -> dict[str, dict]:
+def scan(batches: list[list[str]], *, scanner=clamscan, fetch=download, version=clamav_version, yara=None, keep: dict[str, dict] | None = None, deadline: float | None = None, clock=time.monotonic, contexts: dict[str, dict] | None = None) -> dict[str, dict]:
     """A report for every URL in the batches it gets to, from ClamAV and from yara (a
     Yara; None: not set up). Nothing here fails the run: a ZIP that can't be downloaded
     or scanned, or a scanner that can't run at all, gets an error saying why (scanned
@@ -550,7 +582,7 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
     try:
         engine, signatures = version()
         unavailable = None if signatures else "ClamAV couldn't load its virus signatures"
-    except Exception as error:  # noqa: BLE001
+    except Exception as error:  # noqa: BLE001 - reports say ClamAV couldn't run instead of failing the run
         engine, signatures, unavailable = "", "", f"ClamAV couldn't run: {error}"
     yara_unavailable = yara.unavailable if yara is not None else "YARA wasn't set up for this run"
 
@@ -599,7 +631,7 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
                     found = parse_clamscan(scanner(list(paths.values())), list(paths.values())) if paths else {}
             except subprocess.TimeoutExpired:
                 found = {path: f"ClamAV didn't finish within {BATCH_SECONDS // 60} minutes" for path in paths.values()}
-            except Exception as error:  # noqa: BLE001
+            except Exception as error:  # noqa: BLE001 - reports say ClamAV couldn't run instead of failing the run
                 found = {path: f"ClamAV couldn't run: {error}" for path in paths.values()}
             for url, path in paths.items():
                 if yara_unavailable:
@@ -607,7 +639,7 @@ def scan(batches: list[list[str]], scanner=clamscan, fetch=download, version=cla
                 else:
                     try:
                         found_by_yara = yara.scan(path)
-                    except Exception as error:  # noqa: BLE001
+                    except Exception as error:  # noqa: BLE001 - this ZIP's report says YARA couldn't run
                         found_by_yara = {"result": "error", "reason": f"YARA couldn't run: {error}"}
                 try:
                     audit = audit_zip(path)

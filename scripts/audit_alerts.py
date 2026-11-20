@@ -55,7 +55,12 @@ def body(old: dict, new: dict, names: dict[str, str], generated: str) -> tuple[s
     """(action, issue body); see the module docstring for the actions."""
     current = {repo: warnings for repo, stats in new.items() if (warnings := labelled(stats))}
     added, gone = changes(old, new)
-    action = "clear" if not current else "changed" if added or gone else "same"
+    if not current:
+        action = "clear"
+    elif added or gone:
+        action = "changed"
+    else:
+        action = "same"
     news = [*lines(added, names)] or ["Nothing new."]
     if gone:
         news += ["", "No longer flagged:", "", *lines(gone, names)]

@@ -262,7 +262,7 @@ def warnings_of(entry: dict, release: dict | None, audits: dict) -> list[str]:
     return audits.get((entry["repo"].casefold(), release.get("tag_name"))) or []
 
 
-def plugin_stats(entry: dict, releases: list[dict], stars, manifest=lambda asset: zip_plugin_files(asset)[0], audits: dict | None = None, fork: str | None = None, ai: list[str] | None = None, store: dict | None = None, rating: dict | None = None, rust: bool = False) -> dict:
+def plugin_stats(entry: dict, releases: list[dict], stars, manifest=lambda asset: zip_plugin_files(asset)[0], *, audits: dict | None = None, fork: str | None = None, ai: list[str] | None = None, store: dict | None = None, rating: dict | None = None, rust: bool = False) -> dict:
     channels = channel_releases(entry, releases)
     shown = channels["stable"] or channels["prerelease"]
     assets = matching_assets(entry, shown) if shown else []

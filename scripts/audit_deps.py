@@ -191,6 +191,6 @@ def audit_dependencies(zip_path, query=None):
                         break
                     out["findings"].append({"ecosystem": package["ecosystem"], "name": package["name"],
                         "version": package["version"], "id": vuln["id"][:200]})
-        except Exception:
+        except Exception:  # a failed lookup is reported as an issue, not a crash
             issue("A vulnerability lookup failed or returned an invalid response.")
     return out
