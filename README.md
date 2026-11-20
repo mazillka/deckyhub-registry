@@ -730,6 +730,9 @@ python scripts/build_decky_store.py releases.json out/store
 | Legion Music Decky | Utilities | [onullusoy/legion-music-decky](https://github.com/onullusoy/legion-music-decky) |
 | Decky Emu Lookup | Utilities | [src893/decky-emu-lookup](https://github.com/src893/decky-emu-lookup) |
 | SteamGridDB | Customization | [SteamGridDB/decky-steamgriddb](https://github.com/SteamGridDB/decky-steamgriddb) |
+| ClawDeck | Frame Generation | [IHulkSmashI/ClawDeck](https://github.com/IHulkSmashI/ClawDeck) |
+| FFR Edit | Utilities | [timekillr/FFR_Edit](https://github.com/timekillr/FFR_Edit) |
+| Claude Deck | Controllers | [loddi-o/claude-deck](https://github.com/loddi-o/claude-deck) |
 
 ## Where the plugins come from
 

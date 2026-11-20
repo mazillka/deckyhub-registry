@@ -5914,6 +5914,33 @@
       "detect": { "type": "decky-plugin", "names": ["SteamGridDB (Decky store)"] },
       "asset": { "include": [".zip"], "exclude": ["source"] },
       "store": true
+    },
+    {
+      "id": "clawdeck",
+      "name": "ClawDeck",
+      "description": "What Bazzite does not do for the MSI Claw, in one Quick Access panel: XeSS on the XMX cores with low latency, ClawDeck's own pinned...",
+      "repo": "IHulkSmashI/ClawDeck",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["ClawDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ffr-edit",
+      "name": "FFR Edit",
+      "description": "Discover, edit, back up and restore Final Fantasy Resonance saves.",
+      "repo": "timekillr/FFR_Edit",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["FFR Edit"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "loddi-o-claude-deck",
+      "name": "Claude Deck",
+      "description": "Claude Code agentico nel Quick Access Menu: troubleshooting e riparazione di SteamOS/Bazzite con GUI per gamepad, dettatura vocale...",
+      "repo": "loddi-o/claude-deck",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["Claude Deck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
