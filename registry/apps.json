@@ -5941,6 +5941,42 @@
       "category": "Controllers",
       "detect": { "type": "decky-plugin", "names": ["Claude Deck"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckforge",
+      "name": "DeckForge",
+      "description": "Native Decky trainer platform. Detects the running Steam game and exposes simple cheat toggles backed by a persistent Rust memory engine.",
+      "repo": "firmanjml/deckforge",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["DeckForge"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "radmin-decky",
+      "name": "Radmin VPN",
+      "description": "Start and stop a configured Radmin VPN from Gaming Mode.",
+      "repo": "Buly-dog/radmin-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Radmin VPN"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-dictation-ptt",
+      "name": "Decky Dictation PTT",
+      "description": "Voice-to-text dictation for Game Mode.",
+      "repo": "thelinuxgmr/decky-dictation-ptt",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Dictation PTT"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-dsfov",
+      "name": "DSR FOV",
+      "description": "Adjusts Dark Souls Remastered FOV while the game is running.",
+      "repo": "Chopper1337/decky-dsfov",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DSR FOV"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }

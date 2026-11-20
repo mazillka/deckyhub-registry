@@ -733,6 +733,10 @@ python scripts/build_decky_store.py releases.json out/store
 | ClawDeck | Frame Generation | [IHulkSmashI/ClawDeck](https://github.com/IHulkSmashI/ClawDeck) |
 | FFR Edit | Utilities | [timekillr/FFR_Edit](https://github.com/timekillr/FFR_Edit) |
 | Claude Deck | Controllers | [loddi-o/claude-deck](https://github.com/loddi-o/claude-deck) |
+| DeckForge | Controllers | [firmanjml/deckforge](https://github.com/firmanjml/deckforge) |
+| Radmin VPN | Utilities | [Buly-dog/radmin-decky](https://github.com/Buly-dog/radmin-decky) |
+| Decky Dictation PTT | Utilities | [thelinuxgmr/decky-dictation-ptt](https://github.com/thelinuxgmr/decky-dictation-ptt) |
+| DSR FOV | Utilities | [Chopper1337/decky-dsfov](https://github.com/Chopper1337/decky-dsfov) |
 
 ## Where the plugins come from
 
