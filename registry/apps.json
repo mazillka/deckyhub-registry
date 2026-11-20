@@ -5977,6 +5977,15 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["DSR FOV"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "slsdeck",
+      "name": "SLSDeckUniversal",
+      "description": "Pirate helper for SteamOS/Steam Deck: add games via slsteam-moon, apply game fixes (ryuu + perondepot), manifest version pinning, and...",
+      "repo": "Kaal31/slsdeck",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["SLSDeckUniversal"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
