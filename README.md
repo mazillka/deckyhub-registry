@@ -738,6 +738,8 @@ python scripts/build_decky_store.py releases.json out/store
 | Decky Dictation PTT | Utilities | [thelinuxgmr/decky-dictation-ptt](https://github.com/thelinuxgmr/decky-dictation-ptt) |
 | DSR FOV | Utilities | [Chopper1337/decky-dsfov](https://github.com/Chopper1337/decky-dsfov) |
 | SLSDeckUniversal | Launch Options | [Kaal31/slsdeck](https://github.com/Kaal31/slsdeck) |
+| Gameyfin | Launch Options | [PlayingKarrde/gameyfin-decky](https://github.com/PlayingKarrde/gameyfin-decky) |
+| RomM | Game Libraries | [PlayingKarrde/romm-decky](https://github.com/PlayingKarrde/romm-decky) |
 
 ## Where the plugins come from
 
