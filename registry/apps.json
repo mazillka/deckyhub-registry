@@ -5986,6 +5986,24 @@
       "category": "Launch Options",
       "detect": { "type": "decky-plugin", "names": ["SLSDeckUniversal"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "gameyfin-decky",
+      "name": "Gameyfin",
+      "description": "Browse a self-hosted Gameyfin library in Gaming Mode, install games as Proton shortcuts with artwork, and uninstall them.",
+      "repo": "PlayingKarrde/gameyfin-decky",
+      "category": "Launch Options",
+      "detect": { "type": "decky-plugin", "names": ["Gameyfin"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "romm-decky",
+      "name": "RomM",
+      "description": "Browse a self-hosted RomM library in Gaming Mode, install ROMs as Steam shortcuts that launch the right emulator, and uninstall them.",
+      "repo": "PlayingKarrde/romm-decky",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["RomM"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
