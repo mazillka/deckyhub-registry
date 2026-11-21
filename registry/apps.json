@@ -3251,7 +3251,7 @@
       "repo": "wavessevaw/GFG-Extreme",
       "category": "Frame Generation",
       "detect": { "type": "decky-plugin", "names": ["GFG Extreme"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": ["extreme", ".zip"], "exclude": ["source"] }
     },
     {
       "id": "decky-capydeploy",
