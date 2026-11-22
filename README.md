@@ -785,7 +785,6 @@ python scripts/build_decky_store.py releases.json out/store
 | GC Deck | Utilities | [hikoxy/game-cheats-deck](https://github.com/hikoxy/game-cheats-deck) |
 | DS5Bridge | Controllers | [ccc007ccc/ds5bridge-steamos](https://github.com/ccc007ccc/ds5bridge-steamos) |
 | bonsAI | Utilities | [qd313/bonsAI](https://github.com/qd313/bonsAI) |
-| playercount-badge | Utilities | [swindlesmccoop/playercount-badge](https://github.com/swindlesmccoop/playercount-badge) |
 | Cuivar Pulse | Controllers | [shikamaru2694/CuivarPulse](https://github.com/shikamaru2694/CuivarPulse) |
 | DeckTunes | Customization | [Sablinova/DeckTunes](https://github.com/Sablinova/DeckTunes) |
 | RomM Sync | Game Libraries | [melikootje/Romm-emudecky](https://github.com/melikootje/Romm-emudecky) |
@@ -892,10 +891,78 @@ python scripts/build_decky_store.py releases.json out/store
 | Window Switcher | Controllers | [JDLKMR/decky-window-switcher](https://github.com/JDLKMR/decky-window-switcher) |
 | Download All+ | Utilities | [sharkusmanch/decky-download-all-plus](https://github.com/sharkusmanch/decky-download-all-plus) |
 | Audio Hook Plugin | Customization | [Mujtaba-Alsaleh/Decky-Game-Theme-Music-On-Home](https://github.com/Mujtaba-Alsaleh/Decky-Game-Theme-Music-On-Home) |
-| NVM | Utilities | [bailuochen/PluginDeck-NVM](https://github.com/bailuochen/PluginDeck-NVM) |
-| Port Manager | Utilities | [bailuochen/PluginDeck-PortManager](https://github.com/bailuochen/PluginDeck-PortManager) |
-| deckcraft | Utilities | [full-aigc-plugins/deckcraft-plugin](https://github.com/full-aigc-plugins/deckcraft-plugin) |
 | Decky Trophy Toasts | Game Libraries | [K1tsune12/decky-trophy-toasts](https://github.com/K1tsune12/decky-trophy-toasts) |
+| DeckFAQs | Game Libraries | [hulkrelax/deckfaqs](https://github.com/hulkrelax/deckfaqs) |
+| Game Base Social | Game Libraries | [toto-console/game-hub](https://github.com/toto-console/game-hub) |
+| PatchHub | Utilities | [Mabinogi-Cichol/patchhub](https://github.com/Mabinogi-Cichol/patchhub) |
+| 屏幕保护增强 | Performance | [Grails125/ScreenSaverEnhancements](https://github.com/Grails125/ScreenSaverEnhancements) |
+| Azure-Syncthing | Utilities | [Azure-Agst/decky-syncthing](https://github.com/Azure-Agst/decky-syncthing) |
+| Add to Steam | Utilities | [jurassicplayer/decky-addtosteam](https://github.com/jurassicplayer/decky-addtosteam) |
+| Controller Dock | Controllers | [TacticalLaptopBag/decky-controller-dock](https://github.com/TacticalLaptopBag/decky-controller-dock) |
+| WoWDeck Input | Utilities | [iCodyYang/WoWDeck-Input](https://github.com/iCodyYang/WoWDeck-Input) |
+| FlatpakUpdater | Utilities | [0xD34D/FlatpakUpdater](https://github.com/0xD34D/FlatpakUpdater) |
+| Don't Dimmadeck | Performance | [JaxonWright/decky-dont-dimmadeck](https://github.com/JaxonWright/decky-dont-dimmadeck) |
+| Decky Toolkit | Utilities | [jackhric/decky-toolkit](https://github.com/jackhric/decky-toolkit) |
+| Gurren | Performance | [niwia/Gurren](https://github.com/niwia/Gurren) |
+| SkyPortal | Performance | [Starkka15/SkyPortal](https://github.com/Starkka15/SkyPortal) |
+| Frame Suite | Frame Generation | [kazzzzzzzzzzuya/Frame-Suite](https://github.com/kazzzzzzzzzzuya/Frame-Suite) |
+| SpotifyDeck | Game Libraries | [Lexodeus/SpotifyDeck](https://github.com/Lexodeus/SpotifyDeck) |
+| SimpleDeckyTDP-Intel | Performance | [kas5852/SimpleDeckyTDP-Intel](https://github.com/kas5852/SimpleDeckyTDP-Intel) |
+| Mumble | Utilities | [manbearpig3130/deckyble](https://github.com/manbearpig3130/deckyble) |
+| DeckSCP | Utilities | [ArnonGuttel/decky-filetransfer-plugin](https://github.com/ArnonGuttel/decky-filetransfer-plugin) |
+| Change TTL | Utilities | [JuanJoseGonGi/decky-plugin-change-ttl](https://github.com/JuanJoseGonGi/decky-plugin-change-ttl) |
+| DeckySales | Utilities | [zarif98/DeckySales](https://github.com/zarif98/DeckySales) |
+| RomM Downloader | Game Libraries | [AshleyWragg/decky-romm](https://github.com/AshleyWragg/decky-romm) |
+| Shelfcloud | Game Libraries | [bschelst/shelfcloud-decky](https://github.com/bschelst/shelfcloud-decky) |
+| Map Storage | Game Libraries | [evertonfxavier/map-storage](https://github.com/evertonfxavier/map-storage) |
+| TouchMouse | Utilities | [ax-zwk/decky-touchmouse](https://github.com/ax-zwk/decky-touchmouse) |
+| Decky Overlay | Game Libraries | [powange/decky-overlay](https://github.com/powange/decky-overlay) |
+| Decky SoT | Utilities | [powange/decky-sot](https://github.com/powange/decky-sot) |
+| Droid Deck Loader | Launch Options | [evoluketion/droid-deck-loader](https://github.com/evoluketion/droid-deck-loader) |
+| OverTone | Customization | [SuicideFromVenus/OverTone](https://github.com/SuicideFromVenus/OverTone) |
+| zipline-uploader | Utilities | [Marshy-Madness/zipline-auto-uploader](https://github.com/Marshy-Madness/zipline-auto-uploader) |
+| DeckDepot | Utilities | [zany130/deckdepot](https://github.com/zany130/deckdepot) |
+| vnt_control | Utilities | [zxhwfe/vnt-control](https://github.com/zxhwfe/vnt-control) |
+| Controller1 | Controllers | [0x00by73/Controller1](https://github.com/0x00by73/Controller1) |
+| Steam Trophies | Utilities | [lydia1204/SteamTrophies](https://github.com/lydia1204/SteamTrophies) |
+| X360 Receiver | Controllers | [boettgi14/X360-Receiver](https://github.com/boettgi14/X360-Receiver) |
+| Notification Sender | Utilities | [4hd88/NotificationSender](https://github.com/4hd88/NotificationSender) |
+| InsertPlay | Game Libraries | [insert-play/insertplay](https://github.com/insert-play/insertplay) |
+| Legion Go S Control | Performance | [alexjm19/legion-go-s-control](https://github.com/alexjm19/legion-go-s-control) |
+| DiscordChats | Utilities | [alb3rtov/SDH-DiscordChats](https://github.com/alb3rtov/SDH-DiscordChats) |
+| OXP3Deck | Utilities | [Featherwolf/OXP3Deck](https://github.com/Featherwolf/OXP3Deck) |
+| Game Library | Controllers | [Viber85/game-library](https://github.com/Viber85/game-library) |
+| Boiler S2-S4 switcher | Utilities | [FlightDan/SteamOS-S2-S4-switcher](https://github.com/FlightDan/SteamOS-S2-S4-switcher) |
+| TrainerManager | Mod Managers | [yzi111/steam-deck-trainer-manager](https://github.com/yzi111/steam-deck-trainer-manager) |
+| Orbiter | Utilities | [ozanmutludursun/Orbiter](https://github.com/ozanmutludursun/Orbiter) |
+| MSI Claw A8 Controller Suite | Controllers | [sekirofly/msi-claw-a8-controller-suite](https://github.com/sekirofly/msi-claw-a8-controller-suite) |
+| DeckClip | Utilities | [ryudo261276/DeckClip](https://github.com/ryudo261276/DeckClip) |
+| ROM Shelf | Game Libraries | [ygordreyer/romshelf](https://github.com/ygordreyer/romshelf) |
+| Traction | Controllers | [musika08/traction](https://github.com/musika08/traction) |
+| NetCEC | Utilities | [MSPortnov/NetCEC](https://github.com/MSPortnov/NetCEC) |
+| DeckGram | Utilities | [bodia229/DeckGram](https://github.com/bodia229/DeckGram) |
+| Pitwall | Utilities | [crspytopgn/pitwall](https://github.com/crspytopgn/pitwall) |
+| FSR-KingSteam | Frame Generation | [PedroReyVarela/FSR-KingSteam](https://github.com/PedroReyVarela/FSR-KingSteam) |
+| Finally Game Recorder | Utilities | [otisabiburada/finally-game-replay-recorder](https://github.com/otisabiburada/finally-game-replay-recorder) |
+| NieRDeck | Customization | [Farfaboulette7/NieR-UI](https://github.com/Farfaboulette7/NieR-UI) |
+| ActivityHide | Game Libraries | [weristvlad/activityhide](https://github.com/weristvlad/activityhide) |
+| NonSteamLaunchers | Launch Options | [davnozdu/NonSteamLaunchersDecky](https://github.com/davnozdu/NonSteamLaunchersDecky) |
+| Decky XeSS XMX | Frame Generation | [yoyossef/decky-xess-xmx-linux](https://github.com/yoyossef/decky-xess-xmx-linux) |
+| Discord Status Relay | Utilities | [chino/decky-discord-status-relay](https://github.com/chino/decky-discord-status-relay) |
+| X20 Power | Performance | [kdryja/x20-power](https://github.com/kdryja/x20-power) |
+| glidekm | Utilities | [diasna/glidekm](https://github.com/diasna/glidekm) |
+| DeckHub | Game Libraries | [lnavarrocarter/deckhub](https://github.com/lnavarrocarter/deckhub) |
+| Steam Shaders | Utilities | [RonyNjr/SteamCompShaderUI](https://github.com/RonyNjr/SteamCompShaderUI) |
+| Decky My Rig | Utilities | [NekoGryphou/decky-my-rig](https://github.com/NekoGryphou/decky-my-rig) |
+| Veckord | Controllers | [mattytacos/veckord](https://github.com/mattytacos/veckord) |
+| Value Forge | Controllers | [timekillr/value-forge-decky](https://github.com/timekillr/value-forge-decky) |
+| DeckMate | Controllers | [Bwlazelek/deckmate](https://github.com/Bwlazelek/deckmate) |
+| Wake PC | Utilities | [patrickshao/wake-pc](https://github.com/patrickshao/wake-pc) |
+| Decky FrameGen Hub | Frame Generation | [davnozdu/Decky-FrameGen-Hub](https://github.com/davnozdu/Decky-FrameGen-Hub) |
+| Decky POE Launcher | Utilities | [sunim87/decky-poe-launcher](https://github.com/sunim87/decky-poe-launcher) |
+| Rootless Dictation | Utilities | [nevergiveup777/rootless-dictation](https://github.com/nevergiveup777/rootless-dictation) |
+| 8BitDo Deck | Controllers | [trevor-scheer/8bitdo-deck](https://github.com/trevor-scheer/8bitdo-deck) |
+| Screen Scale | Utilities | [Nasenmann80/Screen-Scale](https://github.com/Nasenmann80/Screen-Scale) |
 
 ## Where the plugins come from
 
