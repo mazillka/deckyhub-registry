@@ -895,6 +895,7 @@ python scripts/build_decky_store.py releases.json out/store
 | NVM | Utilities | [bailuochen/PluginDeck-NVM](https://github.com/bailuochen/PluginDeck-NVM) |
 | Port Manager | Utilities | [bailuochen/PluginDeck-PortManager](https://github.com/bailuochen/PluginDeck-PortManager) |
 | deckcraft | Utilities | [full-aigc-plugins/deckcraft-plugin](https://github.com/full-aigc-plugins/deckcraft-plugin) |
+| Decky Trophy Toasts | Game Libraries | [K1tsune12/decky-trophy-toasts](https://github.com/K1tsune12/decky-trophy-toasts) |
 
 ## Where the plugins come from
 

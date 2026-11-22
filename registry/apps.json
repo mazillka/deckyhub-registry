@@ -7399,6 +7399,15 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["deckcraft"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-trophy-toasts",
+      "name": "Decky Trophy Toasts",
+      "description": "Big, animated achievement-unlock toasts with themes, effects and extra flair for rare achievements.",
+      "repo": "K1tsune12/decky-trophy-toasts",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Decky Trophy Toasts"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
