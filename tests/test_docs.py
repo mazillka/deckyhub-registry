@@ -31,11 +31,11 @@ class CatalogTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, f"{page.name} script {index}: {result.stderr}")
 
 
-@unittest.skipUnless((PLUGIN / "devtools" / "plugin_pages.py").exists(), "needs a deckyhub-plugin checkout")
+@unittest.skipUnless((PLUGIN / "devtools" / "plugin_data.py").exists(), "needs a deckyhub-plugin checkout")
 class PluginPageTests(unittest.TestCase):
     def test_plugin_pages_explain_every_warning(self):
         # deckyhub.com's plugin pages (not this site) show these; a new id here needs its text there.
-        text = (PLUGIN / "devtools" / "plugin_pages.py").read_text(encoding="utf-8")
+        text = (PLUGIN / "devtools" / "plugin_data.py").read_text(encoding="utf-8")
         shown = set(re.findall(r'^    "([\w-]+)": \(', text.split("WARNINGS = {", 1)[1].split("\n}", 1)[0], re.M))
         self.assertEqual(shown, WARNING_IDS)
 

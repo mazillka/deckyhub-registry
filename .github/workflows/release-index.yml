@@ -52,10 +52,19 @@ jobs:
       # The stats.json published last: its warnings stand in when the audit can't be read
       # (build_release_index.py), and the audit issue below compares against it.
       - run: git fetch -q --depth 1 origin "$TARGET" && git show FETCH_HEAD:stats.json > "$RUNNER_TEMP/old-stats.json" || echo '{}' > "$RUNNER_TEMP/old-stats.json"
+      # What was read from each release ZIP before is kept between runs (a release's ZIP never changes), so
+      # an hourly run downloads only new releases (scripts/validate.py's zip cache).
+      - if: steps.same.outputs.copied != 'true'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/zip-reads.json
+          key: zip-reads-index-${{ matrix.branch }}-${{ github.run_id }}
+          restore-keys: zip-reads-index-${{ matrix.branch }}-
       - if: steps.same.outputs.copied != 'true'
         run: python3 scripts/build_release_index.py "$RUNNER_TEMP/index" "$RUNNER_TEMP/old-stats.json"
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          VALIDATE_CACHE: ${{ runner.temp }}/zip-reads.json
       # One rolling "Audit warnings" issue (scripts/audit_alerts.py), edited in place: what
       # changed since the last published stats.json first, then every plugin's current
       # warnings. Created or reopened when needed, closed when nothing is flagged. Only for

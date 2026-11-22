@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from build_release_index import KEEP, OLD_NOTES_LIMIT, keep_old_ratings, rating_entry, trim_notes, ai_evidence, audit_index, build, fork_of, keep_old_warnings, merge_ai_evidence, plugin_stats, store_activity, store_downloads, store_entry  # noqa: E402
+from build_release_index import KEEP, OLD_NOTES_LIMIT, trim_notes, ai_evidence, audit_index, build, fork_of, keep_old_warnings, merge_ai_evidence, plugin_stats, store_activity, store_downloads, store_entry  # noqa: E402
 from validate import rest_shape  # noqa: E402
 
 
@@ -216,23 +216,6 @@ class BuildReleaseIndexTests(unittest.TestCase):
         stats = {"o/a": {"downloads": 1}, "o/b": {"downloads": 2}, "o/new": {"downloads": 3}}
         keep_old_warnings(stats, {"o/a": {"warnings": ["blocked"], "prereleaseWarnings": ["obfuscated"], "downloads": 0}, "o/b": {"warnings": "odd"}, "o/gone": {"warnings": ["blocked"]}})
         self.assertEqual(stats, {"o/a": {"downloads": 1, "warnings": ["blocked"], "prereleaseWarnings": ["obfuscated"]}, "o/b": {"downloads": 2}, "o/new": {"downloads": 3}})
-
-    def test_a_plugins_rating_keeps_only_sane_numbers_and_is_missing_when_nobody_rated(self):
-        found = {"o/a": {"rated": 12, "average": 4.26, "works": 9, "broken": 1, "easy": 8, "hard": 0, "extra": "x"}, "o/b": {"works": 3}, "o/c": {"rated": 0, "average": 9},
-                 "o/d": {"rated": True, "average": "5"}, "o/e": "nope"}
-        self.assertEqual(rating_entry(found, "O/A"), {"rated": 12, "average": 4.3, "works": 9, "broken": 1, "easy": 8})
-        self.assertEqual(rating_entry(found, "o/b"), {"works": 3})
-        for repo in ("o/c", "o/d", "o/e", "o/missing"):
-            self.assertIsNone(rating_entry(found, repo), repo)
-        self.assertIsNone(rating_entry({"o/f": {"rated": 5, "average": 6}}, "o/f").get("average"))
-
-    def test_the_rating_is_in_the_stats_and_without_the_worker_plugins_keep_the_published_one(self):
-        rated = plugin_stats(entry(), [release("v1", 1, [("a.zip", 1)])], stars=lambda repo: 0, manifest=lambda asset: {}, rating={"rated": 5, "average": 4.0})
-        self.assertEqual(rated["rating"], {"rated": 5, "average": 4.0})
-        self.assertNotIn("rating", plugin_stats(entry(), [release("v1", 1, [("a.zip", 1)])], stars=lambda repo: 0, manifest=lambda asset: {}))
-        stats = {"o/a": {"downloads": 1}, "o/b": {"downloads": 2}}
-        keep_old_ratings(stats, {"o/a": {"rating": {"rated": 7}}, "o/b": {"rating": "bad"}})
-        self.assertEqual(stats, {"o/a": {"downloads": 1, "rating": {"rated": 7}}, "o/b": {"downloads": 2}})
 
     def test_graphql_releases_take_the_rest_shape(self):
         node = {"tagName": "v1", "name": "One", "isDraft": False, "isPrerelease": True, "publishedAt": "2026-01-01T00:00:00Z", "url": "u", "description": "notes",
