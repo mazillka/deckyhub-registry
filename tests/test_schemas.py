@@ -32,7 +32,6 @@ FULL = plugin_stats(
     fork="o/b",
     ai=["CLAUDE.md"],
     store={"downloads": 5, "activity": {"downloads": 7, "updates": 3}},
-    rating={"rated": 2, "average": 4.5, "works": 1},
 )
 
 
