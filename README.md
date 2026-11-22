@@ -963,6 +963,34 @@ python scripts/build_decky_store.py releases.json out/store
 | Rootless Dictation | Utilities | [nevergiveup777/rootless-dictation](https://github.com/nevergiveup777/rootless-dictation) |
 | 8BitDo Deck | Controllers | [trevor-scheer/8bitdo-deck](https://github.com/trevor-scheer/8bitdo-deck) |
 | Screen Scale | Utilities | [Nasenmann80/Screen-Scale](https://github.com/Nasenmann80/Screen-Scale) |
+| Animation Changer | Customization | [TheLogicMaster/SDH-AnimationChanger](https://github.com/TheLogicMaster/SDH-AnimationChanger) |
+| Storage Cleaner | Utilities | [mcarlucci/decky-storage-cleaner](https://github.com/mcarlucci/decky-storage-cleaner) |
+| Free Loader | Game Libraries | [jwhitlow45/free-loader](https://github.com/jwhitlow45/free-loader) |
+| DeckMTP | Utilities | [dafta/DeckMTP](https://github.com/dafta/DeckMTP) |
+| Volume Boost | Utilities | [saumya-banthia/volume-boost](https://github.com/saumya-banthia/volume-boost) |
+| Quick Launch | Game Libraries | [Fisch03/SDH-QuickLaunch](https://github.com/Fisch03/SDH-QuickLaunch) |
+| MangoPeel | Performance | [Gawah/MangoPeel](https://github.com/Gawah/MangoPeel) |
+| Brightness Bar | Utilities | [rasitayaz/decky-brightness-bar](https://github.com/rasitayaz/decky-brightness-bar) |
+| Memory Deck | Utilities | [CameronRedmore/memory-deck](https://github.com/CameronRedmore/memory-deck) |
+| RadiYo! | Utilities | [isiah-lloyd/radiyo-steam-deck](https://github.com/isiah-lloyd/radiyo-steam-deck) |
+| KDE Connect | Utilities | [safijari/Decky-KDE-Connect](https://github.com/safijari/Decky-KDE-Connect) |
+| MicroSDeck | Utilities | [CEbbinghaus/MicroSDeck](https://github.com/CEbbinghaus/MicroSDeck) |
+| Notebook | Utilities | [wynn1212/SDH-Notebook](https://github.com/wynn1212/SDH-Notebook) |
+| Decky Terminal | Utilities | [Alex4386/decky-terminal](https://github.com/Alex4386/decky-terminal) |
+| Music Control | Utilities | [martinpl/MusicControl](https://github.com/martinpl/MusicControl) |
+| DeckyFileServer | Utilities | [grimkor/DeckyFileServer](https://github.com/grimkor/DeckyFileServer) |
+| Syncthing | Utilities | [theCapypara/steamdeck-decky-syncthing](https://github.com/theCapypara/steamdeck-decky-syncthing) |
+| DeckSP | Utilities | [jessebofill/DeckSP](https://github.com/jessebofill/DeckSP) |
+| Tailscale Control | Utilities | [saumya-banthia/tailscale-control](https://github.com/saumya-banthia/tailscale-control) |
+| Speed Test | Utilities | [Dukeman330/decky-speed-test](https://github.com/Dukeman330/decky-speed-test) |
+| Shotty | Utilities | [safijari/Shotty](https://github.com/safijari/Shotty) |
+| Decky-Lookup | Utilities | [xXJSONDeruloXx/Decky-Lookup](https://github.com/xXJSONDeruloXx/Decky-Lookup) |
+| ScreenshotUploader | Utilities | [codehz/DeckScreenshotManager](https://github.com/codehz/DeckScreenshotManager) |
+| Simple Timer | Utilities | [decktools-xyz/simple-timer](https://github.com/decktools-xyz/simple-timer) |
+| Network Sentinel | Utilities | [KrishGaur1354/network-sentinel](https://github.com/KrishGaur1354/network-sentinel) |
+| DeckyParty File Manager | Utilities | [39sdev/Decky-CP](https://github.com/39sdev/Decky-CP) |
+| Desktop Apps | Utilities | [allmazz/decky-desktop-apps](https://github.com/allmazz/decky-desktop-apps) |
+| Pixel Buddy | Utilities | [Phill544/Pixel-Buddy](https://github.com/Phill544/Pixel-Buddy) |
 
 ## Where the plugins come from
 

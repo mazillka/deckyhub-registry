@@ -8011,6 +8011,286 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Screen Scale"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "sdh-animationchanger",
+      "name": "Animation Changer",
+      "description": "A boot/suspend animation management plugin.",
+      "repo": "TheLogicMaster/SDH-AnimationChanger",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Animation Changer"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "decky-storage-cleaner",
+      "name": "Storage Cleaner",
+      "description": "Quickly visualize, select and clear shader cache and compatibility data.",
+      "repo": "mcarlucci/decky-storage-cleaner",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Storage Cleaner"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "free-loader",
+      "name": "Free Loader",
+      "description": "Notifications for free games on Steam, GOG, Epic Games, and Itch.io!",
+      "repo": "jwhitlow45/free-loader",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Free Loader"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "deckmtp",
+      "name": "DeckMTP",
+      "description": "A plugin that allows your Steam Deck to transfer files to your PC via MTP and USB",
+      "repo": "dafta/DeckMTP",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckMTP"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "volume-boost",
+      "name": "Volume Boost",
+      "description": "A Decky plugin to boost volume.",
+      "repo": "saumya-banthia/volume-boost",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Volume Boost"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "sdh-quicklaunch",
+      "name": "Quick Launch",
+      "description": "Quickly Launch Non-Steam-Apps from the Quick Access menu without adding them as Shortcuts, or add them to the Steam Library.",
+      "repo": "Fisch03/SDH-QuickLaunch",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Quick Launch"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "gawah-mangopeel",
+      "name": "MangoPeel",
+      "description": "A decky plugin for custom performance monitoring style.",
+      "repo": "Gawah/MangoPeel",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["MangoPeel"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "decky-brightness-bar",
+      "name": "Brightness Bar",
+      "description": "Displays a customizable brightness bar when the brightness is changed with 'STEAM/QAM + LS up/down' shortcuts.",
+      "repo": "rasitayaz/decky-brightness-bar",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Brightness Bar"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "memory-deck",
+      "name": "Memory Deck",
+      "description": "A simplistic scanmem wrapper for Decky. Enabling scanning for and editing values in memory.",
+      "repo": "CameronRedmore/memory-deck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Memory Deck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "radiyo-steam-deck",
+      "name": "RadiYo!",
+      "description": "Search and play music from internet radio stations while gaming",
+      "repo": "isiah-lloyd/radiyo-steam-deck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["RadiYo!"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "decky-kde-connect",
+      "name": "KDE Connect",
+      "description": "A plugin for running KDE Connect in gamemode",
+      "repo": "safijari/Decky-KDE-Connect",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["KDE Connect"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "microsdeck",
+      "name": "MicroSDeck",
+      "description": "A plugin to manage MicroSD cards.",
+      "repo": "CEbbinghaus/MicroSDeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["MicroSDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "sdh-notebook",
+      "name": "Notebook",
+      "description": "Quickly scribble down important codes or notes during your play sessions.",
+      "repo": "wynn1212/SDH-Notebook",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Notebook"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "decky-terminal",
+      "name": "Decky Terminal",
+      "description": "Your terminal is going places. The decky plugin that adds terminal emulator plugin for \"game mode\"",
+      "repo": "Alex4386/decky-terminal",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Terminal"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "musiccontrol",
+      "name": "Music Control",
+      "description": "Quick access for media player controls in game mode.",
+      "repo": "martinpl/MusicControl",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Music Control"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "deckyfileserver",
+      "name": "DeckyFileServer",
+      "description": "A simple on-demand web server that enables remote file browsing, downloads, and uploads via any web browser on the same network.",
+      "repo": "grimkor/DeckyFileServer",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckyFileServer"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "steamdeck-decky-syncthing",
+      "name": "Syncthing",
+      "description": "Plugin for managing Syncthing to synchronize files with other devices. Not officially affiliated with the Syncthing project.",
+      "repo": "theCapypara/steamdeck-decky-syncthing",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Syncthing"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "decksp",
+      "name": "DeckSP",
+      "description": "Full audio effects DSP. EQ, Reverb and much more. Per-game settings possible.",
+      "repo": "jessebofill/DeckSP",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckSP"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "tailscale-control",
+      "name": "Tailscale Control",
+      "description": "A Decky plugin to activate and deactivate Tailscale, while staying in Gaming mode.",
+      "repo": "saumya-banthia/tailscale-control",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Tailscale Control"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "decky-speed-test",
+      "name": "Speed Test",
+      "description": "Run internet speed tests directly from your Steam Deck Game Mode using Cloudflare's global network.",
+      "repo": "Dukeman330/decky-speed-test",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Speed Test"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "shotty",
+      "name": "Shotty",
+      "description": "A plugin for copying over screenshots to the Pictures folder",
+      "repo": "safijari/Shotty",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Shotty"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "decky-lookup",
+      "name": "Decky-Lookup",
+      "description": "A plugin to quickly access useful sites for the running game.",
+      "repo": "xXJSONDeruloXx/Decky-Lookup",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky-Lookup"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "deckscreenshotmanager",
+      "name": "ScreenshotUploader",
+      "description": "Screenshot auto uploader because valve don't do it. Upload screenshots to cloud when screenshot is taken.",
+      "repo": "codehz/DeckScreenshotManager",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["ScreenshotUploader"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "simple-timer",
+      "name": "Simple Timer",
+      "description": "Set a timer that will remind you when your session should end.",
+      "repo": "decktools-xyz/simple-timer",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Simple Timer"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "network-sentinel",
+      "name": "Network Sentinel",
+      "description": "Monitor network quality and track connection performance with live ping display, latency graphs, and network history tracking.",
+      "repo": "KrishGaur1354/network-sentinel",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Network Sentinel"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "decky-cp",
+      "name": "DeckyParty File Manager",
+      "description": "Manage the deck's filesystem from a web browser via Copyparty!",
+      "repo": "39sdev/Decky-CP",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckyParty File Manager"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "decky-desktop-apps",
+      "name": "Desktop Apps",
+      "description": "Opens desktop apps without adding to Steam",
+      "repo": "allmazz/decky-desktop-apps",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Desktop Apps"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
+    },
+    {
+      "id": "pixel-buddy",
+      "name": "Pixel Buddy",
+      "description": "Monitor battery and control ANC for your Google Pixel Buds Pro on Steam Deck.",
+      "repo": "Phill544/Pixel-Buddy",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Pixel Buddy"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
     }
   ]
 }
