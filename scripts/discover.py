@@ -18,7 +18,7 @@ plugin ZIP, the ZIP's plugin.json name), on its newest stable release, else its 
 pre-release: a plugin with pre-releases only qualifies too. A fork qualifies only
 while it's the active one (active_fork(): its original is archived, gone or behind it),
 and its PR line says what it's a fork of. One that looks
-unfinished (quality.py: too new, no users, a placeholder version, no description) is
+unfinished (quality.py: a placeholder version, no description) is
 skipped this time and proposed again once it grows out of it. Passing ones are
 appended to registry/apps.json and the README table; the discover workflow then opens
 a pull request, so a person still reviews every addition before it's merged.
@@ -423,7 +423,7 @@ def main() -> int:
     skipped = Counter()
     ready = []
     for entry in passed:
-        reasons = unfinished(entry, repos[entry["repo"].casefold()], now)
+        reasons = unfinished(entry, repos[entry["repo"].casefold()])
         skipped.update(re.sub(r"\d+|'.*'", "N", reason) for reason in reasons)
         if not reasons:
             ready.append(entry)

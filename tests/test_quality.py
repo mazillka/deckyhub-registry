@@ -1,12 +1,10 @@
 import sys
 import unittest
-from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from quality import unfinished  # noqa: E402
 
-NOW = datetime(2026, 10, 31, tzinfo=timezone.utc)
 ENTRY = {"repo": "o/a", "description": "Does things.", "asset": {"include": [".zip"], "exclude": ["source"]}}
 
 
@@ -20,27 +18,22 @@ def repo(*releases, stars=0, description="A plugin"):
 
 
 class QualityTests(unittest.TestCase):
-    def test_an_established_plugin_passes(self):
-        self.assertEqual(unfinished(ENTRY, repo(release("v1.2.0", "2026-06-01T00:00:00Z", downloads=40)), NOW), [])
-        # Stars alone show people use it, whatever the download count.
-        self.assertEqual(unfinished(ENTRY, repo(release("v1.2.0", "2026-06-01T00:00:00Z"), stars=3), NOW), [])
+    def test_a_plugin_with_a_real_version_and_a_description_passes(self):
+        self.assertEqual(unfinished(ENTRY, repo(release("v1.2.0", "2026-06-01T00:00:00Z", downloads=40))), [])
+
+    def test_age_and_use_are_not_signs_of_an_unfinished_plugin(self):
+        # A release from yesterday, no stars and no downloads: nothing says it isn't ready.
+        self.assertEqual(unfinished(ENTRY, repo(release("v1.0.0", "2026-10-30T00:00:00Z"))), [])
 
     def test_each_sign_of_an_unfinished_plugin(self):
-        new = repo(release("v1.0.0", "2026-10-25T00:00:00Z", downloads=50))
-        self.assertEqual(unfinished(ENTRY, new, NOW), ["first release under 14 days old"])
-        # The age counts from the first release with the plugin ZIP, not a newer one.
-        grown = repo(release("v1.1.0", "2026-10-30T00:00:00Z", downloads=50), release("v1.0.0", "2026-01-01T00:00:00Z", downloads=50))
-        self.assertEqual(unfinished(ENTRY, grown, NOW), [])
-        unused = repo(release("v1.0.0", "2026-06-01T00:00:00Z", downloads=4, assets=("plugin.zip", "plugin-source.zip")))
-        self.assertEqual(unfinished(ENTRY, unused, NOW), ["no stars and 4 downloads"])
         for tag in ("v0.0.3", "0.0", "Initial"):
-            self.assertEqual(unfinished(ENTRY, repo(release(tag, "2026-06-01T00:00:00Z", downloads=50)), NOW), [f"placeholder version {tag!r}"], tag)
-        self.assertEqual(unfinished(ENTRY, repo(release("v0.1.0", "2026-06-01T00:00:00Z", downloads=50)), NOW), [])
+            self.assertEqual(unfinished(ENTRY, repo(release(tag, "2026-06-01T00:00:00Z", downloads=50))), [f"placeholder version {tag!r}"], tag)
+        self.assertEqual(unfinished(ENTRY, repo(release("v0.1.0", "2026-06-01T00:00:00Z", downloads=50))), [])
         # Pre-releases only: the newest pre-release's version is the one judged.
-        self.assertEqual(unfinished(ENTRY, repo(release("v0.0.1-beta", "2026-06-01T00:00:00Z", downloads=50, prerelease=True)), NOW), ["placeholder version 'v0.0.1-beta'"])
-        self.assertEqual(unfinished(ENTRY, repo(release("v0.2.0-beta", "2026-06-01T00:00:00Z", downloads=50, prerelease=True)), NOW), [])
+        self.assertEqual(unfinished(ENTRY, repo(release("v0.0.1-beta", "2026-06-01T00:00:00Z", downloads=50, prerelease=True))), ["placeholder version 'v0.0.1-beta'"])
+        self.assertEqual(unfinished(ENTRY, repo(release("v0.2.0-beta", "2026-06-01T00:00:00Z", downloads=50, prerelease=True))), [])
         nameless = {**ENTRY, "description": "Thing for Decky Loader."}
-        self.assertEqual(unfinished(nameless, repo(release("v1.0.0", "2026-06-01T00:00:00Z", downloads=50), description=None), NOW), ["no description"])
+        self.assertEqual(unfinished(nameless, repo(release("v1.0.0", "2026-06-01T00:00:00Z", downloads=50), description=None)), ["no description"])
 
 
 if __name__ == "__main__":
