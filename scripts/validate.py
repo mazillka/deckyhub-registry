@@ -207,14 +207,16 @@ def _read_json(archive: zipfile.ZipFile, name: str):
 def _read_zip_plugin_files(asset: dict) -> tuple[dict | None, dict]:
     with zipfile.ZipFile(RangedFile(asset["browser_download_url"], asset["size"])) as archive:
         manifests = []
+        # The raw entry names (orig_filename), not Python's: on Windows zipfile turns a backslash into "/", but Linux, where Decky
+        # runs, unpacks "A\plugin.json" as a file with that name, so such a ZIP has no plugin.json there.
         for entry in archive.infolist():
-            parts = entry.filename.split("/")
+            parts = entry.orig_filename.split("/")
             if not entry.is_dir() and parts[-1] == "plugin.json" and "node_modules" not in parts[:-1]:
                 manifests.append(entry)
         if not manifests:
             return None, {}
-        depth = min(entry.filename.count("/") for entry in manifests)
-        candidates = [entry for entry in manifests if entry.filename.count("/") == depth]
+        depth = min(entry.orig_filename.count("/") for entry in manifests)
+        candidates = [entry for entry in manifests if entry.orig_filename.count("/") == depth]
         if len(candidates) > 1:
             names = ", ".join(repr(entry.filename) for entry in candidates)
             raise ValueError(f"ambiguous plugin.json manifests in ZIP: {names}")
@@ -227,6 +229,12 @@ def _read_zip_plugin_files(asset: dict) -> tuple[dict | None, dict]:
 
 def zip_plugin_manifest(asset: dict) -> dict | None:
     return zip_plugin_files(asset)[0]
+
+
+def is_decky_manifest(manifest: object) -> bool:
+    """Decky Loader's own plugin.json: a flags list, or (older forks) an api_version with a publish block. Plugins for other
+    apps have a plugin.json too (SiYuan, Millennium, Pelican...), with a name and nothing of this."""
+    return isinstance(manifest, dict) and (isinstance(manifest.get("flags"), list) or ("api_version" in manifest and isinstance(manifest.get("publish"), dict)))
 
 
 def zip_plugin_name(asset: dict) -> str | None:

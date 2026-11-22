@@ -72,6 +72,24 @@ class PluginVersionTests(unittest.TestCase):
         self.assertEqual(validate.plugin_version({"version": "1.0"}, {"version": "2.0"}), "1.0")
         self.assertIsNone(validate.plugin_version(None, {}))
 
+    def test_a_zip_with_backslash_paths_has_no_plugin_json_on_any_platform(self):
+        # Built on Windows: Linux unpacks "A\plugin.json" as a file with that name, and so must this check, also on Windows,
+        # where zipfile quietly turns a backslash into a slash.
+        data = io.BytesIO()
+        with zipfile.ZipFile(data, "w") as archive:
+            for name in ("A\plugin.json", "A\main.py"):
+                info = zipfile.ZipInfo("x")
+                info.filename = name
+                archive.writestr(info, json.dumps({"name": "A"}))
+        with mock.patch.object(validate, "RangedFile", lambda url, size: io.BytesIO(data.getvalue())):
+            self.assertEqual(validate.zip_plugin_files({"browser_download_url": "https://x/b.zip", "size": 1}), (None, {}))
+
+    def test_is_decky_manifest(self):
+        self.assertTrue(validate.is_decky_manifest({"name": "A", "flags": []}))
+        self.assertTrue(validate.is_decky_manifest({"name": "A", "api_version": 1, "publish": {}}))
+        for other in (None, [], {}, {"name": "A"}, {"api_version": 1}, {"flags": "root"}, {"api_version": 1, "publish": "x"}):
+            self.assertFalse(validate.is_decky_manifest(other), other)
+
     def test_the_filter_error_names_the_word_that_tells_the_zips_apart_if_there_is_one(self):
         names = lambda *items: [{"name": name} for name in items]  # noqa: E731
         self.assertEqual(validate.filter_hint(names("T-v1.7.3_Installer.zip", "T-v1.7.3_Project.zip")), "; to pick one, include 'installer' or 'project'")

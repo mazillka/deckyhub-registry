@@ -95,7 +95,7 @@ class DiscoverTests(unittest.TestCase):
                    "assets": [{"name": "plugin.zip", "browser_download_url": "https://example.invalid/plugin.zip", "size": 1}]}
         repo = {"full_name": "o/plugin", "name": "plugin", "description": "A useful Decky plugin", "archived": False,
                 "fork": False, "releases": [release]}
-        with mock.patch.object(discover, "zip_plugin_name", return_value="Plugin"), mock.patch.object(discover, "github_problems", return_value=([], [])):
+        with mock.patch.object(discover, "zip_plugin_manifest", return_value={"name": "Plugin", "flags": []}), mock.patch.object(discover, "github_problems", return_value=([], [])):
             self.assertEqual(check(eligible[0], repo)["source"], "r/deckyloader")
     def test_candidates_skip_listed_archived_templates_taken_names_and_stale_ones(self):
         explorer = [
@@ -244,12 +244,33 @@ class DiscoverTests(unittest.TestCase):
         def repo(*releases):
             return {"full_name": "o/a", "name": "a", "description": "Does A for the Deck.", "archived": False, "fork": False, "releases": list(releases)}
         read = []
-        with mock.patch.object(discover, "zip_plugin_name", lambda asset: read.append(asset) or "A"), mock.patch.object(discover, "github_problems", lambda entry, repo: ([], [])):
+        with mock.patch.object(discover, "zip_plugin_manifest", lambda asset: read.append(asset) or {"name": "A", "flags": []}), mock.patch.object(discover, "github_problems", lambda entry, repo: ([], [])):
             entry = check(item("o/a", "A"), repo(release("v1.0.0-beta.1", True)))
             self.assertEqual((entry["name"], entry["repo"]), ("A", "o/a"))
             # Nothing installable at all still fails.
             self.assertIsNone(check(item("o/a", "A"), repo({**release("v1.0.0", True), "assets": []})))
         self.assertEqual(len(read), 1)
+
+    def test_only_a_decky_plugin_json_qualifies(self):
+        release = {"tag_name": "v1.0.0", "published_at": "2026-10-01T00:00:00Z", "prerelease": False, "draft": False,
+                   "assets": [{"name": "plugin.zip", "browser_download_url": "https://example.invalid/plugin.zip", "size": 1}]}
+        repo = {"full_name": "o/a", "name": "a", "description": "Does A for the Deck.", "archived": False, "fork": False, "releases": [release]}
+
+        def passes(manifest):
+            with mock.patch.object(discover, "zip_plugin_manifest", lambda asset: manifest), mock.patch.object(discover, "github_problems", lambda entry, repo: ([], [])):
+                return check(item("o/a", "A"), repo) is not None
+        self.assertTrue(passes({"name": "A", "author": "x", "flags": []}))
+        # Older forks have no flags but have api_version and a publish block.
+        self.assertTrue(passes({"name": "A", "api_version": 1, "publish": {"tags": []}}))
+        # Other apps' plugins: SiYuan, Pelican panel, m3u-editor, Millennium, an agent plugin, a name that is not text.
+        for manifest in ({"name": "A", "minAppVersion": "3.0", "frontends": ["*"], "backends": ["*"]},
+                         {"name": "A", "api_version": 1, "panels": [], "namespace": "x"},
+                         {"name": "A", "api_version": 1, "actions": [], "entrypoint": "x"},
+                         {"name": "A", "$schema": "https://example.invalid/millennium.json"},
+                         {"name": "A", "flags": "root", "publish": "yes"},
+                         {"name": {"en": "A"}, "flags": []}, {"flags": []}, {}):
+            self.assertFalse(passes(manifest), manifest)
+
 
 if __name__ == "__main__":
     unittest.main()
