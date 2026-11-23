@@ -8637,7 +8637,7 @@
     {
       "id": "decky-hyperion-manager",
       "name": "HyperDeck manager",
-      "description": "Decky example plugin.",
+      "description": "HyperDeck manager for Decky Loader.",
       "repo": "Astaoth/Decky-hyperion-manager",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["HyperDeck manager"] },
@@ -8691,7 +8691,7 @@
     {
       "id": "decky-save-game-savior",
       "name": "Decky Save Game Savior",
-      "description": "Decky example plugin.",
+      "description": "Decky Save Game Savior for Decky Loader.",
       "repo": "I3eyonder/decky-save-game-savior",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decky Save Game Savior"] },
@@ -8835,7 +8835,7 @@
     {
       "id": "dlp-test",
       "name": "DLP-Test",
-      "description": "Decky example plugin.",
+      "description": "DLP-Test for Decky Loader.",
       "repo": "chuanhao01/DLP-test",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["DLP-Test"] },
@@ -8916,7 +8916,7 @@
     {
       "id": "overscan-fix",
       "name": "Overscan Safe Area",
-      "description": "Decky example plugin.",
+      "description": "Decky Loader plugin for screen replacements that have an overscanning display.",
       "repo": "jnitafan/overscan-fix",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Overscan Safe Area"] },
