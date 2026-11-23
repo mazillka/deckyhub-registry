@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from build_release_index import KEEP, OLD_NOTES_LIMIT, trim_notes, ai_evidence, audit_index, build, fork_of, keep_old_warnings, merge_ai_evidence, plugin_stats, store_activity, store_downloads, store_entry  # noqa: E402
+from build_release_index import KEEP, OLD_NOTES_LIMIT, trim_notes, ai_evidence, audit_index, build, fork_of, keep_old_warnings, merge_ai_evidence, plugin_stats, contested_names, store_activity, store_authors, store_downloads, store_entry  # noqa: E402
 from validate import rest_shape  # noqa: E402
 
 
@@ -142,6 +142,21 @@ class BuildReleaseIndexTests(unittest.TestCase):
             [{"name": "Plugin", "downloads": 1, "updates": 2}, {"name": "plugin", "downloads": 3, "updates": 4}],
             [{"name": "Plugin", "downloads": 5, "updates": 6}],
         ]), {})
+
+    def test_a_store_listing_goes_to_the_entry_whose_owner_is_its_author_when_a_name_is_shared(self):
+        lists = [[{"name": "SteamGridDB", "author": "SteamGridDB", "downloads": 9}, {"name": "Solo", "author": "Someone", "downloads": 4}]]
+        original = {"name": "SteamGridDB", "repo": "SteamGridDB/decky-steamgriddb", "detect": {"names": ["SteamGridDB"]}}
+        fork = {"name": "SteamGridDB", "repo": "K1tsune12/decky-steamgriddb-kitsune", "detect": {"names": ["SteamGridDB"]}}
+        solo = {"name": "Solo", "repo": "Other/solo", "detect": {"names": ["Solo"]}}
+        found = store_downloads(lists)
+        contested = contested_names([original, fork, solo], store_authors(lists))
+        self.assertEqual(contested, {"steamgriddb": {"steamgriddb"}})
+        self.assertEqual(store_entry(original, found, None, contested), {"downloads": 9})
+        self.assertIsNone(store_entry(fork, found, None, contested))
+        # A name only one entry has still matches whatever the store's author is called.
+        self.assertEqual(store_entry(solo, found, None, contested), {"downloads": 4})
+        # When the store's author matches none of them, none is credited.
+        self.assertIsNone(store_entry(original, found, None, contested_names([original, fork], {"steamgriddb": {"nobody"}})))
 
     def test_store_entry_keeps_downloads_when_activity_is_unavailable(self):
         entry = {"name": "Plugin", "detect": {"names": []}}
