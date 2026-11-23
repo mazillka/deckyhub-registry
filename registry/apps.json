@@ -6251,7 +6251,7 @@
     {
       "id": "letmereshadeall",
       "name": "LetMeReShadeAll",
-      "description": "ReShade plugin for Steam Deck - Enhanced version with improved shader and game management.",
+      "description": "A fork of LetMeReShade for managing ReShade on Steam Deck: installs the latest ReShade, optional addon builds and AutoHDR components, and lets you choose shader packages.",
       "repo": "sauliiin/LetMeReShadeAll",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["LetMeReShadeAll"] },
@@ -6336,15 +6336,6 @@
       "repo": "LoZazaMastro/Shortcuts",
       "category": "Controllers",
       "detect": { "type": "decky-plugin", "names": ["Shortcuts"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
-      "id": "guided360",
-      "name": "Guided360",
-      "description": "One guide for Steam Game Mode: quick menu in the style of Xbox, PlayStation, Nintendo, Steam or Steam Deck with quick settings,...",
-      "repo": "Chiko751/Guided360",
-      "category": "Controllers",
-      "detect": { "type": "decky-plugin", "names": ["Guided360"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
@@ -6926,7 +6917,7 @@
     {
       "id": "romm-emudecky-ng",
       "name": "EmuDecky RomM NG",
-      "description": "Sync your self-hosted RomM library to Steam.",
+      "description": "A fork of Romm-emudecky, ported from RetroDECK to EmuDeck: syncs your self-hosted RomM library into Steam as non-Steam shortcuts that launch through EmuDeck.",
       "repo": "ricktap/romm-emudecky-ng",
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["EmuDecky RomM NG"] },
@@ -7340,7 +7331,7 @@
     {
       "id": "jdlkmr-decky-window-switcher",
       "name": "Window Switcher",
-      "description": "Quick switching between windows using gamepad bindings.",
+      "description": "A fork of Window Switcher: bind L4, L5, R4 and R5 to focus a window or cycle between open windows, on the Steam Deck and the Steam Controller.",
       "repo": "JDLKMR/decky-window-switcher",
       "category": "Controllers",
       "detect": { "type": "decky-plugin", "names": ["Window Switcher"] },

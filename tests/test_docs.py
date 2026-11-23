@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import shutil
@@ -41,6 +42,15 @@ class PluginPageTests(unittest.TestCase):
 
 
 class RegistryFileTests(unittest.TestCase):
+    def test_no_two_plugins_share_a_description(self):
+        # deckyhub.com builds a page per plugin, and its site audit refuses pages that share a description, which turns the
+        # plugin repository's CI red. A fork or a sibling plugin needs a description of its own.
+        seen: dict[str, list[str]] = {}
+        for app in json.loads((ROOT / "registry" / "apps.json").read_text(encoding="utf-8"))["apps"]:
+            seen.setdefault(app["description"].strip().casefold(), []).append(app["id"])
+        shared = {description[:70]: ids for description, ids in seen.items() if len(ids) > 1}
+        self.assertEqual(shared, {}, "these plugins share a description")
+
     def test_apps_json_fits_every_released_deckyhub(self):
         # DeckyHub up to 3.0.0 refuses a registry over 512 KB (MAX_REMOTE_REGISTRY_BYTES in its
         # main.py; newer releases allow 4 MB) and keeps its cached list, and installed copies

@@ -777,7 +777,6 @@ python scripts/build_decky_store.py releases.json out/store
 | WaveSafe | Game Libraries | [embergabor/wavesafe-deck-plugin](https://github.com/embergabor/wavesafe-deck-plugin) |
 | warp-deck | Utilities | [rosakodu/warp-deck](https://github.com/rosakodu/warp-deck) |
 | Shortcuts | Controllers | [LoZazaMastro/Shortcuts](https://github.com/LoZazaMastro/Shortcuts) |
-| Guided360 | Controllers | [Chiko751/Guided360](https://github.com/Chiko751/Guided360) |
 | Deckcord | Utilities | [andriuspetravicius/Deckcord](https://github.com/andriuspetravicius/Deckcord) |
 | Legion Go Toolbox | Frame Generation | [kazzzzzzzzzzuya/LeGo-decky-toolbox](https://github.com/kazzzzzzzzzzuya/LeGo-decky-toolbox) |
 | PSP XMB | Game Libraries | [timskap/psp-xmb](https://github.com/timskap/psp-xmb) |
