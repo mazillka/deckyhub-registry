@@ -9101,6 +9101,15 @@
       "category": "Controllers",
       "detect": { "type": "decky-plugin", "names": ["DiscDeck"] },
       "asset": { "include": ["discdeck.zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-native-home",
+      "name": "Native Home",
+      "description": "Game logos, Play/Install/Resume quick actions and playtime chips on the Steam Deck Home screen, with a theme-adapted game view.",
+      "repo": "qualbyyy/decky-native-home",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Native Home"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
