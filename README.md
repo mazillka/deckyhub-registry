@@ -991,6 +991,42 @@ python scripts/build_decky_store.py releases.json out/store
 | DeckyParty File Manager | Utilities | [39sdev/Decky-CP](https://github.com/39sdev/Decky-CP) |
 | Desktop Apps | Utilities | [allmazz/decky-desktop-apps](https://github.com/allmazz/decky-desktop-apps) |
 | Pixel Buddy | Utilities | [Phill544/Pixel-Buddy](https://github.com/Phill544/Pixel-Buddy) |
+| KytyPS5-Native | Utilities | [dmorazasanchez/KytyPS5-Native-beta](https://github.com/dmorazasanchez/KytyPS5-Native-beta) |
+| SedotDeck | Game Libraries | [intermission88/SedotDeck](https://github.com/intermission88/SedotDeck) |
+| Live Wallpaper | Customization | [seatann-dev/decky-wall](https://github.com/seatann-dev/decky-wall) |
+| Vela | Frame Generation | [zrprod9-cmyk/vela](https://github.com/zrprod9-cmyk/vela) |
+| LSFG-VK 2 ARM64 | Frame Generation | [razoomnik/lsfg-vk2-arm64-odin3](https://github.com/razoomnik/lsfg-vk2-arm64-odin3) |
+| eGPU Manager | Performance | [avishai0258/steamos-egpu-manager](https://github.com/avishai0258/steamos-egpu-manager) |
+| ABL Dual Boot | Utilities | [kingsleydon/abl-dualboot](https://github.com/kingsleydon/abl-dualboot) |
+| Pocket XR | Utilities | [pocket-xr/pocket-xr-deck](https://github.com/pocket-xr/pocket-xr-deck) |
+| Force Desktop Mode | Utilities | [RDv88/steamos-force-desktop-mode](https://github.com/RDv88/steamos-force-desktop-mode) |
+| ROG Ally Audio | Customization | [Dragonk/rog-xbox-ally-x-steamos](https://github.com/Dragonk/rog-xbox-ally-x-steamos) |
+| GSF Kedavra | Frame Generation | [wavessevaw/GSF_Kedavra](https://github.com/wavessevaw/GSF_Kedavra) |
+| Blockslot | Customization | [datbird/blockslot](https://github.com/datbird/blockslot) |
+| D2R Collection Tracker | Game Libraries | [DozenTwelve/diablo2-tracker](https://github.com/DozenTwelve/diablo2-tracker) |
+| IMP | Controllers | [niiiitz/imp](https://github.com/niiiitz/imp) |
+| Outbreak Tracker | Utilities | [solitonmedic/Outbreak-Tracker-DX](https://github.com/solitonmedic/Outbreak-Tracker-DX) |
+| Boiler Fingerprint Unlock | Utilities | [FlightDan/FingerprintUnlock-SteamOS](https://github.com/FlightDan/FingerprintUnlock-SteamOS) |
+| SteamOS HA | Utilities | [Pimmeke1989/steamos-ha-decky](https://github.com/Pimmeke1989/steamos-ha-decky) |
+| Decky-Framegen（FSR4） | Frame Generation | [Ren-Amamiya-pixle/decky-framegen-zh](https://github.com/Ren-Amamiya-pixle/decky-framegen-zh) |
+| SteamMediaExport | Utilities | [coyoteshkw/steamdeck-media-export](https://github.com/coyoteshkw/steamdeck-media-export) |
+| Screensaver Ambient Color | Game Libraries | [d-beldy/ambient-screensaver](https://github.com/d-beldy/ambient-screensaver) |
+| WoL Deck | Utilities | [loddi-o/SteamOS-wol-anywhere](https://github.com/loddi-o/SteamOS-wol-anywhere) |
+| USB Ethernet Gadget | Utilities | [philosiraptor/etherdeck](https://github.com/philosiraptor/etherdeck) |
+| DeckyShortcut | Utilities | [JamesDAdams/my-decky-plugins](https://github.com/JamesDAdams/my-decky-plugins) |
+| AutoHDR | Mod Managers | [OldRustyDusty/AutoHDR-SteamOS](https://github.com/OldRustyDusty/AutoHDR-SteamOS) |
+| VBAN Deck | Utilities | [Talsaymaree/vbandeck](https://github.com/Talsaymaree/vbandeck) |
+| Deck Ludusavi | Utilities | [aequis/deck-ludusavi](https://github.com/aequis/deck-ludusavi) |
+| NoSteam Saves | Game Libraries | [aitrace-dev/nosteam-saves-decky](https://github.com/aitrace-dev/nosteam-saves-decky) |
+| ROM Library | Game Libraries | [dbarth/decky-rom-library](https://github.com/dbarth/decky-rom-library) |
+| CryoDeck | Utilities | [dimitaranikov-eng/CryoDeck-releases](https://github.com/dimitaranikov-eng/CryoDeck-releases) |
+| GKinto Download Helper | Utilities | [guodong168888-sudo/gkinto-decky](https://github.com/guodong168888-sudo/gkinto-decky) |
+| DeckScreen | Controllers | [lucasfracaro/deckscreen](https://github.com/lucasfracaro/deckscreen) |
+| Fushi Lens | Utilities | [samutw/fushi-lens](https://github.com/samutw/fushi-lens) |
+| 小黄鸭 | Frame Generation | [zliu9732-hub/decky-lsfg-vk-zh](https://github.com/zliu9732-hub/decky-lsfg-vk-zh) |
+| Whisker | Utilities | [cgrd/whisker](https://github.com/cgrd/whisker) |
+| Decky WhatsApp | Utilities | [db452/DeckyWhatsapp](https://github.com/db452/DeckyWhatsapp) |
+| Deck AI | Utilities | [ivshalenko/codex-steamdeck](https://github.com/ivshalenko/codex-steamdeck) |
 
 ## Where the plugins come from
 

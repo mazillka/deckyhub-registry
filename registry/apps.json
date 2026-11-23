@@ -8291,6 +8291,330 @@
       "detect": { "type": "decky-plugin", "names": ["Pixel Buddy"] },
       "asset": { "include": [".zip"], "exclude": ["source"] },
       "store": true
+    },
+    {
+      "id": "kytyps5-native-beta",
+      "name": "KytyPS5-Native",
+      "description": "PS5 games natively on the BC-250/PS5 under Linux",
+      "repo": "dmorazasanchez/KytyPS5-Native-beta",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["KytyPS5-Native"] },
+      "asset": { "include": ["native"], "exclude": ["source"] }
+    },
+    {
+      "id": "sedotdeck",
+      "name": "SedotDeck",
+      "description": "Obtainium for Steam Deck: keep recomps, PC ports and emulators updated and in your Steam library",
+      "repo": "intermission88/SedotDeck",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["SedotDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-wall",
+      "name": "Live Wallpaper",
+      "description": "Run your own Wallpaper Engine wallpapers behind the Steam Game Mode Home screen — a frontend-only Decky Loader plugin.",
+      "repo": "seatann-dev/decky-wall",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Live Wallpaper"] },
+      "asset": { "include": ["live"], "exclude": ["source"] }
+    },
+    {
+      "id": "vela",
+      "name": "Vela",
+      "description": "FSR 4 for Snapdragon handhelds: a Decky plugin for armadaOS with FSR 4 on the Hexagon NPU, FSR 4 Fast, FSR 3 and SGSR 2",
+      "repo": "zrprod9-cmyk/vela",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["Vela"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "lsfg-vk2-arm64-odin3",
+      "name": "LSFG-VK 2 ARM64",
+      "description": "Self-contained LSFG-VK 2 Decky plugin for AYN Odin 3 ARM64 with live 1X passthrough",
+      "repo": "razoomnik/lsfg-vk2-arm64-odin3",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["LSFG-VK 2 ARM64"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamos-egpu-manager",
+      "name": "eGPU Manager",
+      "description": "Plug-and-play eGPU for SteamOS handhelds: auto-switch Game Mode, per-GPU shader caches, safe disconnect. Decky plugin + Desktop app.",
+      "repo": "avishai0258/steamos-egpu-manager",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["eGPU Manager"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "abl-dualboot",
+      "name": "ABL Dual Boot",
+      "description": "ABL Dual Boot: one-tap Android ⇄ Linux switching on handhelds with the ROCKNIX bootloader.",
+      "repo": "kingsleydon/abl-dualboot",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["ABL Dual Boot"] },
+      "asset": { "include": ["decky"], "exclude": ["source"] }
+    },
+    {
+      "id": "pocket-xr-deck",
+      "name": "Pocket XR",
+      "description": "Pocket XR for Steam Deck: your Deck's apps as windows all around you, and PC VR, on XREAL and VITURE glasses. Free and open source.",
+      "repo": "pocket-xr/pocket-xr-deck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Pocket XR"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamos-force-desktop-mode",
+      "name": "Force Desktop Mode",
+      "description": "Sets Desktop Mode as the default boot session on SteamOS, keeps it that way across reboots and updates, and returns to Game Mode on a...",
+      "repo": "RDv88/steamos-force-desktop-mode",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Force Desktop Mode"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "rog-xbox-ally-x-steamos",
+      "name": "ROG Ally Audio",
+      "description": "SteamOS tweaks for the ASUS ROG Xbox Ally X (RC73XA): Dolby-style audio enhancement on native PipeWire without EasyEffects, WebRTC...",
+      "repo": "Dragonk/rog-xbox-ally-x-steamos",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["ROG Ally Audio"] },
+      "asset": { "include": ["rogallyaudio.zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "gsf-kedavra",
+      "name": "GSF Kedavra",
+      "description": "Independent x2 / x3 frame generation for Steam Deck in Gaming Mode. No Lossless Scaling. No launch command.",
+      "repo": "wavessevaw/GSF_Kedavra",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["GSF Kedavra"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "blockslot",
+      "name": "Blockslot",
+      "description": "Game save sync for the games Steam Cloud does not cover, on a server you own.",
+      "repo": "datbird/blockslot",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Blockslot"] },
+      "asset": { "include": ["decky"], "exclude": ["source"] }
+    },
+    {
+      "id": "diablo2-tracker",
+      "name": "D2R Collection Tracker",
+      "description": "See your whole D2R stash from your own save files: collection progress, where every item is, build gear, mule organizing.",
+      "repo": "DozenTwelve/diablo2-tracker",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["D2R Collection Tracker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "imp",
+      "name": "IMP",
+      "description": "Gamepad-Centric Audio/Video Player for SteamOS (w/decky plugin), Win/MacOS/Linux. Backend Written in Rust",
+      "repo": "niiiitz/imp",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["IMP"] },
+      "asset": { "include": ["decky"], "exclude": ["source"] }
+    },
+    {
+      "id": "outbreak-tracker-dx",
+      "name": "Outbreak Tracker",
+      "description": "An improved tracker for both Resident Evil Outbreak File 1 & 2 English and Japanese games, with support for Windows, MacOS and Linux",
+      "repo": "solitonmedic/Outbreak-Tracker-DX",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Outbreak Tracker"] },
+      "asset": { "include": ["decky"], "exclude": ["source"] }
+    },
+    {
+      "id": "fingerprintunlock-steamos",
+      "name": "Boiler Fingerprint Unlock",
+      "description": "Fingerprint unlock for SteamOS with Decky Loader",
+      "repo": "FlightDan/FingerprintUnlock-SteamOS",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Boiler Fingerprint Unlock"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamos-ha-decky",
+      "name": "SteamOS HA",
+      "description": "Connecting SteamOS with Home Assistant with Decky",
+      "repo": "Pimmeke1989/steamos-ha-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SteamOS HA"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-framegen-zh",
+      "name": "Decky-Framegen（FSR4）",
+      "description": "Decky-Framegen 可直接安装的完整中文插件",
+      "repo": "Ren-Amamiya-pixle/decky-framegen-zh",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["Decky-Framegen（FSR4）"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamdeck-media-export",
+      "name": "SteamMediaExport",
+      "description": "A handy tool for exporting recorded videos and screenshots from your Steam Deck; supports both Decky Loader and desktop mode.",
+      "repo": "coyoteshkw/steamdeck-media-export",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SteamMediaExport"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "ambient-screensaver",
+      "name": "Screensaver Ambient Color",
+      "description": "Custom Steam screensaver + Decky Loader plugin: library banners with ambient color glow, smoothed vignette, and non-Steam game support",
+      "repo": "d-beldy/ambient-screensaver",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Screensaver Ambient Color"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamos-wol-anywhere",
+      "name": "WoL Deck",
+      "description": "A decky loader plugin + server to manage and wake you devices from anywhere",
+      "repo": "loddi-o/SteamOS-wol-anywhere",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["WoL Deck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "etherdeck",
+      "name": "USB Ethernet Gadget",
+      "description": "Plugin for decky on steam deck that enables ethernet usb gadget mode",
+      "repo": "philosiraptor/etherdeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["USB Ethernet Gadget"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "my-decky-plugins",
+      "name": "DeckyShortcut",
+      "description": "Decky Loader plugins for Steam Big Picture: Decky shortcut, SCSKiller bridge, account switching",
+      "repo": "JamesDAdams/my-decky-plugins",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["DeckyShortcut"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "autohdr-steamos",
+      "name": "AutoHDR",
+      "description": "Full, easy to use HDR mode for any SteamOS game.",
+      "repo": "OldRustyDusty/AutoHDR-SteamOS",
+      "category": "Mod Managers",
+      "detect": { "type": "decky-plugin", "names": ["AutoHDR"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "vbandeck",
+      "name": "VBAN Deck",
+      "description": "Stream Steam Deck and Linux audio to Voicemeeter and other VBAN receivers.",
+      "repo": "Talsaymaree/vbandeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["VBAN Deck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deck-ludusavi",
+      "name": "Deck Ludusavi",
+      "description": "Deck Ludusavi is a Decky Loader plugin for Steam Deck that runs Ludusavi save backups from Gaming Mode.",
+      "repo": "aequis/deck-ludusavi",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Deck Ludusavi"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "nosteam-saves-decky",
+      "name": "NoSteam Saves",
+      "description": "Open-source Decky client for NoSteam Saves — non-Steam game cloud saves on Bazzite (developer alpha)",
+      "repo": "aitrace-dev/nosteam-saves-decky",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["NoSteam Saves"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "dbarth-decky-rom-library",
+      "name": "ROM Library",
+      "description": "Play, manage and surface console games in your Steam library",
+      "repo": "dbarth/decky-rom-library",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["ROM Library"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "cryodeck-releases",
+      "name": "CryoDeck",
+      "description": "Releases of CryoDeck (Decky plugin) and CryoBuddy (Windows agent)",
+      "repo": "dimitaranikov-eng/CryoDeck-releases",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["CryoDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "gkinto-decky",
+      "name": "GKinto Download Helper",
+      "description": "SteamOS Decky download helper for user-authorized files",
+      "repo": "guodong168888-sudo/gkinto-decky",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["GKinto Download Helper"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckscreen",
+      "name": "DeckScreen",
+      "description": "Steam Deck como segunda tela e controle do PC Linux estilo Wii U GamePad) - Sunshine + Moonlight + Decky",
+      "repo": "lucasfracaro/deckscreen",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["DeckScreen"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "fushi-lens",
+      "name": "Fushi Lens",
+      "description": "Fushi Lens: Steam Deck (Decky Loader) plugin for screen OCR, lookup and Anki mining with Fushi",
+      "repo": "samutw/fushi-lens",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Fushi Lens"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "zliu9732-hub-decky-lsfg-vk-zh",
+      "name": "小黄鸭",
+      "description": "Renkit Decky LSFG-VK 署名完整中文插件",
+      "repo": "zliu9732-hub/decky-lsfg-vk-zh",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["小黄鸭"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "whisker",
+      "name": "Whisker",
+      "description": "Local push-to-talk speech-to-text for Linux and Steam Deck",
+      "repo": "cgrd/whisker",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Whisker"] },
+      "asset": { "include": ["decky"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckywhatsapp",
+      "name": "Decky WhatsApp",
+      "description": "Decky WhatsApp is a Steam Deck Decky plugin backed by a PC service.",
+      "repo": "db452/DeckyWhatsapp",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky WhatsApp"] },
+      "asset": { "include": ["plugin"], "exclude": ["source"] }
+    },
+    {
+      "id": "codex-steamdeck",
+      "name": "Deck AI",
+      "description": "AI companion for Steam Deck. Chat with Codex in Gaming Mode, review actions, and control your Deck from Mac or PC over SSH.",
+      "repo": "ivshalenko/codex-steamdeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Deck AI"] },
+      "asset": { "include": ["decky"], "exclude": ["source"] }
     }
   ]
 }
