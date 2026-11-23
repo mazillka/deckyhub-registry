@@ -1027,6 +1027,61 @@ python scripts/build_decky_store.py releases.json out/store
 | Whisker | Utilities | [cgrd/whisker](https://github.com/cgrd/whisker) |
 | Decky WhatsApp | Utilities | [db452/DeckyWhatsapp](https://github.com/db452/DeckyWhatsapp) |
 | Deck AI | Utilities | [ivshalenko/codex-steamdeck](https://github.com/ivshalenko/codex-steamdeck) |
+| DeckySyncMyGame | Game Libraries | [9chu/DeckySyncMyGame](https://github.com/9chu/DeckySyncMyGame) |
+| Net Merge | Utilities | [Artur-Nayman/decky-net-merge](https://github.com/Artur-Nayman/decky-net-merge) |
+| HyperDeck manager | Utilities | [Astaoth/Decky-hyperion-manager](https://github.com/Astaoth/Decky-hyperion-manager) |
+| MO2 Universal Launcher | Launch Options | [BlakeASmith/decky-mo2-picker](https://github.com/BlakeASmith/decky-mo2-picker) |
+| Sony Headphones | Utilities | [ChesterFritz/decky-sony-headphones](https://github.com/ChesterFritz/decky-sony-headphones) |
+| steamweblauncher | Game Libraries | [FlavioRoso/steamweblauncher](https://github.com/FlavioRoso/steamweblauncher) |
+| Last Epoch Companion | Utilities | [FollenPP/lastEpoch](https://github.com/FollenPP/lastEpoch) |
+| DeckySense | Controllers | [Heric-Olier/DeckySense](https://github.com/Heric-Olier/DeckySense) |
+| Decky Save Game Savior | Utilities | [I3eyonder/decky-save-game-savior](https://github.com/I3eyonder/decky-save-game-savior) |
+| Hardware Monitor | Utilities | [JamesNMartin/decky-hardware-monitor](https://github.com/JamesNMartin/decky-hardware-monitor) |
+| HoYoDeck | Launch Options | [Java-Sama/HoYoDeck](https://github.com/Java-Sama/HoYoDeck) |
+| Prystanok | Performance | [Ka3u6y6a/decky-prystanok](https://github.com/Ka3u6y6a/decky-prystanok) |
+| Alt_Shift | Utilities | [Kowalski-coder/Alt_Shift](https://github.com/Kowalski-coder/Alt_Shift) |
+| Steam Controller Manager | Controllers | [Leseratte10/decky-steam-controller-manager](https://github.com/Leseratte10/decky-steam-controller-manager) |
+| Gamecube driver | Utilities | [Lisuccia20/gamecube-nso-driver-for-steamDeck](https://github.com/Lisuccia20/gamecube-nso-driver-for-steamDeck) |
+| Decky Privilege Escalation | Utilities | [MageJohn/decky-privilege-escalation](https://github.com/MageJohn/decky-privilege-escalation) |
+| DeckyScripts | Utilities | [MaybeAffan/DeckyScripts](https://github.com/MaybeAffan/DeckyScripts) |
+| DeckPiP | Utilities | [NelleYn/Steamdeck-Plugins](https://github.com/NelleYn/Steamdeck-Plugins) |
+| Recent Games To Library | Game Libraries | [ParabellumPony/RecentGamesToLibrary_Decky](https://github.com/ParabellumPony/RecentGamesToLibrary_Decky) |
+| Git Sync | Utilities | [PeakKS/decky-git-save](https://github.com/PeakKS/decky-git-save) |
+| LeGo2 Fan Control | Performance | [Rodpad/LeGo2-Fan-Control](https://github.com/Rodpad/LeGo2-Fan-Control) |
+| Moonbeam | Utilities | [Sabissimo/decky-moonbeam](https://github.com/Sabissimo/decky-moonbeam) |
+| DeckShare | Utilities | [SmugZombie/DeckShare-DeckyPlugin](https://github.com/SmugZombie/DeckShare-DeckyPlugin) |
+| Library Hub | Game Libraries | [TheRoben-Dev/Decky-Library](https://github.com/TheRoben-Dev/Decky-Library) |
+| DLP-Test | Utilities | [chuanhao01/DLP-test](https://github.com/chuanhao01/DLP-test) |
+| Launch Options Manager | Launch Options | [danielcamilo1/decky-launch-options-manager](https://github.com/danielcamilo1/decky-launch-options-manager) |
+| DeckSettings | Performance | [davocarli/sharedeck-y](https://github.com/davocarli/sharedeck-y) |
+| Decky Equalizer | Utilities | [dlavia/decky-equalizer](https://github.com/dlavia/decky-equalizer) |
+| Sidequest | Utilities | [gcysne/sidequest](https://github.com/gcysne/sidequest) |
+| Screen Recorder | Utilities | [gomburger/decky-screen-recorder](https://github.com/gomburger/decky-screen-recorder) |
+| Hangulogame Patcher | Utilities | [hangulogame/hangulogame-decky-patcher-release](https://github.com/hangulogame/hangulogame-decky-patcher-release) |
+| DeckyFileBrowser | Utilities | [heydemoura/decky-filebrowser-plugin](https://github.com/heydemoura/decky-filebrowser-plugin) |
+| decky-nutstore | Utilities | [jmac1990cn/decky-nutstore](https://github.com/jmac1990cn/decky-nutstore) |
+| Overscan Safe Area | Utilities | [jnitafan/overscan-fix](https://github.com/jnitafan/overscan-fix) |
+| RemotePlayWhatever | Utilities | [joamjoamjoam/RemotePlayWhatever](https://github.com/joamjoamjoam/RemotePlayWhatever) |
+| Decky alarm | Utilities | [juansturla/decky-alarm-plugin](https://github.com/juansturla/decky-alarm-plugin) |
+| Achievo | Game Libraries | [kromossomom-debug/decky-achievo](https://github.com/kromossomom-debug/decky-achievo) |
+| Helix Deck | Utilities | [ks692/dlss-decky](https://github.com/ks692/dlss-decky) |
+| Spotify connect speaker | Utilities | [lukasvdberk/decky-spotify-connect-speaker](https://github.com/lukasvdberk/decky-spotify-connect-speaker) |
+| DeS Checkpoints | Utilities | [marcodallagatta/decky-demons-souls-save-restore](https://github.com/marcodallagatta/decky-demons-souls-save-restore) |
+| Trailer TV | Performance | [mdeguzis/decky-trailer-tv](https://github.com/mdeguzis/decky-trailer-tv) |
+| 命令管理器 | Launch Options | [mhhf800/Deck-Command-Manager](https://github.com/mhhf800/Deck-Command-Manager) |
+| PlayerCount | Utilities | [miva2/decky-playercount](https://github.com/miva2/decky-playercount) |
+| Decky OptiScaler Nightly | Frame Generation | [olexandrger/decky-optiscaler-nightly](https://github.com/olexandrger/decky-optiscaler-nightly) |
+| HLTB Sync for Deck | Utilities | [palharesf/decky-hltb-sync](https://github.com/palharesf/decky-hltb-sync) |
+| Store Proxy | Utilities | [paulmiro/decky-store-proxy](https://github.com/paulmiro/decky-store-proxy) |
+| Flugdiggi | Utilities | [paulmiro/flugdiggi](https://github.com/paulmiro/flugdiggi) |
+| ROGAllyBios | Utilities | [pixeldins/ROGAllyBios](https://github.com/pixeldins/ROGAllyBios) |
+| PC On Off | Utilities | [proilyxa/deck-pc-on-off](https://github.com/proilyxa/deck-pc-on-off) |
+| Wishlist | Utilities | [scatteredbra1n/decky-wishlist](https://github.com/scatteredbra1n/decky-wishlist) |
+| TDP Tuner | Performance | [sidharthify/DeckyTDPTuner](https://github.com/sidharthify/DeckyTDPTuner) |
+| NetProfile Switcher | Utilities | [sixiaolong1117/NetProfile-Switcher-for-Decky](https://github.com/sixiaolong1117/NetProfile-Switcher-for-Decky) |
+| BC-250 Sleep | Utilities | [superkeka/bc250-sleep](https://github.com/superkeka/bc250-sleep) |
+| Non-Steam Matcher | Game Libraries | [tmghd272/decky-non-steam-matcher](https://github.com/tmghd272/decky-non-steam-matcher) |
+| DiscDeck | Controllers | [zany130/DiscDeck](https://github.com/zany130/DiscDeck) |
 
 ## Where the plugins come from
 
