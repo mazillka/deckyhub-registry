@@ -9101,6 +9101,15 @@
       "category": "Controllers",
       "detect": { "type": "decky-plugin", "names": ["DiscDeck"] },
       "asset": { "include": ["discdeck.zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-native-home",
+      "name": "Native Home",
+      "description": "Native Steam Deck Home logos, Play/Settings quick actions, and seamless game page transitions with CSS Loader theme support.",
+      "repo": "qualbyyy/decky-native-home",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Native Home"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }

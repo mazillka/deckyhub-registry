@@ -1081,6 +1081,7 @@ python scripts/build_decky_store.py releases.json out/store
 | BC-250 Sleep | Utilities | [superkeka/bc250-sleep](https://github.com/superkeka/bc250-sleep) |
 | Non-Steam Matcher | Game Libraries | [tmghd272/decky-non-steam-matcher](https://github.com/tmghd272/decky-non-steam-matcher) |
 | DiscDeck | Controllers | [zany130/DiscDeck](https://github.com/zany130/DiscDeck) |
+| Native Home | Customization | [qualbyyy/decky-native-home](https://github.com/qualbyyy/decky-native-home) |
 
 ## Where the plugins come from
 
