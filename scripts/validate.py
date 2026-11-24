@@ -311,7 +311,16 @@ def github_problems(app: dict, repo: dict | None = None) -> tuple[list[str], lis
             continue
         if not assets[0].get("digest"):
             warnings.append(f"{where}: {assets[0]['name']} has no SHA-256 digest; Decky installs it unverified")
-        manifest, package = zip_plugin_files(assets[0])
+        try:
+            manifest, package = zip_plugin_files(assets[0])
+        except zipfile.BadZipFile:
+            # A rolling pre-release (a new ZIP name for every commit) replaces its file between GitHub's listing and
+            # this read, and the old URL answers with a page, not a ZIP. With a stable release beside it that is
+            # only worth a warning: the next run reads the new file.
+            if channel == "stable" or not channels["stable"]:
+                raise
+            warnings.append(f"{where}: {assets[0]['name']} is not a ZIP any more (replaced while checking?)")
+            continue
         name = (manifest or {}).get("name")
         if name is None:
             errors.append(f"{where}: {assets[0]['name']} has no plugin.json")

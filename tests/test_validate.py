@@ -22,6 +22,29 @@ def release(tag, published, prerelease=False, draft=False, assets=("plugin.zip",
 
 
 class ValidateTests(unittest.TestCase):
+    def test_a_rolling_pre_release_replaced_while_checking_is_a_warning_when_a_stable_release_exists(self):
+        repo = {
+            "full_name": "o/a",
+            "releases": [
+                release("v1", "2026-01-02T00:00:00Z", assets=("plugin.zip",)),
+                release("dev", "2026-01-03T00:00:00Z", prerelease=True, assets=("plugin-abc1234.zip",)),
+            ],
+        }
+
+        def read(asset):
+            if asset["name"] == "plugin-abc1234.zip":
+                raise zipfile.BadZipFile("File is not a zip file")
+            return {"name": "A"}, {}
+
+        with mock.patch.object(validate, "zip_plugin_files", read):
+            errors, warnings = validate.github_problems(app(include=("plugin",)), repo)
+        self.assertEqual(errors, [])
+        self.assertTrue(any("plugin-abc1234.zip is not a ZIP any more" in warning for warning in warnings), warnings)
+        # The stable release's ZIP still has to be a ZIP.
+        with mock.patch.object(validate, "zip_plugin_files", side_effect=zipfile.BadZipFile("File is not a zip file")):
+            with self.assertRaises(zipfile.BadZipFile):
+                validate.github_problems(app(include=("plugin",)), repo)
+
     def test_static_errors_catch_clashing_ids_repos_and_detect_names(self):
         self.assertEqual(static_errors([app(), app(id="b", repo="o/b", names=("B",))]), [])
         self.assertEqual(static_errors([{**app(), "upstream": "orig/a"}]), [])
