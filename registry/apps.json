@@ -8486,6 +8486,7 @@
       "name": "DeckyShortcut",
       "description": "Decky Loader plugins for Steam Big Picture: Decky shortcut, SCSKiller bridge, account switching",
       "repo": "JamesDAdams/my-decky-plugins",
+      "releaseTagInclude": "DeckyShortcut",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["DeckyShortcut"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
