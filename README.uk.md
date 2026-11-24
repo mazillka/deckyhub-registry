@@ -123,7 +123,7 @@ CI запускається для кожного pull request, при push у `
   GITHUB_TOKEN=$(gh auth token) python scripts/validate.py
   ```
 - **Вебсайт:** усе на deckyhub.com, який будує mazillka/deckyhub-plugin: [плагіни](https://deckyhub.com/plugins/), [як долучитися](https://deckyhub.com/uk/contribute/) і [редактор реєстру](https://deckyhub.com/uk/contribute/editor.html). Власного вебсайту в цього репозиторію немає.
-- **Тести:** `python -m unittest discover -s tests` покриває скрипти, а також перевіряє, що `apps.json` лишається меншим за 512 КБ, які приймає DeckyHub 3.0.0 і старіші, що скрипт сторінки каталогу розбирається й що `stats.json` зберігає кожне поле й попередження, які читає запущений людьми DeckyHub (відносно `main` deckyhub-plugin, який CI клонує).
+- **Тести:** `python -m unittest discover -s tests` покриває скрипти, а також перевіряє, що `apps.json` лишається значно меншим за 4 МБ, які приймає DeckyHub (3.0.0 і старіші, що зупинялися на 512 КБ, більше не враховуються), що скрипт сторінки каталогу розбирається й що `stats.json` зберігає кожне поле й попередження, які читає запущений людьми DeckyHub (відносно `main` deckyhub-plugin, який CI клонує).
 
 ## Власний реєстр
 

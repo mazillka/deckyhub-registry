@@ -1159,7 +1159,7 @@ CI runs on every pull request, on pushes to `main` and `develop`, and weekly bec
   GITHUB_TOKEN=$(gh auth token) python scripts/validate.py
   ```
 - **Website:** everything is on deckyhub.com, built by mazillka/deckyhub-plugin: the [plugins](https://deckyhub.com/plugins/), [how to contribute](https://deckyhub.com/contribute/) and the [registry editor](https://deckyhub.com/contribute/editor.html). This repository has no website of its own.
-- **Tests:** `python -m unittest discover -s tests` covers the scripts, and also checks that `apps.json` stays under the 512 KB DeckyHub 3.0.0 and older accept, that the catalog page's script parses, and that `stats.json` keeps every field and warning the DeckyHub people run reads (against deckyhub-plugin's `main`, which CI checks out).
+- **Tests:** `python -m unittest discover -s tests` covers the scripts, and also checks that `apps.json` stays well under the 4 MB DeckyHub accepts (3.0.0 and older, which stopped at 512 KB, are no longer kept in step), that the catalog page's script parses, and that `stats.json` keeps every field and warning the DeckyHub people run reads (against deckyhub-plugin's `main`, which CI checks out).
 
 ## Taking a plugin off DeckyHub, or sending it to the Decky store
 

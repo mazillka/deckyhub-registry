@@ -52,11 +52,11 @@ class RegistryFileTests(unittest.TestCase):
         self.assertEqual(shared, {}, "these plugins share a description")
 
     def test_apps_json_fits_every_released_deckyhub(self):
-        # DeckyHub up to 3.0.0 refuses a registry over 512 KB (MAX_REMOTE_REGISTRY_BYTES in its
-        # main.py; newer releases allow 4 MB) and keeps its cached list, and installed copies
-        # never change. Stay under it with room for a few days of discovery PRs.
+        # DeckyHub refuses a registry over 4 MB (MAX_REMOTE_REGISTRY_BYTES in its registry.py) and keeps its
+        # cached list. Releases up to 3.0.0 stopped at 512 KB; the project dropped them once the list passed it,
+        # so they keep the list they had. Stay well under 4 MB, with room for months of discovery PRs.
         size = (ROOT / "registry" / "apps.json").stat().st_size
-        self.assertLess(size, 512 * 1024 - 64 * 1024, f"apps.json is {size} bytes, close to the 512 KB installed DeckyHub accepts")
+        self.assertLess(size, 3 * 1024 * 1024, f"apps.json is {size} bytes, close to the 4 MB DeckyHub accepts")
 
 
 @unittest.skipUnless((PLUGIN / "src" / "types.ts").exists(), "needs a deckyhub-plugin checkout")
