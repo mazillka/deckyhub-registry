@@ -2275,7 +2275,7 @@
     {
       "id": "decky-tools",
       "name": "Decky Tools",
-      "description": "SteamOS 游戏模式工具箱 Decky 插件：Proton 运行时下载管理等",
+      "description": "Toolbox for SteamOS Game Mode: manage Proton runtime downloads and more.",
       "repo": "jinzhongjia/decky-tools",
       "category": "Launch Options",
       "detect": { "type": "decky-plugin", "names": ["Decky Tools"] },
@@ -2797,7 +2797,7 @@
     {
       "id": "steamproxy",
       "name": "SteamProxy",
-      "description": "Steam Deck Decky 插件：香港节点分流加速，只代理被墙站点，国内与游戏下载走直连",
+      "description": "Routes only blocked sites through a Hong Kong node; domestic sites and game downloads go direct.",
       "repo": "chenpx976/steamproxy",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["SteamProxy"] },
@@ -2905,7 +2905,7 @@
     {
       "id": "freedeck-plugin-enhancements",
       "name": "Freedeck",
-      "description": "通过局域网在设备间传输文件到 Steam Deck",
+      "description": "Transfers files to the Steam Deck from other devices over the local network.",
       "repo": "YunGuiHe/freedeck-plugin-enhancements",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Freedeck"] },
@@ -3499,7 +3499,7 @@
     {
       "id": "dsh-deck-pet",
       "name": "DSH 鲸鱼娘桌宠",
-      "description": "DSH（DeepSeek Harness）+ 鲸鱼娘 Live2D 桌宠的 Steam Deck 插件：Game Mode 里截图问攻略、语音提问、桌宠悬浮，语气由她本体人设驱动。A Decky Loader plugin that brings DSH and the...",
+      "description": "Live2D desktop pet with the DSH (DeepSeek Harness) assistant: ask about a game from a screenshot or by voice in Game Mode.",
       "repo": "228co/dsh-deck-pet",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["DSH 鲸鱼娘桌宠"] },
@@ -3778,7 +3778,7 @@
     {
       "id": "decky-speed-test-china",
       "name": "decky-speed-test-China",
-      "description": "面向 Steam Deck 和 SteamOS 中文用户的网络测速工具，可直接在游戏模式（Game Mode）下进行测速，无需切换到桌面模式。支持中国科学技术大学（中科大）、南京大学、南京航空航天大学三大高校测速节点，更准确反映中国大陆网络环境。",
+      "description": "Network speed test for Chinese users, run in Game Mode with nodes at three universities that reflect mainland China's network.",
       "repo": "hayschan/decky-speed-test-China",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["decky-speed-test-China"] },
@@ -4012,7 +4012,7 @@
     {
       "id": "deckyally",
       "name": "DeckyAlly",
-      "description": "ROG Ally X 在 SteamOS 下的唤醒手柄恢复、摇杆灯光控制与诊断。",
+      "description": "Controller wake recovery, joystick lighting control and diagnostics for the ROG Ally X on SteamOS.",
       "repo": "XiaoMinghui/DeckyAlly",
       "category": "Controllers",
       "detect": { "type": "decky-plugin", "names": ["DeckyAlly"] },
@@ -4093,7 +4093,7 @@
     {
       "id": "gined44-vpn-decky",
       "name": "vpn-decky",
-      "description": "VPN-клиент для Steam Deck (Decky Loader) на sing-box: vless, hysteria2, trojan",
+      "description": "VPN client for the Steam Deck built on sing-box, supporting vless, hysteria2 and trojan.",
       "repo": "Gined44/vpn-decky",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["vpn-decky"] },
@@ -4291,7 +4291,7 @@
     {
       "id": "decky-guide",
       "name": "Decky Guide",
-      "description": "在 Decky 侧栏中自动查找并阅读当前游戏的游民星空攻略。",
+      "description": "Finds and shows the current game's GamerSky walkthrough in the Decky sidebar.",
       "repo": "Logic-mle/decky-guide",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decky Guide"] },
@@ -4877,7 +4877,7 @@
     {
       "id": "decky-ai-assistant",
       "name": "AI 助手",
-      "description": "Steamdeck上的AI对话助手",
+      "description": "AI chat assistant for the Steam Deck.",
       "repo": "YunXi-X/Decky-ai-assistant",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["AI 助手"] },
@@ -5186,7 +5186,7 @@
     {
       "id": "v-deck",
       "name": "V-Deck",
-      "description": "Decky VPN manager / Менеджер VPN для Steam Deck: AmneziaWG, WireGuard, OpenVPN, Xray Reality, Amnezia Premium. v0.2.0 public preview.",
+      "description": "VPN manager for the Steam Deck: AmneziaWG, WireGuard, OpenVPN, Xray Reality and Amnezia Premium (public preview).",
       "repo": "GoldDGaro/V-Deck",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["V-Deck"] },
@@ -5348,7 +5348,7 @@
     {
       "id": "decky-eclipse",
       "name": "Decky Eclipse",
-      "description": "Steam Deck용 ECLIPSE 최적화 모드 58개 자동 다운로드·설치·백업·복구 Decky 플러그인 (한국어)",
+      "description": "Downloads, installs, backs up and restores 58 ECLIPSE optimization mods for the Steam Deck (Korean).",
       "repo": "sunim87/decky-eclipse",
       "category": "Mod Managers",
       "detect": { "type": "decky-plugin", "names": ["Decky Eclipse"] },
@@ -5827,7 +5827,7 @@
     {
       "id": "decky-uu-accelerator",
       "name": "UU加速器",
-      "description": "面向 ArmadaOS 和 ArmadaOS Freedom 的第三方 UU 加速器 Decky 插件，通过 FEX 运行官方 Steam Deck 核心，支持核心安装、手机扫码绑定与加速状态查看。",
+      "description": "Third-party UU Accelerator for ArmadaOS: runs the official Steam Deck core through FEX, with QR-code binding and status.",
       "repo": "ArmadaOS-Freedom/decky-uu-accelerator",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["UU加速器"] },
@@ -6503,7 +6503,7 @@
     {
       "id": "deckymus",
       "name": "DeckyMus",
-      "description": "Музыкальный плеер с возможностью воспроизведения и скачивания музыкальных треков со стриминговых площадок специально для Decky Loader Россия",
+      "description": "Music player that plays and downloads tracks from streaming services, made for Decky Loader users in Russia.",
       "repo": "Kowalski-coder/DeckyMus",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["DeckyMus"] },
@@ -6899,7 +6899,7 @@
     {
       "id": "decky-hangul-ime",
       "name": "Hangul IME Bridge",
-      "description": "Steam 가상 키보드와 물리 키보드의 한글 입력을 IME 또는 붙여넣기 방식으로 게임에 전달합니다.",
+      "description": "Passes Korean (Hangul) input from Steam's on-screen keyboard and physical keyboards to games, through an IME or by pasting.",
       "repo": "gomburger/decky-hangul-ime",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Hangul IME Bridge"] },
@@ -6971,7 +6971,7 @@
     {
       "id": "koda-ai-plugin",
       "name": "Koda AI",
-      "description": "Koda AI — плагин для установки десктопного клиента Kodacode для Steam Deck с поддержкой режима рабочего стола и Game Mode.",
+      "description": "Installs the Kodacode desktop client on the Steam Deck, with Desktop Mode and Game Mode support.",
       "repo": "Kowalski-coder/koda-ai-plugin",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Koda AI"] },
@@ -7016,7 +7016,7 @@
     {
       "id": "steamdeck-display",
       "name": "DeckDisplay",
-      "description": "Превращает Steam Deck в проводной низколатентный сенсорный монитор для ПК по USB Type-C.",
+      "description": "Turns the Steam Deck into a wired, low-latency touchscreen monitor for a PC over USB Type-C.",
       "repo": "Roskud/steamdeck-display",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["DeckDisplay"] },
@@ -7034,7 +7034,7 @@
     {
       "id": "sam-for-decky-loader",
       "name": "SAM",
-      "description": "Steam Achievement Manager (SAM) для Steam Deck с интеллектуальной защитой от бана.",
+      "description": "Steam Achievement Manager (SAM) for the Steam Deck, with smart protection against bans.",
       "repo": "Kowalski-coder/SAM-for-Decky-Loader",
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["SAM"] },
@@ -7070,7 +7070,7 @@
     {
       "id": "decky-lsfg-vk-zh",
       "name": "小黄鸭2.0",
-      "description": "Decky LSFG-VK 可直接安装的完整中文插件",
+      "description": "Complete, ready-to-install Chinese-language build of Decky LSFG-VK.",
       "repo": "Ren-Amamiya-pixle/decky-lsfg-vk-zh",
       "category": "Frame Generation",
       "detect": { "type": "decky-plugin", "names": ["小黄鸭2.0"] },
@@ -7088,7 +7088,7 @@
     {
       "id": "currency-converter",
       "name": "Currency Converter",
-      "description": "Конвертер цен в магазине Steam на выбранную валюту по текущему или ручному курсу.",
+      "description": "Converts Steam store prices to a chosen currency at the current or a manual exchange rate.",
       "repo": "S0S1S0CHKA/currency-converter",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Currency Converter"] },
@@ -7232,7 +7232,7 @@
     {
       "id": "decky-external-storage-guard",
       "name": "External Storage Guard",
-      "description": "面向 SteamOS 掌机的 Decky Loader 外部存储管理与诊断插件",
+      "description": "External storage management and diagnostics for SteamOS handhelds.",
       "repo": "ohxiaoguang/decky-external-storage-guard",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["External Storage Guard"] },
@@ -7385,7 +7385,7 @@
     {
       "id": "patchhub",
       "name": "PatchHub",
-      "description": "PatchHub · 查找、下载并安装 Steam 游戏的补丁，支持 Windows 与 Steam Deck。",
+      "description": "Finds, downloads and installs patches for Steam games, on Windows and Steam Deck.",
       "repo": "Mabinogi-Cichol/patchhub",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["PatchHub"] },
@@ -7430,7 +7430,7 @@
     {
       "id": "wowdeck-input",
       "name": "WoWDeck Input",
-      "description": "在 Steam Deck 游戏模式下玩《魔兽世界》：“无限”时，支持中文语音输入+外接键盘",
+      "description": "Play World of Warcraft in Steam Deck Game Mode, with Chinese voice input and external keyboard support.",
       "repo": "iCodyYang/WoWDeck-Input",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["WoWDeck Input"] },
@@ -7799,7 +7799,7 @@
     {
       "id": "deckgram",
       "name": "DeckGram",
-      "description": "Telegram на Steam Deck: Decky-плагин, вход в свой аккаунт по MTProto (Telethon), чаты, отправка и уведомления о новых сообщениях прямо в...",
+      "description": "Telegram on the Steam Deck: sign in over MTProto (Telethon), read chats, send messages and get notifications in Game Mode.",
       "repo": "bodia229/DeckGram",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["DeckGram"] },
@@ -7970,7 +7970,7 @@
     {
       "id": "decky-poe-launcher",
       "name": "Decky POE Launcher",
-      "description": "Steam Deck용 POE 런처 설치·제거와 Steam 라이브러리 이미지 자동 등록 Decky 플러그인",
+      "description": "Installs and removes the POE launcher on the Steam Deck and registers its Steam library images automatically.",
       "repo": "sunim87/decky-poe-launcher",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Decky POE Launcher"] },
@@ -8439,7 +8439,7 @@
     {
       "id": "decky-framegen-zh",
       "name": "Decky-Framegen（FSR4）",
-      "description": "Decky-Framegen 可直接安装的完整中文插件",
+      "description": "Complete, ready-to-install Chinese-language build of Decky-Framegen.",
       "repo": "Ren-Amamiya-pixle/decky-framegen-zh",
       "category": "Frame Generation",
       "detect": { "type": "decky-plugin", "names": ["Decky-Framegen（FSR4）"] },
@@ -8575,7 +8575,7 @@
     {
       "id": "zliu9732-hub-decky-lsfg-vk-zh",
       "name": "小黄鸭",
-      "description": "Renkit Decky LSFG-VK 署名完整中文插件",
+      "description": "Complete Chinese-language build of Decky LSFG-VK, with Renkit's credit.",
       "repo": "zliu9732-hub/decky-lsfg-vk-zh",
       "category": "Frame Generation",
       "detect": { "type": "decky-plugin", "names": ["小黄鸭"] },
@@ -8701,7 +8701,7 @@
     {
       "id": "hoyodeck",
       "name": "HoYoDeck",
-      "description": "🎮 Steam Deck 米哈游游戏管理器 — Decky Loader 插件",
+      "description": "Manager for HoYoverse (miHoYo) games on the Steam Deck.",
       "repo": "Java-Sama/HoYoDeck",
       "category": "Launch Options",
       "detect": { "type": "decky-plugin", "names": ["HoYoDeck"] },
@@ -8719,7 +8719,7 @@
     {
       "id": "alt-shift",
       "name": "Alt_Shift",
-      "description": "Исправляет ввод русских символов и смену раскладки на экранной клавиатуре Steam в Wayland и Game Mode.",
+      "description": "Fixes Russian character input and layout switching on Steam's on-screen keyboard in Wayland and Game Mode.",
       "repo": "Kowalski-coder/Alt_Shift",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["Alt_Shift"] },
@@ -8899,7 +8899,7 @@
     {
       "id": "decky-nutstore",
       "name": "decky-nutstore",
-      "description": "Sync Steam Deck game saves to Nutstore (坚果云) WebDAV — a China-friendly cloud backup plugin for Decky.",
+      "description": "Sync Steam Deck game saves to Nutstore (Jianguoyun) WebDAV, a China-friendly cloud backup plugin for Decky.",
       "repo": "jmac1990cn/decky-nutstore",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["decky-nutstore"] },
@@ -9133,7 +9133,7 @@
     {
       "id": "greenscaler",
       "name": "GreenScaler",
-      "description": "Instala e mantém atualizado o OptiScaler com ANR FG (Apex Neural Rendering) nos jogos Proton, com FSR 4 por padrão.",
+      "description": "Installs and keeps OptiScaler up to date with ANR FG (Apex Neural Rendering) in Proton games, with FSR 4 by default.",
       "repo": "vaporgreen/GreenScaler",
       "category": "Frame Generation",
       "detect": { "type": "decky-plugin", "names": ["GreenScaler"] },
