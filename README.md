@@ -1139,6 +1139,10 @@ python scripts/build_decky_store.py releases.json out/store
 | AutoCheatDeck | Launch Options | [JoeysRetroHandhelds/AutoCheatDeck](https://github.com/JoeysRetroHandhelds/AutoCheatDeck) |
 | MetaDeck Plus | Game Libraries | [Schrofingerbib/MetaDeck](https://github.com/Schrofingerbib/MetaDeck) |
 | 3D Game Cases | Customization | [JDLKMR/Decky-3D-Game-Cases](https://github.com/JDLKMR/Decky-3D-Game-Cases) |
+| Quick Walkthrough | Utilities | [vumaquan/decky-quick-walkthrough](https://github.com/vumaquan/decky-quick-walkthrough) |
+| Decky Smooth Frames | Frame Generation | [lumen-tools/Decky-Smooth-Frames](https://github.com/lumen-tools/Decky-Smooth-Frames) |
+| Live Translator | Utilities | [Veter1904/decky-live-translator](https://github.com/Veter1904/decky-live-translator) |
+| NexonPlug | Utilities | [sunim87/decky-nexonplug](https://github.com/sunim87/decky-nexonplug) |
 
 ## Where the plugins come from
 
