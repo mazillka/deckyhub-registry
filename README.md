@@ -1105,6 +1105,7 @@ python scripts/build_decky_store.py releases.json out/store
 | Library Doctor | Game Libraries | [nch0083/decky-library-doctor](https://github.com/nch0083/decky-library-doctor) |
 | Continue | Game Libraries | [Alexsander720/continue](https://github.com/Alexsander720/continue) |
 | Custom Loader Shuffle | Customization | [mrkingjaydee/custom-loader-shuffle](https://github.com/mrkingjaydee/custom-loader-shuffle) |
+| Twinpad | Utilities | [Kanin-020/decky-twinpad](https://github.com/Kanin-020/decky-twinpad) |
 
 ## Where the plugins come from
 

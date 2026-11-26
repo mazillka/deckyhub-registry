@@ -9318,6 +9318,15 @@
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["Custom Loader Shuffle"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-twinpad",
+      "name": "Twinpad",
+      "description": "Pairing QR code, status, start, stop and autostart for a Twinpad server. Needs that server on the same device.",
+      "repo": "Kanin-020/decky-twinpad",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Twinpad"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
