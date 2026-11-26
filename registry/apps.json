@@ -9300,6 +9300,24 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["Library Doctor"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "continue",
+      "name": "Continue",
+      "description": "Shows where you left off on a game page, read offline from your save files, for supported games. Public alpha.",
+      "repo": "Alexsander720/continue",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Continue"] },
+      "asset": { "include": ["continue-deck"], "exclude": ["source"] }
+    },
+    {
+      "id": "custom-loader-shuffle",
+      "name": "Custom Loader Shuffle",
+      "description": "Shuffles your own GIF loading animations between game launches. Needs CSS Loader and its Custom Loader theme.",
+      "repo": "mrkingjaydee/custom-loader-shuffle",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Custom Loader Shuffle"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }

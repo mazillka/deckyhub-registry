@@ -1103,6 +1103,8 @@ python scripts/build_decky_store.py releases.json out/store
 | DeckyDSH | Utilities | [Qiming-Liu/DeckyDSH](https://github.com/Qiming-Liu/DeckyDSH) |
 | SaveTether | Utilities | [carlocgc/SaveTether-Decky](https://github.com/carlocgc/SaveTether-Decky) |
 | Library Doctor | Game Libraries | [nch0083/decky-library-doctor](https://github.com/nch0083/decky-library-doctor) |
+| Continue | Game Libraries | [Alexsander720/continue](https://github.com/Alexsander720/continue) |
+| Custom Loader Shuffle | Customization | [mrkingjaydee/custom-loader-shuffle](https://github.com/mrkingjaydee/custom-loader-shuffle) |
 
 ## Where the plugins come from
 
