@@ -1089,8 +1089,8 @@ python scripts/build_decky_store.py releases.json out/store
 | Button Glyphs | Controllers | [evertonfxavier/button-glyphs](https://github.com/evertonfxavier/button-glyphs) |
 | Decky Mihomo | Utilities | [tishelka/decky-mihomo](https://github.com/tishelka/decky-mihomo) |
 | Claude Voice | Utilities | [o-raskin/decky-claude-voice](https://github.com/o-raskin/decky-claude-voice) |
-| CreamDeck | Game Libraries | [Qiming-Liu/CreamDeck](https://github.com/Qiming-Liu/CreamDeck) |
-| DeckyGCM | Game Libraries | [Qiming-Liu/Decky-Game-Cheats-Manager](https://github.com/Qiming-Liu/Decky-Game-Cheats-Manager) |
+| CreamDeck | Mod Managers | [Qiming-Liu/CreamDeck](https://github.com/Qiming-Liu/CreamDeck) |
+| DeckyGCM | Launch Options | [Qiming-Liu/Decky-Game-Cheats-Manager](https://github.com/Qiming-Liu/Decky-Game-Cheats-Manager) |
 | Escaladores | Frame Generation | [Nicothyna/Escaladores](https://github.com/Nicothyna/Escaladores) |
 | Uber Watch | Utilities | [ubermoc/Uber-Watch](https://github.com/ubermoc/Uber-Watch) |
 | Cover Overlayer | Game Libraries | [JDLKMR/Decky-Cover-Overlayer](https://github.com/JDLKMR/Decky-Cover-Overlayer) |
