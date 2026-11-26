@@ -17,8 +17,13 @@ class ReleaseContractTests(unittest.TestCase):
     def test_plugin_and_registry_agree_on_release_selection(self):
         filters = PLUGIN / "src" / "releaseFilters.ts"
         version = PLUGIN / "src" / "version.ts"
-        if not filters.exists() or not version.exists() or not shutil.which("node"):
-            self.skipTest("plugin release filters or Node are unavailable")
+        releases = PLUGIN / "src" / "releases.ts"
+        # A plugin from before releaseFilters.ts keeps the filters inside releases.ts.
+        if releases.exists() and "function matchingAssets(" in releases.read_text(encoding="utf-8"):
+            self.skipTest("this plugin version has no separate release filters")
+        # CI names the plugin, so anything missing there fails below instead of skipping.
+        if "DECKYHUB_PLUGIN" not in os.environ and (not PLUGIN.exists() or not shutil.which("node")):
+            self.skipTest("no plugin checkout or Node")
         cases = [
             {"app": {"asset": {"include": ["plugin"], "exclude": ["source"]}}, "releases": [
                 {"tag_name": "v1", "published_at": "2026-01-01", "assets": [{"name": "Plugin.zip"}]},

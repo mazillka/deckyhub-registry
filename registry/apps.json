@@ -6596,7 +6596,7 @@
       "description": "Lossless Scaling frame generation on Steam Deck with expanded Flatpak support and a base FPS cap.",
       "repo": "Ozozuz/decky-lsfg-vk",
       "category": "Frame Generation",
-      "detect": { "type": "decky-plugin", "names": ["Decky LSFG-VK - Ozozuz's Fork"] },
+      "detect": { "type": "decky-plugin", "names": ["Decky LSFG-VK - Ozozuz", "Decky LSFG-VK - Ozozuz's Fork"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
