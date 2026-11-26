@@ -1106,6 +1106,39 @@ python scripts/build_decky_store.py releases.json out/store
 | Continue | Game Libraries | [Alexsander720/continue](https://github.com/Alexsander720/continue) |
 | Custom Loader Shuffle | Customization | [mrkingjaydee/custom-loader-shuffle](https://github.com/mrkingjaydee/custom-loader-shuffle) |
 | Twinpad | Utilities | [Kanin-020/decky-twinpad](https://github.com/Kanin-020/decky-twinpad) |
+| DeckSurroundRooms | Utilities | [lumen-tools/Deck-Surround-Rooms](https://github.com/lumen-tools/Deck-Surround-Rooms) |
+| DS5-Haptics | Controllers | [tangjiahui-cn/ds5-haptics](https://github.com/tangjiahui-cn/ds5-haptics) |
+| DualSense Doctor | Controllers | [MSPortnov/DualSenseDoctor](https://github.com/MSPortnov/DualSenseDoctor) |
+| DeckForge Input Studio | Controllers | [NaustudentX18/deckforge-input-studio](https://github.com/NaustudentX18/deckforge-input-studio) |
+| HexDeck | Controllers | [venglov/hexdeck](https://github.com/venglov/hexdeck) |
+| SteamOS_Steam_review | Game Libraries | [AG69075/steamOS-plugin-review-score](https://github.com/AG69075/steamOS-plugin-review-score) |
+| Non-Steam Collection | Game Libraries | [Rick45/AutoGroupNonSteam](https://github.com/Rick45/AutoGroupNonSteam) |
+| Collection Renamer | Game Libraries | [Infiresu/Collection-Renamer-for-Steam-Deck-](https://github.com/Infiresu/Collection-Renamer-for-Steam-Deck-) |
+| BetterDeckUI | Customization | [Natiiia/BetterDeckUI](https://github.com/Natiiia/BetterDeckUI) |
+| Armada Ports | Game Libraries | [Ken5998/armada-ports](https://github.com/Ken5998/armada-ports) |
+| EpicDeck | Game Libraries | [AvalonO98/EpicDeck](https://github.com/AvalonO98/EpicDeck) |
+| SMB Download | Game Libraries | [Cool3Rocks/SMB-Download](https://github.com/Cool3Rocks/SMB-Download) |
+| CurseDeck | Utilities | [deegan/cursedeck](https://github.com/deegan/cursedeck) |
+| BonkScanner Deck | Utilities | [lightview/bonkscanner-deck](https://github.com/lightview/bonkscanner-deck) |
+| Deck Mentor | Utilities | [FPSarmin/deck-mentor](https://github.com/FPSarmin/deck-mentor) |
+| ProtonHook | Launch Options | [SitHond/ProtonHook](https://github.com/SitHond/ProtonHook) |
+| UmeYc-FocusFix | Utilities | [xiaochaom/UmeYc-FocusFix](https://github.com/xiaochaom/UmeYc-FocusFix) |
+| Deck Clip Export | Utilities | [DariLudum2217/deck-clip-export](https://github.com/DariLudum2217/deck-clip-export) |
+| Omni-Revi-Transfer | Utilities | [Revivedx/omni-revi-transfer](https://github.com/Revivedx/omni-revi-transfer) |
+| PiP Theater | Utilities | [ColbyB03/pip-theater](https://github.com/ColbyB03/pip-theater) |
+| Deck Music Player | Utilities | [yeseoung/deck_music_player](https://github.com/yeseoung/deck_music_player) |
+| PC Remote | Utilities | [hugouchoasborges/decky-pc-remote](https://github.com/hugouchoasborges/decky-pc-remote) |
+| Remote Start | Utilities | [lfelipessilva/remote-start](https://github.com/lfelipessilva/remote-start) |
+| tcl-me-remo | Utilities | [tiltbob/tcl-me-remo](https://github.com/tiltbob/tcl-me-remo) |
+| PowerShift | Performance | [vpraion/power-shift](https://github.com/vpraion/power-shift) |
+| LeGo1 Fan Control | Performance | [everancii/Legion-Go-1-Fan-Control](https://github.com/everancii/Legion-Go-1-Fan-Control) |
+| A1X RGB | Customization | [MadMathMike/a1x-rgb](https://github.com/MadMathMike/a1x-rgb) |
+| Deck Locker | Utilities | [jhonniledio/DeckLocker](https://github.com/jhonniledio/DeckLocker) |
+| UmeYc-Plugin-Updater | Utilities | [xiaochaom/UmeYc-Plugin-Updater](https://github.com/xiaochaom/UmeYc-Plugin-Updater) |
+| DeckSeinen | Utilities | [Mrpapita2124/Deck-Seinen](https://github.com/Mrpapita2124/Deck-Seinen) |
+| AutoCheatDeck | Launch Options | [JoeysRetroHandhelds/AutoCheatDeck](https://github.com/JoeysRetroHandhelds/AutoCheatDeck) |
+| MetaDeck Plus | Game Libraries | [Schrofingerbib/MetaDeck](https://github.com/Schrofingerbib/MetaDeck) |
+| 3D Game Cases | Customization | [JDLKMR/Decky-3D-Game-Cases](https://github.com/JDLKMR/Decky-3D-Game-Cases) |
 
 ## Where the plugins come from
 
