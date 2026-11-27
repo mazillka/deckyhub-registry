@@ -1,0 +1,44 @@
+{
+  "warnings": {
+    "blocked": {
+      "label": "Blocked by audit",
+      "hint": "The audit blocked this release, for example for suspected malware or a broken archive.",
+      "tone": "danger"
+    },
+    "private-data": {
+      "label": "Reads private data",
+      "hint": "The audit found code that may access Steam login data, SSH keys or secrets from the environment.",
+      "tone": "caution"
+    },
+    "persistence": {
+      "label": "Changes system startup",
+      "hint": "The audit found code that may change shell profiles, preloaded libraries, kernel modules or device rules. Such changes can keep working outside Decky.",
+      "tone": "caution"
+    },
+    "not-in-source": {
+      "label": "Very high risk: Download includes code that is not in GitHub",
+      "hint": "The downloaded release contains code the audit could not match to the published source. This could hide malicious changes. Review the release before installing; a mismatch does not prove malware.",
+      "tone": "danger"
+    },
+    "obfuscated": {
+      "label": "Hidden code",
+      "hint": "The audit found encoded or packed code that's hard to read.",
+      "tone": "caution"
+    },
+    "no-tls-check": {
+      "label": "Skips HTTPS checks",
+      "hint": "The audit found code that turns off certificate checks, so what it downloads could be tampered with.",
+      "tone": "caution"
+    },
+    "runs-downloads": {
+      "label": "Runs downloaded scripts",
+      "hint": "The audit found code that downloads a script and runs it straight away.",
+      "tone": "caution"
+    },
+    "vulnerable": {
+      "label": "Known vulnerabilities",
+      "hint": "The audit found bundled libraries with published security flaws.",
+      "tone": "caution"
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/mazillka/deckyhub-registry/main/registry/plugins.schema.json",
+  "title": "DeckyHub plugins.json and plugins-lite.json (published on the virus-scans branch)",
+  "description": "Scan results per plugin, keyed by lowercase owner/name. plugins-lite.json has the same shape, with audit cut to the source findings the browser extension shows.",
+  "type": "object",
+  "required": [
+    "generatedAt",
+    "plugins"
+  ],
+  "properties": {
+    "generatedAt": {
+      "type": "string"
+    },
+    "plugins": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[^A-Z/]+/[^A-Z/]+$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "stable": {
+            "$ref": "#/$defs/record"
+          },
+          "prerelease": {
+            "$ref": "#/$defs/record"
+          },
+          "releases": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/record"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "verdict": {
+      "type": "object",
+      "required": [
+        "result"
+      ],
+      "properties": {
+        "result": {
+          "enum": [
+            "clean",
+            "infected",
+            "incomplete",
+            "error"
+          ]
+        },
+        "found": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reason": {
+          "type": "string"
+        },
+        "scannedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "record": {
+      "type": "object",
+      "required": [
+        "tag",
+        "file"
+      ],
+      "properties": {
+        "tag": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "prerelease": {
+          "type": "boolean"
+        },
+        "clamav": {
+          "$ref": "#/$defs/verdict"
+        },
+        "yara": {
+          "$ref": "#/$defs/verdict"
+        },
+        "audit": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

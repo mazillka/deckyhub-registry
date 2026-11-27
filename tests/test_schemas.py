@@ -10,6 +10,7 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 from build_release_index import WARNINGS, plugin_stats, store_entry  # noqa: E402
+from virus_scan import lite_summary, plugin_summary  # noqa: E402
 
 # CI checks out the readers next to this repository; without a checkout their tests are skipped.
 PLUGIN = Path(os.environ.get("DECKYHUB_PLUGIN", ROOT.parent / "deckyhub-plugin"))
@@ -45,6 +46,22 @@ def field_names(source: str, type_name: str) -> set[str]:
 
 
 class SchemaTests(unittest.TestCase):
+    def test_every_schema_is_valid_and_warnings_json_matches_its_own(self):
+        for path in (ROOT / "registry").glob("*.schema.json"):
+            with self.subTest(path.name):
+                schema(path.name)
+        schema("warnings.schema.json").validate(json.loads((ROOT / "registry" / "warnings.json").read_text(encoding="utf-8")))
+
+    def test_what_the_scanner_publishes_matches_the_plugins_schema(self):
+        asset = {"name": "plugin.zip", "browser_download_url": "https://x/plugin.zip", "size": 1, "digest": None}
+        index = {"releases": {"o/a": [{"tag_name": "v1", "prerelease": False, "assets": [asset]}]}}
+        audit = {"result": "complete", "source": {"result": "complete", "findings": [{"rule": "source_file_differs", "path": "a.py"}]}}
+        files = {asset["browser_download_url"]: {"result": "clean", "sha256": "a" * 64, "audit": audit}}
+        plugins = plugin_summary([index], [ENTRY], files)
+        for summary in (plugins, lite_summary(plugins)):
+            schema("plugins.schema.json").validate({"generatedAt": "2026-11-27T00:00:00Z", "plugins": summary})
+        schema("scans.schema.json").validate({"generatedAt": "2026-11-27T00:00:00Z", "files": files})
+
     def test_apps_json_matches_its_schema(self):
         APPS.validate(json.loads((ROOT / "registry" / "apps.json").read_text(encoding="utf-8")))
 

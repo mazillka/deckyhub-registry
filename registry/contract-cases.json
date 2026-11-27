@@ -1,0 +1,26 @@
+{
+  "scans": [
+    { "name": "all four scanners clean", "clamav": "clean", "yara": "clean", "virusTotal": 0, "metaDefender": 0, "expect": { "kind": "clean", "passed": 4 } },
+    { "name": "waiting on both external scanners", "clamav": "clean", "yara": "clean", "virusTotal": null, "metaDefender": null, "expect": { "kind": "partial", "passed": 2 } },
+    { "name": "waiting on one external scanner", "clamav": "clean", "yara": "clean", "virusTotal": 0, "metaDefender": null, "expect": { "kind": "partial", "passed": 3 } },
+    { "name": "no YARA verdict", "clamav": "clean", "yara": null, "virusTotal": 0, "metaDefender": 0, "expect": { "kind": "partial", "passed": 3 } },
+    { "name": "YARA incomplete", "clamav": "clean", "yara": "incomplete", "virusTotal": 0, "metaDefender": 0, "expect": { "kind": "partial", "passed": 3 } },
+    { "name": "ClamAV error", "clamav": "error", "yara": "clean", "virusTotal": 0, "metaDefender": 0, "expect": { "kind": "partial", "passed": 3 } },
+    { "name": "YARA flags it before the others report", "clamav": "clean", "yara": "infected", "virusTotal": null, "metaDefender": null, "expect": { "kind": "infected", "passed": 1 } },
+    { "name": "one VirusTotal engine flags it", "clamav": "clean", "yara": "clean", "virusTotal": 1, "metaDefender": 0, "expect": { "kind": "infected", "passed": 3 } },
+    { "name": "a MetaDefender engine flags an incomplete scan", "clamav": "incomplete", "yara": "clean", "virusTotal": null, "metaDefender": 2, "expect": { "kind": "infected", "passed": 1 } }
+  ],
+  "warnings": [
+    { "name": "no warnings", "stats": {}, "expect": [] },
+    {
+      "name": "each warning keeps its order and tone",
+      "stats": { "warnings": ["blocked", "not-in-source", "obfuscated"] },
+      "expect": [{ "id": "blocked", "prerelease": false }, { "id": "not-in-source", "prerelease": false }, { "id": "obfuscated", "prerelease": false }]
+    },
+    {
+      "name": "a pre-release repeats no stable warning",
+      "stats": { "warnings": ["persistence"], "prereleaseWarnings": ["persistence", "vulnerable"] },
+      "expect": [{ "id": "persistence", "prerelease": false }, { "id": "vulnerable", "prerelease": true }]
+    }
+  ]
+}

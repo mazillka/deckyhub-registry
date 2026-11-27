@@ -480,5 +480,16 @@ class MainTests(unittest.TestCase):
             sys.argv = argv
 
 
+class LiteSummaryTests(unittest.TestCase):
+    def test_only_the_source_findings_stay_in_a_release_audit(self):
+        found = {"rule": "source_file_differs", "path": "main.py", "extra": "dropped"}
+        record = {"tag": "v1", "file": "p.zip", "clamav": {"result": "clean"}, "audit": {"result": "complete", "findings": [{"rule": "no-tls-check"}], "source": {"result": "complete", "findings": [found, {"rule": "other", "path": "x"}]}, "dependencies": {"packages": [1]}}}
+        quiet = {"tag": "v0", "file": "p.zip", "audit": {"result": "complete", "source": {"findings": []}}}
+        lite = virus_scan.lite_summary({"o/a": {"stable": record, "releases": [quiet]}})["o/a"]
+        self.assertEqual(lite["stable"], {"tag": "v1", "file": "p.zip", "clamav": {"result": "clean"}, "audit": {"source": {"findings": [{"rule": "source_file_differs", "path": "main.py"}]}}})
+        self.assertEqual(lite["releases"], [{"tag": "v0", "file": "p.zip"}])
+        self.assertIn("dependencies", record["audit"], "plugins.json keeps the whole audit")
+
+
 if __name__ == "__main__":
     unittest.main()

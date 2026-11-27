@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/mazillka/deckyhub-registry/main/registry/releases.schema.json",
+  "title": "DeckyHub releases.json (published on the release-index branches)",
+  "description": "Each plugin's recent installable releases, shaped like GitHub's REST releases list, keyed by lowercase owner/name.",
+  "type": "object",
+  "required": [
+    "generatedAt",
+    "releases"
+  ],
+  "properties": {
+    "generatedAt": {
+      "type": "string"
+    },
+    "releases": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[^A-Z/]+/[^A-Z/]+$"
+      },
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/release"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "release": {
+      "type": "object",
+      "required": [
+        "tag_name",
+        "name",
+        "draft",
+        "prerelease",
+        "published_at",
+        "html_url",
+        "body",
+        "assets"
+      ],
+      "properties": {
+        "tag_name": {
+          "type": "string"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "draft": {
+          "type": "boolean"
+        },
+        "prerelease": {
+          "type": "boolean"
+        },
+        "published_at": {
+          "type": "string"
+        },
+        "html_url": {
+          "type": "string"
+        },
+        "body": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pluginVersion": {
+          "type": "string"
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "browser_download_url",
+              "size",
+              "digest"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "browser_download_url": {
+                "type": "string"
+              },
+              "size": {
+                "type": "integer"
+              },
+              "digest": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

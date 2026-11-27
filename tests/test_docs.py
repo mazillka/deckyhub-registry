@@ -15,8 +15,6 @@ from build_release_index import WARNINGS, plugin_stats  # noqa: E402
 WARNING_IDS = set(WARNINGS.values()) | {"blocked"}
 # CI checks out deckyhub-plugin's default branch (what people run) here.
 PLUGIN = Path(os.environ.get("DECKYHUB_PLUGIN", ROOT.parent / "deckyhub-plugin"))
-# CI checks out deckyhub-site's default branch (the live deckyhub.com) here.
-SITE = Path(os.environ.get("DECKYHUB_SITE", ROOT.parent / "deckyhub-site"))
 
 
 class CatalogTests(unittest.TestCase):
@@ -34,13 +32,18 @@ class CatalogTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, f"{page.name} script {index}: {result.stderr}")
 
 
-@unittest.skipUnless("DECKYHUB_SITE" in os.environ or SITE.exists(), "needs a deckyhub-site checkout")
-class PluginPageTests(unittest.TestCase):
-    def test_plugin_pages_explain_every_warning(self):
-        # deckyhub.com's plugin pages (not this site) show these; a new id here needs its text there.
-        text = (SITE / "devtools" / "plugin_data.py").read_text(encoding="utf-8")
-        shown = set(re.findall(r'^    "([\w-]+)": \(', text.split("WARNINGS = {", 1)[1].split("\n}", 1)[0], re.M))
-        self.assertEqual(shown, WARNING_IDS)
+class WarningsFileTests(unittest.TestCase):
+    def test_warnings_json_explains_every_warning_the_index_can_write(self):
+        # DeckyHub, the browser extension and deckyhub.com check their copies against this file.
+        warnings = json.loads((ROOT / "registry" / "warnings.json").read_text(encoding="utf-8"))["warnings"]
+        self.assertEqual(set(warnings), WARNING_IDS)
+
+    def test_the_shared_cases_name_only_known_warnings(self):
+        cases = json.loads((ROOT / "registry" / "contract-cases.json").read_text(encoding="utf-8"))
+        self.assertTrue(cases["scans"] and cases["warnings"])
+        for case in cases["warnings"]:
+            for badge in case["expect"]:
+                self.assertIn(badge["id"], WARNING_IDS, case["name"])
 
 
 class RegistryFileTests(unittest.TestCase):
@@ -74,9 +77,12 @@ class PluginContractTests(unittest.TestCase):
         self.assertLessEqual(read, written)
 
     def test_registry_still_sends_every_warning_deckyhub_knows(self):
-        badges = (PLUGIN / "src" / "components" / "AppBadges.tsx").read_text(encoding="utf-8")
-        known = re.search(r"AUDIT_WARNINGS = \[([^\]]*)\]", badges)
-        self.assertLessEqual(set(re.findall(r'"([\w-]+)"', known.group(1))) if known else set(), WARNING_IDS)
+        types = (PLUGIN / "src" / "types.ts").read_text(encoding="utf-8")
+        found = re.search(r"AUDIT_WARNINGS = \[([^\]]*)\]", types)
+        known = set(re.findall(r'"([\w-]+)"', found.group(1))) if found else set()
+        # An empty set would pass whatever the registry sends: fail if the list has moved.
+        self.assertTrue(known, "AUDIT_WARNINGS not found in the plugin's src/types.ts")
+        self.assertLessEqual(known, WARNING_IDS)
 
 
 if __name__ == "__main__":

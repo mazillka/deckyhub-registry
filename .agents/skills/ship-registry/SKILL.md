@@ -5,7 +5,7 @@ description: Ship what's on the registry's develop branch to main, where every D
 
 # Shipping the registry
 
-`main` is production: every DeckyHub fetches `registry/apps.json` from it at startup (`REMOTE_REGISTRY_URL` in deckyhub-plugin's `main.py`), the release-index workflow builds `releases.json` and `stats.json` from it every hour. `develop` is where changes land first. Both branches are protected by rulesets ("Protect main": squash only; "Protect develop": squash, or a merge commit for the back-merge), and both need the `validate` check.
+`main` is production: every DeckyHub fetches `registry/apps.json` from it at startup (`REMOTE_REGISTRY_URL` in deckyhub-plugin's `py_modules/deckyhub/registry.py`), the release-index workflow builds `releases.json` and `stats.json` from it every hour. `develop` is where changes land first. Both branches are protected by rulesets ("Protect main": squash only; "Protect develop": squash, or a merge commit for the back-merge), and both need the `validate` check.
 
 Never push to either branch, and never merge a PR here without the user's OK.
 
