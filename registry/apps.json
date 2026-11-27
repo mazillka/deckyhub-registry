@@ -9660,6 +9660,33 @@
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["NexonPlug"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deck-notch",
+      "name": "Deck Notch",
+      "description": "Notch overlay with FPS, frame generation, TDP, battery and clock.",
+      "repo": "pietruh00s/Deck-Notch",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["Deck Notch"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deckyplex",
+      "name": "DeckyPlex",
+      "description": "Play Plex music, movies, and TV in Steam Gaming Mode and control playback with Plexamp.",
+      "repo": "opstormhq/DeckyPlex",
+      "category": "Controllers",
+      "detect": { "type": "decky-plugin", "names": ["DeckyPlex"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-cheevoviewer",
+      "name": "CheevoViewer",
+      "description": "Adds a simple QAM RetroAchievements viewer.",
+      "repo": "JDLKMR/Decky-CheevoViewer",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["CheevoViewer"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }

@@ -1143,6 +1143,9 @@ python scripts/build_decky_store.py releases.json out/store
 | Decky Smooth Frames | Frame Generation | [lumen-tools/Decky-Smooth-Frames](https://github.com/lumen-tools/Decky-Smooth-Frames) |
 | Live Translator | Utilities | [Veter1904/decky-live-translator](https://github.com/Veter1904/decky-live-translator) |
 | NexonPlug | Utilities | [sunim87/decky-nexonplug](https://github.com/sunim87/decky-nexonplug) |
+| Deck Notch | Frame Generation | [pietruh00s/Deck-Notch](https://github.com/pietruh00s/Deck-Notch) |
+| DeckyPlex | Controllers | [opstormhq/DeckyPlex](https://github.com/opstormhq/DeckyPlex) |
+| CheevoViewer | Game Libraries | [JDLKMR/Decky-CheevoViewer](https://github.com/JDLKMR/Decky-CheevoViewer) |
 
 ## Where the plugins come from
 
