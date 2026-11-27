@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from build_release_index import KEEP, OLD_NOTES_LIMIT, trim_notes, ai_evidence, audit_index, build, fork_of, keep_old_warnings, merge_ai_evidence, plugin_stats, contested_names, store_activity, store_authors, store_downloads, store_entry  # noqa: E402
+from build_release_index import KEEP, OLD_NOTES_LIMIT, trim_notes, ai_evidence, audit_index, build, fork_of, keep_old_warnings, merge_ai_evidence, plugin_stats, contested_names, store_activity, store_authors, store_downloads, store_entry, store_versions  # noqa: E402
 from validate import rest_shape  # noqa: E402
 
 
@@ -97,6 +97,15 @@ class BuildReleaseIndexTests(unittest.TestCase):
         entry = {"name": "Framegen", "detect": {"names": ["Decky-Framegen", "Decky Framegen"]}}
         self.assertEqual(store_entry(entry, found), {"downloads": 9})
         self.assertIsNone(store_entry({"name": "Nope", "detect": {"names": []}}, found))
+
+    def test_store_versions_go_to_a_sure_match_only(self):
+        stable = store_versions([{"name": "Plugin", "author": "Owner", "versions": [{"name": "0.2.1"}, {"name": "0.1.7"}, {}]}])
+        entry = {"name": "Plugin", "repo": "owner/plugin"}
+        self.assertEqual(store_entry(entry, {"plugin": 1}, stable=stable)["versions"], ["0.2.1", "0.1.7"])
+        self.assertIn("versions", store_entry(entry, {"plugin": 1}, stable=stable, fork=True))
+        other = {"name": "Plugin", "repo": "someone/plugin"}
+        self.assertNotIn("versions", store_entry(other, {"plugin": 1}, stable=stable, fork=True))
+        self.assertEqual(store_versions([{"name": "A", "versions": [{"name": "1"}]}, {"name": "a", "versions": []}]), {})
 
     def test_store_activity_sums_both_store_counters_and_matches_names(self):
         lists = [

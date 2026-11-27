@@ -160,6 +160,22 @@ def store_authors(lists: list[list[dict]]) -> dict[str, set[str]]:
     return found
 
 
+def store_versions(plugins: list[dict]) -> dict[str, tuple[str, list[str]]]:
+    """(author, version names) per plugin name (both lowercased names) in one store; a name listed twice is left out."""
+    found: dict[str, tuple[str, list[str]]] = {}
+    repeated: set[str] = set()
+    for plugin in plugins:
+        if not isinstance(plugin, dict) or not isinstance(plugin.get("name"), str):
+            continue
+        name = plugin["name"].casefold()
+        if name in found:
+            repeated.add(name)
+        versions = plugin.get("versions")
+        names = [v["name"] for v in versions if isinstance(v, dict) and isinstance(v.get("name"), str)] if isinstance(versions, list) else []
+        found[name] = (str(plugin.get("author") or "").casefold(), names)
+    return {name: value for name, value in found.items() if name not in repeated}
+
+
 def contested_names(entries: list[dict], authors: dict[str, set[str]]) -> dict[str, set[str]]:
     """Names that more than one registry entry could match (a fork and its original): each maps to the
     store's authors for it, because a store listing belongs to one repository, not to every same-named one."""
@@ -170,10 +186,12 @@ def contested_names(entries: list[dict], authors: dict[str, set[str]]) -> dict[s
     return {name: authors.get(name, set()) for name, count in claims.items() if count > 1}
 
 
-def store_entry(entry: dict, found: dict[str, int], activity: dict[str, dict[str, int]] | None = None, contested: dict[str, set[str]] | None = None) -> dict | None:
+def store_entry(entry: dict, found: dict[str, int], activity: dict[str, dict[str, int]] | None = None, contested: dict[str, set[str]] | None = None, stable: dict[str, tuple[str, list[str]]] | None = None, fork: bool = False) -> dict | None:
     """The store listing of a registry entry: the store doesn't say which repository a plugin
     came from, so it is matched by name (its detect names, then its display name); {downloads}, or None.
-    A name several entries share (contested) goes only to the entry whose GitHub owner is the store's author."""
+    A name several entries share (contested) goes only to the entry whose GitHub owner is the store's author.
+    versions (from the stable store) drive DeckyHub's updates, so a fork gets them only when its owner is that
+    author: otherwise the listing may be the original's."""
     owner = entry.get("repo", "").split("/")[0].casefold()
     for name in entry_names(entry):
         if contested and name.casefold() in contested and owner not in contested[name.casefold()]:
@@ -182,6 +200,9 @@ def store_entry(entry: dict, found: dict[str, int], activity: dict[str, dict[str
             result = {"downloads": found[name.casefold()]}
             if activity and name.casefold() in activity:
                 result["activity"] = activity[name.casefold()]
+            author, versions = (stable or {}).get(name.casefold(), ("", []))
+            if versions and (not fork or author == owner):
+                result["versions"] = versions
             return result
     return None
 
@@ -363,6 +384,7 @@ def main() -> int:
     in_store = in_store or {}
     contested = contested_names(entries, best_effort(lambda: store_authors(store_lists)) or {}) if store_lists is not None else {}
     in_store_activity = in_store_activity or {}
+    stable_versions = (best_effort(lambda: store_versions(store_lists[0])) if store_lists is not None else None) or {}
     # What was read from each ZIP before (a release's ZIP never changes) is kept between runs when the
     # workflow names a file, so only new releases are downloaded.
     cache = os.environ.get("VALIDATE_CACHE")
@@ -374,7 +396,9 @@ def main() -> int:
     def stats_of(entry: dict, releases: list[dict]) -> dict:
         """One plugin's stats.json entry, from everything fetched above."""
         repo = github[entry["repo"].casefold()]
-        return plugin_stats(entry, releases, lambda name: github[name.casefold()]["stars"], manifest=lambda asset: read(asset)[0], audits=audits, fork=entry.get("upstream") or fork_of(repo), ai=ai_evidence(entry, repo, known_ai), store=store_entry(entry, in_store, in_store_activity, contested), rust=bool(repo.get("rust")))
+        fork = entry.get("upstream") or fork_of(repo)
+        store = store_entry(entry, in_store, in_store_activity, contested, stable_versions, bool(fork))
+        return plugin_stats(entry, releases, lambda name: github[name.casefold()]["stars"], manifest=lambda asset: read(asset)[0], audits=audits, fork=fork, ai=ai_evidence(entry, repo, known_ai), store=store, rust=bool(repo.get("rust")))
 
     index = build(entries, lambda repo: github[repo.casefold()]["releases"], stats_of, version=lambda asset: plugin_version(*read(asset)))
     save_zip_cache(cache)
