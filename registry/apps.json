@@ -9624,6 +9624,42 @@
       "category": "Customization",
       "detect": { "type": "decky-plugin", "names": ["3D Game Cases"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-quick-walkthrough",
+      "name": "Quick Walkthrough",
+      "description": "Search, translate, ad-block, and bookmark live web game walkthroughs directly inside SteamOS Gaming Mode QAM or fullscreen.",
+      "repo": "vumaquan/decky-quick-walkthrough",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Quick Walkthrough"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-smooth-frames",
+      "name": "Decky Smooth Frames",
+      "description": "Driver-style frame generation for the Steam Deck, based on the open-source afmf-linux layer: per-game toggle, live status and a base...",
+      "repo": "lumen-tools/Decky-Smooth-Frames",
+      "category": "Frame Generation",
+      "detect": { "type": "decky-plugin", "names": ["Decky Smooth Frames"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-live-translator",
+      "name": "Live Translator",
+      "description": "Automatic, live translation of any game's on-screen text.",
+      "repo": "Veter1904/decky-live-translator",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Live Translator"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-nexonplug",
+      "name": "NexonPlug",
+      "description": "Install NexonPlug and manage its Steam shortcut.",
+      "repo": "sunim87/decky-nexonplug",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["NexonPlug"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
