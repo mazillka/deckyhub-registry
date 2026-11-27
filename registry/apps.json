@@ -9651,6 +9651,33 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["CheevoViewer"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-replay-clips",
+      "name": "Replay Clips",
+      "description": "Always-on replay buffer using gpu-screen-recorder.",
+      "repo": "TomZandt/decky-replay-clips",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Replay Clips"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-bt-speaker",
+      "name": "Bluetooth Speaker",
+      "description": "Turn your Steam Deck into a Bluetooth speaker: phones, tablets and PCs can connect and play music straight out of the Deck's stereo speakers.",
+      "repo": "fotlim/decky-bt-speaker",
+      "category": "Performance",
+      "detect": { "type": "decky-plugin", "names": ["Bluetooth Speaker"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "oniondeck",
+      "name": "OnionDeck",
+      "description": "Control OnionHop (route Steam Deck traffic through Tor) from Gaming Mode.",
+      "repo": "modernbarbarian/OnionDeck",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["OnionDeck"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }

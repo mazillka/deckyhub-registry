@@ -1142,6 +1142,9 @@ python scripts/build_decky_store.py releases.json out/store
 | Deck Notch | Frame Generation | [pietruh00s/Deck-Notch](https://github.com/pietruh00s/Deck-Notch) |
 | DeckyPlex | Controllers | [opstormhq/DeckyPlex](https://github.com/opstormhq/DeckyPlex) |
 | CheevoViewer | Game Libraries | [JDLKMR/Decky-CheevoViewer](https://github.com/JDLKMR/Decky-CheevoViewer) |
+| Replay Clips | Performance | [TomZandt/decky-replay-clips](https://github.com/TomZandt/decky-replay-clips) |
+| Bluetooth Speaker | Performance | [fotlim/decky-bt-speaker](https://github.com/fotlim/decky-bt-speaker) |
+| OnionDeck | Utilities | [modernbarbarian/OnionDeck](https://github.com/modernbarbarian/OnionDeck) |
 
 ## Where the plugins come from
 
