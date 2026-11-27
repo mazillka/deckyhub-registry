@@ -2735,7 +2735,7 @@
       "id": "steamdbdeckybutton",
       "name": "SteamDB Button",
       "description": "Adds a SteamDB price history shortcut while browsing the Steam store on Deck.",
-      "repo": "kedMertens/steamdbDeckyButton",
+      "repo": "evkosenk/steamdbDeckyButton",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["SteamDBButton"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
@@ -3833,7 +3833,7 @@
       "id": "decky-ukr-badge",
       "name": "decky-ukr-badge",
       "description": "Displays a badge on game pages showing Ukrainian language support status (Official, Community, or None).",
-      "repo": "yataktyni/decky-ukr-badge",
+      "repo": "yataktyni/decky-lang-badge",
       "category": "Utilities",
       "detect": { "type": "decky-plugin", "names": ["decky-ukr-badge", "Localization Badge", "Decky Localization Badge"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
@@ -7968,15 +7968,6 @@
       "asset": { "include": ["decky"], "exclude": ["source"] }
     },
     {
-      "id": "decky-poe-launcher",
-      "name": "Decky POE Launcher",
-      "description": "Installs and removes the POE launcher on the Steam Deck and registers its Steam library images automatically.",
-      "repo": "sunim87/decky-poe-launcher",
-      "category": "Utilities",
-      "detect": { "type": "decky-plugin", "names": ["Decky POE Launcher"] },
-      "asset": { "include": ["decky"], "exclude": ["source"] }
-    },
-    {
       "id": "rootless-dictation",
       "name": "Rootless Dictation",
       "description": "Hold a button combo, speak, release: your words are typed into game chat. Runs without root; speech recognition is offline (whisper.cpp).",
@@ -8744,15 +8735,6 @@
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
-      "id": "decky-privilege-escalation",
-      "name": "Decky Privilege Escalation",
-      "description": "A demonstration of a plugin giving itself root permissions",
-      "repo": "MageJohn/decky-privilege-escalation",
-      "category": "Utilities",
-      "detect": { "type": "decky-plugin", "names": ["Decky Privilege Escalation"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
       "id": "deckyscripts",
       "name": "DeckyScripts",
       "description": "Run user-configured local scripts before launching Steam games.",
@@ -8823,15 +8805,6 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["Library Hub"] },
       "asset": { "include": ["library-hub"], "exclude": ["source"] }
-    },
-    {
-      "id": "dlp-test",
-      "name": "DLP-Test",
-      "description": "DLP-Test for Decky Loader.",
-      "repo": "chuanhao01/DLP-test",
-      "category": "Utilities",
-      "detect": { "type": "decky-plugin", "names": ["DLP-Test"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
       "id": "decky-launch-options-manager",
