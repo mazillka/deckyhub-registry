@@ -1142,6 +1142,7 @@ python scripts/build_decky_store.py releases.json out/store
 | Deck Notch | Frame Generation | [pietruh00s/Deck-Notch](https://github.com/pietruh00s/Deck-Notch) |
 | DeckyPlex | Controllers | [opstormhq/DeckyPlex](https://github.com/opstormhq/DeckyPlex) |
 | CheevoViewer | Game Libraries | [JDLKMR/Decky-CheevoViewer](https://github.com/JDLKMR/Decky-CheevoViewer) |
+| Decky Notifications | Utilities | [Firemoon777/decky-notifications](https://github.com/Firemoon777/decky-notifications) |
 
 ## Where the plugins come from
 

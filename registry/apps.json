@@ -9651,6 +9651,16 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["CheevoViewer"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "decky-notifications-firemoon",
+      "name": "Decky Notifications",
+      "description": "Receive notifications from smartphone using KDE Connect Protocol",
+      "repo": "Firemoon777/decky-notifications",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Decky Notifications (Decky store)"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
     }
   ]
 }
