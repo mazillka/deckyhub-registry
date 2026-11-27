@@ -15,6 +15,8 @@ from build_release_index import WARNINGS, plugin_stats  # noqa: E402
 WARNING_IDS = set(WARNINGS.values()) | {"blocked"}
 # CI checks out deckyhub-plugin's default branch (what people run) here.
 PLUGIN = Path(os.environ.get("DECKYHUB_PLUGIN", ROOT.parent / "deckyhub-plugin"))
+# CI checks out deckyhub-site's default branch (the live deckyhub.com) here.
+SITE = Path(os.environ.get("DECKYHUB_SITE", ROOT.parent / "deckyhub-site"))
 
 
 class CatalogTests(unittest.TestCase):
@@ -32,11 +34,11 @@ class CatalogTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, f"{page.name} script {index}: {result.stderr}")
 
 
-@unittest.skipUnless((PLUGIN / "devtools" / "plugin_data.py").exists(), "needs a deckyhub-plugin checkout")
+@unittest.skipUnless("DECKYHUB_SITE" in os.environ or SITE.exists(), "needs a deckyhub-site checkout")
 class PluginPageTests(unittest.TestCase):
     def test_plugin_pages_explain_every_warning(self):
         # deckyhub.com's plugin pages (not this site) show these; a new id here needs its text there.
-        text = (PLUGIN / "devtools" / "plugin_data.py").read_text(encoding="utf-8")
+        text = (SITE / "devtools" / "plugin_data.py").read_text(encoding="utf-8")
         shown = set(re.findall(r'^    "([\w-]+)": \(', text.split("WARNINGS = {", 1)[1].split("\n}", 1)[0], re.M))
         self.assertEqual(shown, WARNING_IDS)
 
@@ -44,7 +46,7 @@ class PluginPageTests(unittest.TestCase):
 class RegistryFileTests(unittest.TestCase):
     def test_no_two_plugins_share_a_description(self):
         # deckyhub.com builds a page per plugin, and its site audit refuses pages that share a description, which turns the
-        # plugin repository's CI red. A fork or a sibling plugin needs a description of its own.
+        # website repository's CI red. A fork or a sibling plugin needs a description of its own.
         seen: dict[str, list[str]] = {}
         for app in json.loads((ROOT / "registry" / "apps.json").read_text(encoding="utf-8"))["apps"]:
             seen.setdefault(app["description"].strip().casefold(), []).append(app["id"])

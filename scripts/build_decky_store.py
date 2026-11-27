@@ -10,7 +10,7 @@ are. OUT_DIR gets what Decky Loader fetches from a custom store URL (Settings > 
   plugins.json     the same list, for people and other tools
   versions         the update check (GET <store url>/versions): {plugin name: [version, sha256, zip url]}
 
-DeckyHub's website workflow (deckyhub-plugin's pages.yml) serves it as https://deckyhub.com/store, the URL to give Decky. (GitHub Pages sends /store to /store/,
+DeckyHub's website workflow (deckyhub-site's pages.yml) serves it as https://deckyhub.com/store, the URL to give Decky. (GitHub Pages sends /store to /store/,
 which is index.html: a JSON body is fine, Decky parses it whatever the file is called.)
 
 Only stable releases (with --prereleases, pre-releases too: the store for DeckyHub's Pre-release registry on develop), and only ZIPs GitHub published a SHA-256 for: Decky checks that hash before it installs, and
