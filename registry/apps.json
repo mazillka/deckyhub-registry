@@ -5217,7 +5217,8 @@
       "repo": "FlashyReese/decky-wine-cellar",
       "category": "Launch Options",
       "detect": { "type": "decky-plugin", "names": ["Wine Cellar"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": [".zip"], "exclude": ["source"] },
+      "store": true
     },
     {
       "id": "decky-animated-screensaver",
