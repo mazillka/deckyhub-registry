@@ -148,7 +148,7 @@ python scripts/build_decky_store.py releases.json out/store
 | AlarMe | Utilities | [lemossilva/alarme-decky-plugin](https://github.com/lemossilva/alarme-decky-plugin) |
 | AutoFlatpaks | Utilities | [jurassicplayer/decky-autoflatpaks](https://github.com/jurassicplayer/decky-autoflatpaks) |
 | AutoSuspend | Performance | [jurassicplayer/decky-autosuspend](https://github.com/jurassicplayer/decky-autosuspend) |
-| Battery Tracker | Performance | [safijari/steam-deck-battery-tracker](https://github.com/safijari/steam-deck-battery-tracker) |
+| Battery Tracker | Performance | [DeckFilter/steam-deck-battery-tracker](https://github.com/DeckFilter/steam-deck-battery-tracker) |
 | Better Keyboard | Utilities | [chenx-dust/BetterKeyboard](https://github.com/chenx-dust/BetterKeyboard) |
 | Bluetooth | Utilities | [Outpox/Bluetooth](https://github.com/Outpox/Bluetooth) |
 | CheatDeck | Launch Options | [SheffeyG/CheatDeck](https://github.com/SheffeyG/CheatDeck) |

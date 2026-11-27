@@ -661,7 +661,7 @@
       "id": "steam-deck-battery-tracker",
       "name": "Battery Tracker",
       "description": "Tracks battery usage over time.",
-      "repo": "safijari/steam-deck-battery-tracker",
+      "repo": "DeckFilter/steam-deck-battery-tracker",
       "category": "Performance",
       "detect": { "type": "decky-plugin", "names": ["Battery Tracker"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
