@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/mazillka/deckyhub-registry/main/registry/virustotal.schema.json",
+  "title": "VirusTotal reports.json (published on the virustotal-reports branch)",
+  "description": "External scan reports keyed by the ZIP's lowercase SHA-256.",
+  "type": "object",
+  "required": [
+    "reports"
+  ],
+  "properties": {
+    "reports": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "state"
+        ],
+        "properties": {
+          "state": {
+            "enum": [
+              "complete",
+              "pending",
+              "waiting",
+              "error",
+              "unsupported"
+            ]
+          },
+          "stats": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "scannedAt": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "analysisId": {
+            "type": "string"
+          },
+          "checkedAt": {
+            "type": "integer"
+          },
+          "lastError": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
