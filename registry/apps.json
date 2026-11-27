@@ -3835,7 +3835,7 @@
       "description": "Displays a badge on game pages showing Ukrainian language support status (Official, Community, or None).",
       "repo": "yataktyni/decky-ukr-badge",
       "category": "Utilities",
-      "detect": { "type": "decky-plugin", "names": ["decky-ukr-badge"] },
+      "detect": { "type": "decky-plugin", "names": ["decky-ukr-badge", "Localization Badge", "Decky Localization Badge"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
@@ -8822,7 +8822,7 @@
       "repo": "TheRoben-Dev/Decky-Library",
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["Library Hub"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
+      "asset": { "include": ["library-hub"], "exclude": ["source"] }
     },
     {
       "id": "dlp-test",
@@ -9191,15 +9191,6 @@
       "repo": "Qiming-Liu/Decky-Game-Cheats-Manager",
       "category": "Launch Options",
       "detect": { "type": "decky-plugin", "names": ["DeckyGCM"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
-      "id": "escaladores",
-      "name": "Escaladores",
-      "description": "Escalado y generación de frames por juego: OptiScaler, Lossless Scaling, Mako y recetas por juego.",
-      "repo": "Nicothyna/Escaladores",
-      "category": "Frame Generation",
-      "detect": { "type": "decky-plugin", "names": ["Escaladores"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
