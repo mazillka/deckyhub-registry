@@ -378,7 +378,7 @@ python scripts/build_decky_store.py releases.json out/store
 | YASGM | Utilities | [viktor-malieichyk/yasgm](https://github.com/viktor-malieichyk/yasgm) |
 | Travelling Deck | Utilities | [cernoh/travelling-deck](https://github.com/cernoh/travelling-deck) |
 | RustDeck | Utilities | [Hintay/decky-rustdeck](https://github.com/Hintay/decky-rustdeck) |
-| SteamDB Button | Utilities | [kedMertens/steamdbDeckyButton](https://github.com/kedMertens/steamdbDeckyButton) |
+| SteamDB Button | Utilities | [evkosenk/steamdbDeckyButton](https://github.com/evkosenk/steamdbDeckyButton) |
 | Just Clock | Customization | [mysteriousHerb/just-clock](https://github.com/mysteriousHerb/just-clock) |
 | Audio Switcher | Utilities | [SethPDA/Decky-Audio-Switcher](https://github.com/SethPDA/Decky-Audio-Switcher) |
 | Deck as Display | Utilities | [SnakeTheDev/decky-display](https://github.com/SnakeTheDev/decky-display) |
@@ -500,7 +500,7 @@ python scripts/build_decky_store.py releases.json out/store
 | Claude | Utilities | [RyanWReid/claude-deck](https://github.com/RyanWReid/claude-deck) |
 | GCM-Launcher | Launch Options | [waynegeng/GCM-Launcher](https://github.com/waynegeng/GCM-Launcher) |
 | HyperHDR Toggle | Utilities | [DarkTiengo/decky-hyperhdr-toggle](https://github.com/DarkTiengo/decky-hyperhdr-toggle) |
-| decky-ukr-badge | Utilities | [yataktyni/decky-ukr-badge](https://github.com/yataktyni/decky-ukr-badge) |
+| decky-ukr-badge | Utilities | [yataktyni/decky-lang-badge](https://github.com/yataktyni/decky-lang-badge) |
 | AYANEO 3 Companion | Controllers | [Rayekkk/Ayaneo3Companion](https://github.com/Rayekkk/Ayaneo3Companion) |
 | Speaker Boost | Utilities | [beaglemoo/decky-speaker-boost](https://github.com/beaglemoo/decky-speaker-boost) |
 | RainWave Buddy | Utilities | [BrenticusMaximus/RainWaveBuddy](https://github.com/BrenticusMaximus/RainWaveBuddy) |
@@ -958,7 +958,6 @@ python scripts/build_decky_store.py releases.json out/store
 | DeckMate | Controllers | [Bwlazelek/deckmate](https://github.com/Bwlazelek/deckmate) |
 | Wake PC | Utilities | [patrickshao/wake-pc](https://github.com/patrickshao/wake-pc) |
 | Decky FrameGen Hub | Frame Generation | [davnozdu/Decky-FrameGen-Hub](https://github.com/davnozdu/Decky-FrameGen-Hub) |
-| Decky POE Launcher | Utilities | [sunim87/decky-poe-launcher](https://github.com/sunim87/decky-poe-launcher) |
 | Rootless Dictation | Utilities | [nevergiveup777/rootless-dictation](https://github.com/nevergiveup777/rootless-dictation) |
 | 8BitDo Deck | Controllers | [trevor-scheer/8bitdo-deck](https://github.com/trevor-scheer/8bitdo-deck) |
 | Screen Scale | Utilities | [Nasenmann80/Screen-Scale](https://github.com/Nasenmann80/Screen-Scale) |
@@ -1041,7 +1040,6 @@ python scripts/build_decky_store.py releases.json out/store
 | Alt_Shift | Utilities | [Kowalski-coder/Alt_Shift](https://github.com/Kowalski-coder/Alt_Shift) |
 | Steam Controller Manager | Controllers | [Leseratte10/decky-steam-controller-manager](https://github.com/Leseratte10/decky-steam-controller-manager) |
 | Gamecube driver | Utilities | [Lisuccia20/gamecube-nso-driver-for-steamDeck](https://github.com/Lisuccia20/gamecube-nso-driver-for-steamDeck) |
-| Decky Privilege Escalation | Utilities | [MageJohn/decky-privilege-escalation](https://github.com/MageJohn/decky-privilege-escalation) |
 | DeckyScripts | Utilities | [MaybeAffan/DeckyScripts](https://github.com/MaybeAffan/DeckyScripts) |
 | DeckPiP | Utilities | [NelleYn/Steamdeck-Plugins](https://github.com/NelleYn/Steamdeck-Plugins) |
 | Recent Games To Library | Game Libraries | [ParabellumPony/RecentGamesToLibrary_Decky](https://github.com/ParabellumPony/RecentGamesToLibrary_Decky) |
@@ -1050,7 +1048,6 @@ python scripts/build_decky_store.py releases.json out/store
 | Moonbeam | Utilities | [Sabissimo/decky-moonbeam](https://github.com/Sabissimo/decky-moonbeam) |
 | DeckShare | Utilities | [SmugZombie/DeckShare-DeckyPlugin](https://github.com/SmugZombie/DeckShare-DeckyPlugin) |
 | Library Hub | Game Libraries | [TheRoben-Dev/Decky-Library](https://github.com/TheRoben-Dev/Decky-Library) |
-| DLP-Test | Utilities | [chuanhao01/DLP-test](https://github.com/chuanhao01/DLP-test) |
 | Launch Options Manager | Launch Options | [danielcamilo1/decky-launch-options-manager](https://github.com/danielcamilo1/decky-launch-options-manager) |
 | DeckSettings | Performance | [davocarli/sharedeck-y](https://github.com/davocarli/sharedeck-y) |
 | Decky Equalizer | Utilities | [dlavia/decky-equalizer](https://github.com/dlavia/decky-equalizer) |
