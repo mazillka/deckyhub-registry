@@ -28,6 +28,11 @@ jobs:
         with:
           repository: mazillka/deckyhub-ext
           path: deckyhub-ext
+      # deckyhub.com explains every warning; tests/test_docs.py checks that none is missing there.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: mazillka/deckyhub-site
+          path: deckyhub-site
       - run: python3 -m pip install -r requirements-dev.txt
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -43,6 +48,7 @@ jobs:
         env:
           DECKYHUB_PLUGIN: ${{ github.workspace }}/deckyhub-plugin
           DECKYHUB_EXT: ${{ github.workspace }}/deckyhub-ext
+          DECKYHUB_SITE: ${{ github.workspace }}/deckyhub-site
       # Each entry against its repository: releases, asset filter, plugin.json name.
       - if: github.event_name == 'pull_request'
         run: |
