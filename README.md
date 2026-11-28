@@ -44,7 +44,7 @@ The same job writes `stats.json` for the [catalog](https://deckyhub.com/plugins/
 
 - **Downloads:** all-time, summed over the plugin's ZIPs (the entry's `asset` filter) across every release. GitHub counts every download of a file, whether from DeckyHub, Decky, a browser or a script, so these are downloads, not installs.
 - **Stars:** the repository's GitHub stars.
-- **In the Decky store:** the [Decky store](https://plugins.deckbrew.xyz/plugins) (and its testing store) lists a plugin of that name, with its store download count. The `store.downloads` field remains the larger count from either listing. When the plugin appears in either listing with valid download and update counters, `store.activity` adds those counters across the main and testing stores; a store that does not list it contributes zero. Duplicate names in one listing or invalid counters omit the activity total. This is an approximate activity total, not unique installs: reinstalling or updating can count again. The store names no repository, so the match is by plugin name and can be wrong for two plugins that share one. These counts differ from GitHub's **Downloads**, which is why the catalog labels the other one **GitHub downloads**. If the store cannot be read, the badge is left out.
+- **In the Decky store:** the [Decky store](https://plugins.deckbrew.xyz/plugins) (and its testing store) lists a plugin of that name, with its store download count. The `store.downloads` field remains the larger count from either listing. When the plugin appears in either listing with valid download and update counters, `store.activity` adds those counters across the main and testing stores; a store that does not list it contributes zero. Duplicate names in one listing or invalid counters omit the activity total. This is an approximate activity total, not unique installs: reinstalling or updating can count again. The store names no repository, so the match is by plugin name and can be wrong for two plugins that share one. These counts differ from GitHub's **Downloads**, which is why the catalog labels the other one **GitHub downloads**. If the store cannot be read, the badge is left out. `store.versions` lists the stable store's versions, only when one entry claims the name (for a fork, only when its owner is the store's author): DeckyHub then takes updates for an installed copy with one of those versions from the store, and only mentions a newer GitHub release.
 - **Last updated:** when the release DeckyHub shows came out; over a year ago reads **No release in a year**.
 - **Fork:** the repository is a fork; the catalog says of what. Discovery lists a fork only while it's the active one: its original is archived, gone, or hasn't released since.
 - **Runs as root:** that release's `plugin.json` has `"root"` in its `flags`, so Decky Loader runs the plugin's backend as the `root` user. It can then read and change anything on the Deck: system files, other plugins, your data. Plenty of plugins need that for real reasons (fan and power control, drivers, VPNs, system settings), so it isn't a red flag by itself, but a bug or a malicious update can do far more harm.
@@ -1142,6 +1142,10 @@ python scripts/build_decky_store.py releases.json out/store
 | Deck Notch | Frame Generation | [pietruh00s/Deck-Notch](https://github.com/pietruh00s/Deck-Notch) |
 | DeckyPlex | Controllers | [opstormhq/DeckyPlex](https://github.com/opstormhq/DeckyPlex) |
 | CheevoViewer | Game Libraries | [JDLKMR/Decky-CheevoViewer](https://github.com/JDLKMR/Decky-CheevoViewer) |
+| Satur8 | Customization | [NtrpyDev/satur8](https://github.com/NtrpyDev/satur8) |
+| SteamOS Chromoting | Utilities | [georgesak/SteamOS-Chromoting](https://github.com/georgesak/SteamOS-Chromoting) |
+| gg.deals | Utilities | [Marshy-Madness/gg-deals](https://github.com/Marshy-Madness/gg-deals) |
+| Deck Stats | Game Libraries | [iwsen/deck-stats](https://github.com/iwsen/deck-stats) |
 
 ## Where the plugins come from
 
@@ -1212,7 +1216,7 @@ CI runs on every pull request, on pushes to `main` and `develop`, and weekly bec
   ```bash
   GITHUB_TOKEN=$(gh auth token) python scripts/validate.py
   ```
-- **Website:** everything is on deckyhub.com, built by mazillka/deckyhub-plugin: the [plugins](https://deckyhub.com/plugins/), [how to contribute](https://deckyhub.com/contribute/) and the [registry editor](https://deckyhub.com/contribute/editor.html). This repository has no website of its own.
+- **Website:** everything is on deckyhub.com, built by mazillka/deckyhub-site: the [plugins](https://deckyhub.com/plugins/), [how to contribute](https://deckyhub.com/contribute/) and the [registry editor](https://deckyhub.com/contribute/editor.html). This repository has no website of its own.
 - **Tests:** `python -m unittest discover -s tests` covers the scripts, and also checks that `apps.json` stays well under the 4 MB DeckyHub accepts (3.0.0 and older, which stopped at 512 KB, are no longer kept in step), that the catalog page's script parses, and that `stats.json` keeps every field and warning the DeckyHub people run reads (against deckyhub-plugin's `main`, which CI checks out).
 
 ## Taking a plugin off DeckyHub, or sending it to the Decky store

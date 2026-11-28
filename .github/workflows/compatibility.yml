@@ -1,0 +1,41 @@
+name: Reader compatibility
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '42 5 * * 1'
+permissions:
+  contents: read
+jobs:
+  plugin:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        plugin-ref: [main, develop]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: mazillka/deckyhub-plugin
+          ref: ${{ matrix.plugin-ref }}
+          path: reader-plugin
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: mazillka/deckyhub-ext
+          ref: main
+          path: reader-extension
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - run: python3 -m pip install -r requirements-dev.txt
+      - run: python3 -m unittest tests.test_registry_schema
+        working-directory: reader-plugin
+        env:
+          DECKYHUB_REGISTRY: ${{ github.workspace }}/registry/apps.json
+      - run: python3 -m unittest tests.test_schemas tests.test_release_contract
+        env:
+          DECKYHUB_PLUGIN: ${{ github.workspace }}/reader-plugin
+          DECKYHUB_EXT: ${{ github.workspace }}/reader-extension

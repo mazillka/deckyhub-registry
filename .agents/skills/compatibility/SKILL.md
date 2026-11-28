@@ -11,13 +11,15 @@ DeckyHub is in production. Installed copies, including old releases nobody has u
 
 | File | Where | Reader in deckyhub-plugin | Rules |
 | --- | --- | --- | --- |
-| `registry/apps.json` | `main`, `refs/heads/main/registry/apps.json` | `REMOTE_REGISTRY_URL` in `main.py` | `schemaVersion` 1; every key in `tests/test_registry_schema.py` keeps its name, type and meaning; at most 4 MB (`MAX_REMOTE_REGISTRY_BYTES`): a bigger file is refused and the cached list kept. DeckyHub up to 3.0.0 accepted only 512 KB; they were dropped on 2026-11-24, so they keep the list they had |
+| `registry/apps.json` | `main`, `refs/heads/main/registry/apps.json` | `REMOTE_REGISTRY_URL` in `py_modules/deckyhub/registry.py` | `schemaVersion` 1; every key in `tests/test_registry_schema.py` keeps its name, type and meaning; at most 4 MB (`MAX_REMOTE_REGISTRY_BYTES`): a bigger file is refused and the cached list kept. DeckyHub up to 3.0.0 accepted only 512 KB; they were dropped on 2026-11-24, so they keep the list they had |
 | `registry/apps.json` | `develop` | `PRERELEASE_REGISTRY_URL`, the opt-in Registry: Pre-release setting | same rules: testers run the same releases |
-| `apps.json` (release file) | a release per change: `registry-<date>-<run>` from main (stable, latest), `registry-<date>-<run>-develop` from develop (pre-release) | `newest_registry_release()` in `main.py`, read before the branch file by newer DeckyHub: Stable takes the newest stable release, Pre-release the newest of all | published by `registry-release.yml` from the same file, so the same rules; DeckyHub falls back to the branch file when it's missing, empty or unreadable, so never stop updating the branches |
+| `apps.json` (release file) | a release per change: `registry-<date>-<run>` from main (stable, latest), `registry-<date>-<run>-develop` from develop (pre-release) | `newest_registry_release()` in `py_modules/deckyhub/registry.py`, read before the branch file by newer DeckyHub: Stable takes the newest stable release, Pre-release the newest of all | published by `registry-release.yml` from the same file, so the same rules; DeckyHub falls back to the branch file when it's missing, empty or unreadable, so never stop updating the branches |
 | `releases.json` | `release-index` branch (`release-index-develop` for pre-release) | `fetchReleaseIndex()` in `src/releases.ts` | `generatedAt`, `releases` keyed by lowercase `owner/name`, REST-shaped releases (`slim()` in `build_release_index.py`), only installable ones (`kept_releases()`: the 5 newest plus the newest stable), so never drop the newest stable or the newest pre-release a channel would pick; over 7 days old, it's ignored |
 | `stats.json` | same branches | `fetchPluginStats()`, `PluginStats` in `src/types.ts` | `generatedAt`, `plugins` keyed by lowercase `owner/name`; fields and warning IDs only ever added |
 
 The branch names, file paths and raw.githubusercontent.com URLs are part of this too: never rename or move them. Old DeckyHub releases from before the registry moved here still read the plugin repo's `registry/apps.json`, which no longer exists. That's the kind of break this skill exists to prevent.
+
+[DATA.md](../../../DATA.md) lists every published file, its readers and its schema, with the shared warning texts and cases.
 
 ## Rules
 
@@ -31,7 +33,7 @@ The branch names, file paths and raw.githubusercontent.com URLs are part of this
 
 - `python -m unittest discover -s tests` with `DECKYHUB_PLUGIN` pointing at a checkout of deckyhub-plugin's `main` (what users run). `tests/test_docs.py` fails if `stats.json` drops a field `PluginStats` reads or a warning ID `AUDIT_WARNINGS` knows, or if `apps.json` gets near 4 MB.
 - From `../deckyhub-plugin`: `DECKYHUB_REGISTRY=../deckyhub-registry/registry/apps.json python -m unittest tests.test_registry_schema` (CI runs it from the plugin's `main`).
-- For a change to the data's shape, also check the oldest DeckyHub release the user still supports: read its `main.py`/`src/releases.ts` at that tag (`git -C ../deckyhub-plugin show vX.Y.Z:src/releases.ts`), or install it on a Deck (`deck-test` skill in deckyhub-plugin) and point it at the new data.
+- For a change to the data's shape, also check the oldest DeckyHub release the user still supports: read its `py_modules/deckyhub/` (`main.py` in older releases) and `src/releases.ts` at that tag (`git -C ../deckyhub-plugin show vX.Y.Z:src/releases.ts`), or install it on a Deck (`deck-test` skill in deckyhub-plugin) and point it at the new data.
 - Say in the PR what an older DeckyHub sees after the change. "Nothing different" is the usual answer; anything else needs the user's OK first.
 
 ## A schema change that can't be additive

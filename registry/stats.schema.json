@@ -33,6 +33,7 @@
           "required": ["downloads"],
           "properties": {
             "downloads": { "type": "integer", "minimum": 0 },
+            "versions": { "type": "array", "items": { "type": "string" }, "description": "The stable Decky store's versions; only when the listing is surely this repo." },
             "activity": {
               "type": "object",
               "required": ["downloads", "updates"],

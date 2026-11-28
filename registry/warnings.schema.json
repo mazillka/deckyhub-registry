@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/mazillka/deckyhub-registry/main/registry/warnings.schema.json",
+  "title": "DeckyHub registry/warnings.json",
+  "description": "The English label, explanation and tone of each audit warning ID in stats.json. Readers keep a copy and test it against this file.",
+  "type": "object",
+  "required": [
+    "warnings"
+  ],
+  "properties": {
+    "warnings": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "label",
+          "hint",
+          "tone"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hint": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tone": {
+            "enum": [
+              "danger",
+              "caution"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

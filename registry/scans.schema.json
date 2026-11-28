@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/mazillka/deckyhub-registry/main/registry/scans.schema.json",
+  "title": "DeckyHub scans.json (published on the virus-scans branch)",
+  "description": "The full report for each scanned ZIP, keyed by its download URL.",
+  "type": "object",
+  "required": [
+    "generatedAt",
+    "files"
+  ],
+  "properties": {
+    "generatedAt": {
+      "type": "string"
+    },
+    "files": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^https://"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "result"
+        ],
+        "properties": {
+          "result": {
+            "enum": [
+              "clean",
+              "infected",
+              "incomplete",
+              "error"
+            ]
+          },
+          "found": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          },
+          "scannedAt": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string"
+          },
+          "engine": {
+            "type": "string"
+          },
+          "signatures": {
+            "type": "string"
+          },
+          "yara": {
+            "$ref": "#/$defs/verdict"
+          },
+          "audit": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "verdict": {
+      "type": "object",
+      "required": [
+        "result"
+      ],
+      "properties": {
+        "result": {
+          "enum": [
+            "clean",
+            "infected",
+            "incomplete",
+            "error"
+          ]
+        },
+        "found": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reason": {
+          "type": "string"
+        },
+        "scannedAt": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

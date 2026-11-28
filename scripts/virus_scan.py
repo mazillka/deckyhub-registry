@@ -251,6 +251,25 @@ def plugin_summary(indexes: list[dict], entries: list[dict], files: dict[str, di
     return plugins
 
 
+SOURCE_RULES = ("source_path_missing", "source_file_differs")
+
+
+def lite_summary(plugins: dict[str, dict]) -> dict[str, dict]:
+    """plugin_summary for plugins-lite.json, the browser extension's copy: it has to fit in the extension's storage, and
+    reads nothing of a release's audit but the source findings."""
+
+    def lite(record: dict) -> dict:
+        out = {key: value for key, value in record.items() if key != "audit"}
+        findings = ((record.get("audit") or {}).get("source") or {}).get("findings") or []
+        kept = [{"rule": item["rule"], "path": item.get("path")} for item in findings if item.get("rule") in SOURCE_RULES]
+        return {**out, "audit": {"source": {"findings": kept}}} if kept else out
+
+    return {
+        repo: {channel: [lite(item) for item in value] if channel == "releases" else lite(value) for channel, value in channels.items()}
+        for repo, channels in plugins.items()
+    }
+
+
 BADGE_MESSAGES = {"clean": ("no threats", "brightgreen"), "infected": ("threat found", "red"), "incomplete": ("partly scanned", "orange"), "error": ("not scanned", "orange")}
 
 
@@ -693,6 +712,7 @@ def main() -> int:
     (out / "scans.json").write_text(json.dumps({"generatedAt": now(), "files": {url: files[url] for url in wanted if url in files}}, separators=(",", ":")), encoding="utf-8")
     plugins = plugin_summary(indexes, entries, files)
     (out / "plugins.json").write_text(json.dumps({"generatedAt": now(), "plugins": plugins}, separators=(",", ":")), encoding="utf-8")
+    (out / "plugins-lite.json").write_text(json.dumps({"generatedAt": now(), "plugins": lite_summary(plugins)}, separators=(",", ":")), encoding="utf-8")
     for path, badge in badges(plugins).items():
         target = out / "badges" / path
         target.parent.mkdir(parents=True, exist_ok=True)

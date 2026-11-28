@@ -100,7 +100,7 @@ class PluginVersionTests(unittest.TestCase):
         # where zipfile quietly turns a backslash into a slash.
         data = io.BytesIO()
         with zipfile.ZipFile(data, "w") as archive:
-            for name in ("A\plugin.json", "A\main.py"):
+            for name in (r"A\plugin.json", r"A\main.py"):
                 info = zipfile.ZipInfo("x")
                 info.filename = name
                 archive.writestr(info, json.dumps({"name": "A"}))
