@@ -1146,6 +1146,7 @@ python scripts/build_decky_store.py releases.json out/store
 | SteamOS Chromoting | Utilities | [georgesak/SteamOS-Chromoting](https://github.com/georgesak/SteamOS-Chromoting) |
 | gg.deals | Utilities | [Marshy-Madness/gg-deals](https://github.com/Marshy-Madness/gg-deals) |
 | Deck Stats | Game Libraries | [iwsen/deck-stats](https://github.com/iwsen/deck-stats) |
+| Master Browser | Utilities | [soullegacyvn-ux/Master-Browser](https://github.com/soullegacyvn-ux/Master-Browser) |
 
 ## Where the plugins come from
 

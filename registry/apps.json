@@ -9687,6 +9687,15 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["Deck Stats"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "master-browser",
+      "name": "Master Browser",
+      "description": "Browse the web with a controller in Steam Gaming Mode on Linux.",
+      "repo": "soullegacyvn-ux/Master-Browser",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["Master Browser"] },
+      "asset": { "include": ["master-browser-decky-", ".zip"], "exclude": ["source"] }
     }
   ]
 }
