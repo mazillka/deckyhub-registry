@@ -1142,6 +1142,11 @@ python scripts/build_decky_store.py releases.json out/store
 | Deck Notch | Frame Generation | [pietruh00s/Deck-Notch](https://github.com/pietruh00s/Deck-Notch) |
 | DeckyPlex | Controllers | [opstormhq/DeckyPlex](https://github.com/opstormhq/DeckyPlex) |
 | CheevoViewer | Game Libraries | [JDLKMR/Decky-CheevoViewer](https://github.com/JDLKMR/Decky-CheevoViewer) |
+| Hyrule Tracker | Utilities | [jv-prado/hyrule-tracker](https://github.com/jv-prado/hyrule-tracker) |
+| Satur8 | Customization | [NtrpyDev/satur8](https://github.com/NtrpyDev/satur8) |
+| SteamOS Chromoting | Utilities | [georgesak/SteamOS-Chromoting](https://github.com/georgesak/SteamOS-Chromoting) |
+| gg.deals | Utilities | [Marshy-Madness/gg-deals](https://github.com/Marshy-Madness/gg-deals) |
+| Deck Stats | Game Libraries | [iwsen/deck-stats](https://github.com/iwsen/deck-stats) |
 
 ## Where the plugins come from
 
