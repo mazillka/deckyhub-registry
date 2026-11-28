@@ -9651,6 +9651,42 @@
       "category": "Game Libraries",
       "detect": { "type": "decky-plugin", "names": ["CheevoViewer"] },
       "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "satur8",
+      "name": "Satur8",
+      "description": "Installs, updates and opens the Satur8 app, which sets color saturation for each game.",
+      "repo": "NtrpyDev/satur8",
+      "category": "Customization",
+      "detect": { "type": "decky-plugin", "names": ["Satur8"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "steamos-chromoting",
+      "name": "SteamOS Chromoting",
+      "description": "Control your device from another one with Chrome Remote Desktop, in Gaming Mode and Desktop Mode, without root.",
+      "repo": "georgesak/SteamOS-Chromoting",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["SteamOS Chromoting"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "gg-deals",
+      "name": "gg.deals",
+      "description": "Shows the lowest current gg.deals price on Steam store pages. Needs a free gg.deals API key.",
+      "repo": "Marshy-Madness/gg-deals",
+      "category": "Utilities",
+      "detect": { "type": "decky-plugin", "names": ["gg.deals"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
+    },
+    {
+      "id": "deck-stats",
+      "name": "Deck Stats",
+      "description": "Tracks playtime, streaks and milestones for each game.",
+      "repo": "iwsen/deck-stats",
+      "category": "Game Libraries",
+      "detect": { "type": "decky-plugin", "names": ["Deck Stats"] },
+      "asset": { "include": [".zip"], "exclude": ["source"] }
     }
   ]
 }
