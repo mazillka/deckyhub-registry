@@ -9653,15 +9653,6 @@
       "asset": { "include": [".zip"], "exclude": ["source"] }
     },
     {
-      "id": "hyrule-tracker",
-      "name": "Hyrule Tracker",
-      "description": "Shows your Zelda progress (Ocarina of Time, Breath of the Wild, Tears of the Kingdom) by reading the saves on your Deck.",
-      "repo": "jv-prado/hyrule-tracker",
-      "category": "Utilities",
-      "detect": { "type": "decky-plugin", "names": ["Hyrule Tracker"] },
-      "asset": { "include": [".zip"], "exclude": ["source"] }
-    },
-    {
       "id": "satur8",
       "name": "Satur8",
       "description": "Installs, updates and opens the Satur8 app, which sets color saturation for each game.",
